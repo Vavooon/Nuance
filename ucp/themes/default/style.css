@@ -1,0 +1,405 @@
+*
+{
+ margin: 0;
+ padding: 0;
+}
+body
+{
+  background: lightgray url(images/staticbg.png) repeat;
+}
+.center
+{
+  margin: 34px 0;
+  margin-left: -350px;
+  position: relative;
+  left: 50%;
+  width: 600px;
+  text-align: center;
+}
+.info-table
+{
+  width: 100%;
+}
+.info-table .name
+{
+  text-align: right;
+  width: 50%;
+}
+.info-table .value
+{
+  text-align: left;
+}
+.info-table td
+{
+  padding: 1px 8px;
+}
+.actions
+{
+  width: 300px;
+  margin-left: 150px;
+}
+.actions a
+{
+  width: 100%;
+}
+
+
+
+
+.center.logo
+{
+  padding: 0px 50px;
+  text-align: center;
+  float: left;
+}
+.center.logo>img
+{
+  max-width: 600px;
+}
+#cssmenu
+{
+  margin-top: 10px!important;
+}
+#content
+{
+
+  padding: 50px;
+  background-color: #f2f2f2;
+  box-shadow: 0 0 4px lightgray;
+  border: 1px solid lightgray;
+}
+
+
+h2
+{
+  font-size: 110%;
+  /*margin: 1em;*/
+}
+h3
+{
+  font-variant: small-caps;
+  color: #333;
+  font-weight: bold;
+  font-family: 'Georgia';
+  font-size: 120%;
+  margin: 1em;
+}
+.name
+{
+  font-size: 110%;
+}
+.value
+{
+  font-weight: bold;
+  font-size: 110%;
+  color: #FF8500;
+}
+.center .button.big
+{
+  /*font-size: 100%!important;*/
+  font-weight: bold;
+  color: #FF6500!important;
+}
+
+.center .button.big:before
+{
+  margin-top: 0.25em;
+}
+
+#login
+{
+  margin: 10px;
+  float: right;
+}
+#header
+{
+  float: right;
+  width: 100%;
+}
+.clear
+{
+  clear: both;
+}
+
+#login input
+{
+  margin-top: 6px;
+  display: block;
+}
+#login h3
+{
+  text-align: center;
+  font-size: 100%;
+}
+#login h2
+{
+  text-align: center;
+  white-space: nowrap;
+}
+#login .button
+{
+  width: 100%;
+}
+
+
+#login form
+{
+  display: inline;
+}
+
+#login-title
+{
+  font-style: italic;
+  text-align: center;
+  height: 3em;
+  min-width: 10em;
+}
+.nice-table
+{
+  text-align: left;
+  width: 100%;
+  margin: 10px 0;
+}
+
+
+.nice-table.tariff td
+{
+  width: auto;
+}
+.nice-table.tariff .price
+{
+  width: 15%;
+}
+.nice-table .sum,
+.nice-table .date
+{
+  width: 14%;
+}
+.gray
+{
+  color: lightgray;
+}
+
+
+
+
+.button
+{
+  text-align: center;
+}
+
+
+/* Notification */
+
+.notification
+{
+  padding: 25px 50px;
+  background-color: #ededed;
+  border: 1px solid black;
+  box-shadow: 0 0 4px lightgray;
+}
+.tip
+{
+  border-color: #FFA400;
+}
+
+.error
+{
+  background-color: white;
+  border-color: red;
+}
+.success
+{
+  background-color: #F2FFF7;
+  border-color: green;
+}
+
+
+/* forms */
+
+form
+{
+  margin: 0 auto;
+}
+
+form input.text-field
+{
+  height: 22px;
+}
+form input,
+form select
+{
+  width: 196px;
+}
+
+form select
+{
+  height: 26px;
+}
+
+#message-form input 
+{
+  width: 100%;
+}
+
+
+.text-field
+{
+  padding: 1px;
+  border: 1px solid lightgray;
+}
+
+
+
+/* language-switch */
+
+#language-switch
+{
+  display: inline-block;
+  padding: 10px;
+  float: left;
+  margin-right: -200px;
+  text-align: center;
+  color: rgb(151, 151, 151);
+  font-style: italic;
+}
+
+#language-switch ul li
+{
+  display: inline;
+  opacity: 0.3;
+  -webkit-transition: 1s ease opacity;
+  -moz-transition: 1s ease opacity;
+  -o-transition: 1s ease opacity;
+  transition: 1s ease opacity;
+}
+#language-switch ul li.active
+{
+  opacity: 0.7;
+}
+#language-switch ul li:hover
+{
+  opacity: 1;
+}
+
+.messages-list
+{
+  background-color: white;
+  border: 1px solid lightgray;
+  max-height: 500px;
+  overflow: auto;
+}
+
+
+.messages-list a
+{
+  text-decoration: none;
+  color: black;
+}
+.message
+{
+  margin: 10px 0;
+  padding: 3% 1%;
+  text-align: left;
+  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif;
+  font-size: 90%;
+}
+.message:hover
+{
+  background-color: #d7d7d7;
+}
+
+.message.incoming
+{
+  background-color: #f7f7f7;
+}
+.message.incoming:hover
+{
+  background-color: #d7d7d7;
+}
+.message.new
+{
+  background-color: #BEE5FF;
+}
+.message.new:hover
+{
+  background-color: #09F;
+}
+.message.single
+{
+  background-color: transparent!important;
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 120%;
+}
+
+.message .type,
+.message .date
+{
+  font-weight: bold;
+  font-size: 75%;
+}
+
+.message .date
+{
+  float: right;
+}
+.message .text
+{
+  margin-top: 10px;
+}
+
+.buttons-wrap
+{
+  margin: 10px 0;
+  width: 100%;
+}
+.button-wrap
+{
+  width: 49%;
+  float: left;
+}
+.button-wrap+.button-wrap
+{
+  margin-left: 2%;
+}
+
+.button-wrap .button
+{
+  width: 100%;
+  margin: 0;
+  display: block;
+}
+
+
+
+/* new message */
+
+.compose-message form
+{
+  width: 100%;
+}
+
+.compose-message textarea
+{
+  width: 100%;
+  height: 200px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+
+/* messages count at menu */
+
+#messages-count
+{
+  padding: 2px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  background-color: white;
+  box-shadow: inset 1px -1px 1px gray, inset -1px 1px 1px gray;
+  text-shadow: 0 0 2px gray;
+  color: black;
+}

@@ -1,0 +1,911 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nuance Billing System\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-02 19:05+0200\n"
+"PO-Revision-Date: 2013-10-02 19:06+0200\n"
+"Last-Translator: Vavooon <vavooon@gmail.com>\n"
+"Language-Team: Nuance <vavooon@gmail.com>\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_ngettext;ngettext\n"
+"X-Poedit-Basepath: ..\\..\\..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-SearchPath-0: .locale-src\\ucp\n"
+"X-Poedit-SearchPath-1: ucp\n"
+"X-Poedit-SearchPath-2: include\n"
+
+#: ucp/documents.php:20
+msgid "Download"
+msgstr "Завантажити"
+
+#: ucp/documents.php:24
+msgid "View"
+msgstr "Переглянути"
+
+#: ucp/editprofile.php:24
+msgid "Your password was successfully changed."
+msgstr "Ваш пароль було успішно змінено."
+
+#: ucp/editprofile.php:42
+msgid "Your tariff will be changed from the next month."
+msgstr "Ваш тариф буде змінено з наступного місяця."
+
+#: ucp/editprofile.php:46
+msgid "Your tariff has been changed."
+msgstr "Ваш тариф було успішно змінено."
+
+#: ucp/info.php:29
+msgid "Is on loan"
+msgstr "Увімкнено в кредит"
+
+#: ucp/info.php:33
+msgid "Enabled"
+msgstr "Увімкнено"
+
+#: ucp/info.php:38
+msgid "Disabled"
+msgstr "Вимкнено"
+
+#: ucp/moneyflow.php:57
+msgid "Fund with scratchcard"
+msgstr "Оплата карткою"
+
+#: ucp/moneyflow.php:62
+msgid "Refund operation"
+msgstr "Повернення коштів"
+
+#: ucp/moneyflow.php:72
+#, php-format
+msgid "Referral charge from %s"
+msgstr "Реферальне нарахування від %s"
+
+#: ucp/moneyflow.php:85
+#, php-format
+msgid "Order %s from %s to %s"
+msgstr "Зняття за послугу %s з %s по %s"
+
+#: ucp/moneyflow.php:96
+msgid "Unknown order"
+msgstr "Оплата послуги"
+
+#: ucp/moneyflow.php:102
+msgid "Fund by cashier"
+msgstr "Поповнення касиром"
+
+#: ucp/themes/default/badcard.php:2 ucp/themes/default/badlogin.php:2
+msgid "Wrong code"
+msgstr "Неправильний код"
+
+#: ucp/themes/default/badcard.php:5 ucp/themes/default/badlogin.php:5
+msgid "Try again"
+msgstr "Спробувати знову"
+
+#: ucp/themes/default/disabled.php:2
+msgid "Your account is disabled"
+msgstr "Ваш обліковий запис вимкнено"
+
+#: ucp/themes/default/editpassword.php:2
+msgid "Enter new password:"
+msgstr "Введіть новий пароль:"
+
+#: ucp/themes/default/editpassword.php:5 ucp/themes/default/info.php:48
+msgid "Change password"
+msgstr "Змінити пароль"
+
+#: ucp/themes/default/edittariff.php:2
+msgid "Select new tariff:"
+msgstr "Виберіть новий тариф:"
+
+#: ucp/themes/default/edittariff.php:29 ucp/themes/default/info.php:43
+msgid "Change tariff"
+msgstr "Змінити тариф"
+
+#: ucp/themes/default/goodcard.php:2
+#, php-format
+msgid "Your account has been funded for %s."
+msgstr "Ваш рахунок було поповнено на %s ."
+
+#: ucp/themes/default/header.php:4
+#, php-format
+msgid "%s - Nuance - User panel"
+msgstr "%s - Nuance - Особистий кабінет"
+
+#: ucp/themes/default/header.php:15
+msgid "Select language"
+msgstr "Виберіть мову"
+
+#: ucp/themes/default/header.php:39
+#, php-format
+msgid "You are logged in as <br>%s"
+msgstr "Ви увійшли як <br>%s"
+
+#: ucp/themes/default/header.php:43 ucp/themes/default/info.php:2
+#: include/ucp.php:265
+msgid "My info"
+msgstr "Мої дані"
+
+#: ucp/themes/default/header.php:45
+msgid "Log out"
+msgstr "Вийти"
+
+#: ucp/themes/default/header.php:51
+msgid "User panel"
+msgstr "Особистий кабінет"
+
+#: ucp/themes/default/header.php:52 ucp/themes/default/info.php:10
+msgid "Username"
+msgstr "Ім’я користувача"
+
+#: ucp/themes/default/header.php:53
+msgid "Password"
+msgstr "Пароль"
+
+#: ucp/themes/default/header.php:55 ucp/themes/default/login.php:14
+msgid "Log in"
+msgstr "Увійти"
+
+#: ucp/themes/default/info.php:5
+msgid "Account ID"
+msgstr "Номер договору"
+
+#: ucp/themes/default/info.php:14
+msgid "Service state"
+msgstr "Стан послуги"
+
+#: ucp/themes/default/info.php:19
+msgid "Current tariff"
+msgstr "Поточний тариф"
+
+#: ucp/themes/default/info.php:22
+msgid "Next tariff"
+msgstr "Наступний тариф"
+
+#: ucp/themes/default/info.php:26
+msgid "Tariff"
+msgstr "Тариф"
+
+#: ucp/themes/default/info.php:26
+msgid "Not selected"
+msgstr "Не вибрано"
+
+#: ucp/themes/default/info.php:30
+msgid "Balance"
+msgstr "Баланс"
+
+#: ucp/themes/default/info.php:34
+msgid "Discount"
+msgstr "Знижка"
+
+#: ucp/themes/default/info.php:40
+msgid "Actions"
+msgstr "Дії"
+
+#: ucp/themes/default/login.php:2
+msgid "Wrong login or password. Please try again…"
+msgstr "Неправильний логін чи пароль. Будь ласка, спробуйте ще раз…"
+
+#: ucp/themes/default/login.php:4
+msgid ""
+"You are logged in in automatic mode. Please enter your login and password to "
+"unlock all opportunities."
+msgstr ""
+"Ви увійшли в автоматичному режимі. Для розблокування всіх можливостей "
+"увійдіть, використовуючи ваші логін та пароль."
+
+#: ucp/themes/default/login.php:8
+msgid "Username:"
+msgstr "Ім’я користувача:"
+
+#: ucp/themes/default/login.php:10
+msgid "Password:"
+msgstr "Пароль:"
+
+#: ucp/themes/default/login.php:17
+msgid "OR"
+msgstr "АБО"
+
+#: ucp/themes/default/login.php:21
+msgid "Log in by IP"
+msgstr "Увійти по IP"
+
+#: ucp/themes/default/messagehasbeenhidden.php:2
+msgid "Message has been hidden. You can using the internet."
+msgstr ""
+"Повідомлення було приховане. Тепер ви можете продовжити користування "
+"інтернетом."
+
+#: ucp/themes/default/messagehasbeensent.php:2
+msgid "Your message has been sent."
+msgstr "Ваше повідомлення було відправлене."
+
+#: ucp/themes/default/messageslist.php:11
+msgid "Incoming message"
+msgstr "Вхідне повідомлення"
+
+#: ucp/themes/default/messageslist.php:11
+msgid "Outgoing message"
+msgstr "Вихідне повідомлення"
+
+#: ucp/themes/default/messageslist.php:22
+msgid "Mark all as read"
+msgstr "Позначити усі прочитаними"
+
+#: ucp/themes/default/messageslist.php:25
+msgid "New message"
+msgstr "Нове повідомлення"
+
+#: ucp/themes/default/moneyflow.php:3 include/ucp.php:270
+msgid "Moneyflow"
+msgstr "Історія платежів"
+
+#: ucp/themes/default/moneyflow.php:13
+msgid "Sum"
+msgstr "Сума"
+
+#: ucp/themes/default/moneyflow.php:14
+msgid "Date"
+msgstr "Дата"
+
+#: ucp/themes/default/moneyflow.php:15
+msgid "Details"
+msgstr "Деталі"
+
+#: ucp/themes/default/nocosts-notification.php:3
+#: ucp/themes/default/strings.php:3
+msgid ""
+"You do not have the funds to continue the use of the Internet in the next "
+"month."
+msgstr ""
+"У вас недостатньо коштів для продовження користування Інтернетом в "
+"наступному місяці."
+
+#: ucp/themes/default/nocosts-notification.php:4
+#: ucp/themes/default/nocosts-permanent.php:3 ucp/themes/default/strings.php:4
+msgid "Fund your account, please."
+msgstr "Поповніть, будь ласка, ваш рахунок."
+
+#: ucp/themes/default/nocosts-notification.php:12
+#: ucp/themes/default/nocosts-permanent.php:9
+msgid "Your account ID"
+msgstr "Номер вашого рахунку"
+
+#: ucp/themes/default/nocosts-notification.php:15
+#: ucp/themes/default/nocosts-permanent.php:12
+msgid "Minimal payment"
+msgstr "Мінімальний платіж"
+
+#: ucp/themes/default/nocosts-notification.php:22
+msgid "Continue to use the Internet"
+msgstr "Продовжити користування Інтернетом"
+
+#: ucp/themes/default/nocosts-notification.php:24
+msgid "Please log in into the UCP in order to hide this notification."
+msgstr ""
+"Будь ласка, увійдіть в особистий кабінет для того, щоб приховати це "
+"повідомлення."
+
+#: ucp/themes/default/nocosts-permanent.php:2
+msgid "You do not have the funds to continue the use of the Internet."
+msgstr "У вас недостатньо коштів для продовження користування Інтернетом."
+
+#: ucp/themes/default/paywithcard.php:10
+#, php-format
+msgid ""
+"After updating service \"%s\" from %s to %s will be automatically paid for "
+"%s."
+msgstr ""
+"Після поповнення вам автоматично буде підключено послугу<br> \"%s\" з %s по "
+"%s за %s."
+
+#: ucp/themes/default/paywithcard.php:19
+msgid "Enter the code completion:"
+msgstr "Введіть код поповнення:"
+
+#: ucp/themes/default/paywithcard.php:23
+msgid "Fund"
+msgstr "Внести кошти"
+
+#: ucp/themes/default/showmessage.php:8
+msgid "Reply"
+msgstr "Відповісти"
+
+#: ucp/themes/default/showmessage.php:11
+msgid "Mark as read"
+msgstr "Позначити як прочитане"
+
+#: ucp/themes/default/showmessage.php:18
+msgid "Back to list"
+msgstr "Назад до списку"
+
+#: ucp/themes/default/strings.php:2 .locale-src\ucp/strings.js:3
+#, python-format, php-format
+msgid "%s UAH"
+msgid_plural "%s UAH"
+msgstr[0] "%s гривня"
+msgstr[1] "%s гривні"
+msgstr[2] "%s гривень"
+
+#: ucp/themes/default/tariffs.php:2
+#, php-format
+msgid "Night rates are valid from %s to %s"
+msgstr "Нічні тарифи діють з %s по %s"
+
+#: ucp/themes/default/tariffs.php:5
+msgid "Available tariffs"
+msgstr "Доступні тарифи"
+
+#: ucp/themes/default/tariffs.php:13
+msgid "Name"
+msgstr "Назва"
+
+#: ucp/themes/default/tariffs.php:14
+msgid "Download speed"
+msgstr "Вхідна швидкість"
+
+#: ucp/themes/default/tariffs.php:15
+msgid "Upload speed"
+msgstr "Вихідна швидкість"
+
+#: ucp/themes/default/tariffs.php:17
+msgid "Night download speed"
+msgstr "Нічна вхідна швидкість"
+
+#: ucp/themes/default/tariffs.php:18
+msgid "Night upload speed"
+msgstr "Нічна вихідна швидкість"
+
+#: ucp/themes/default/tariffs.php:20
+msgid "Price"
+msgstr "Вартість"
+
+#: ucp/themes/default/wrongdevice.php:3
+msgid "Your device is unauthorized. Please call support."
+msgstr ""
+"Ваш пристрій не є авторизованим. Будь ласка, зверніться в техпідтримку. "
+
+#: include/ucp.php:21
+msgid "You do not have permission to use UCP"
+msgstr "У вас немає можливості використовувати особистий кабінет"
+
+#: include/ucp.php:261
+msgid "Home"
+msgstr "Головна"
+
+#: include/ucp.php:274
+msgid "Fund by card"
+msgstr "Поповнити карткою"
+
+#: include/ucp.php:280
+msgid "Tariffs"
+msgstr "Тарифи"
+
+#: include/ucp.php:284
+msgid "Documents"
+msgstr "Документи"
+
+#: include/ucp.php:290
+msgid "Messages"
+msgstr "Повідомлення"
+
+#: include/ucp.php:304
+msgid "Contacts"
+msgstr "Контакти"
+
+#: .locale-src\ucp/strings.js:1
+#, python-format
+msgid "%s RUB"
+msgid_plural "%s RUB"
+msgstr[0] "%s рубель"
+msgstr[1] "%s рублі"
+msgstr[2] "%s рублів"
+
+#: .locale-src\ucp/strings.js:2
+#, python-format
+msgid "%s USD"
+msgid_plural "%s USD"
+msgstr[0] "%s долар"
+msgstr[1] "%s долари"
+msgstr[2] "%s доларів"
+
+#: .locale-src\ucp/strings.js:4
+#, python-format
+msgid "%d Gbit/s"
+msgstr "%d Гбіт/с"
+
+#: .locale-src\ucp/strings.js:5
+#, python-format
+msgid "%d Mbit/s"
+msgstr "%d Мбіт/с"
+
+#: .locale-src\ucp/strings.js:6
+#, python-format
+msgid "%d kbit/s"
+msgstr "%d кбіт/с"
+
+#: .locale-src\ucp/strings.js:7
+#, python-format
+msgid "%d bit/s"
+msgstr "%d біт/с"
+
+#~ msgid "Hide notification"
+#~ msgstr "ПОзначити "
+
+#~ msgid "Continue"
+#~ msgstr "Продовжити"
+
+#~ msgid "Control panel"
+#~ msgstr "Панель керування"
+
+#~ msgid "Account state"
+#~ msgstr "Стан рахунку"
+
+#~ msgid "Account info"
+#~ msgstr "Інформація про рахунок"
+
+#~ msgid "State"
+#~ msgstr "Стан"
+
+#~ msgid "Login"
+#~ msgstr "Логін"
+
+#~ msgid "%.2f UAH"
+#~ msgid_plural "%.2f UAH"
+#~ msgstr[0] "%.2f гривня"
+#~ msgstr[1] "%.2f гривні"
+#~ msgstr[2] "%.2f гривень"
+
+#~ msgid "UAH"
+#~ msgid_plural "UAH"
+#~ msgstr[0] "гривня"
+#~ msgstr[1] "гривні"
+#~ msgstr[2] "гривень"
+
+#~ msgid "Are you sure you want to delete?"
+#~ msgstr "Ви справді хочете видалити?"
+
+#~ msgid "header_routertype"
+#~ msgstr "Тип роутера"
+
+#~ msgid "routertype"
+#~ msgstr "Тип роутера"
+
+#~ msgid "Allow block users"
+#~ msgstr "Дозволити блокування користувачів"
+
+#~ msgid "Payments"
+#~ msgstr "Платежі"
+
+#~ msgid "Users"
+#~ msgstr "Користувачі"
+
+#~ msgid "Add"
+#~ msgstr "Додати"
+
+#~ msgid "Edit"
+#~ msgstr "Редагувати"
+
+#~ msgid "Delete"
+#~ msgstr "Видалити"
+
+#~ msgid "Cities"
+#~ msgstr "Міста"
+
+#~ msgid "Streets"
+#~ msgstr "Вулиці"
+
+#~ msgid "Routers"
+#~ msgstr "Маршрутизатори"
+
+#~ msgid "Select city"
+#~ msgstr "Виберіть місто"
+
+#~ msgid "Select street"
+#~ msgstr "Виберіть вулицю"
+
+#~ msgid "Select city at first"
+#~ msgstr "Спочатку виберіть місто"
+
+#~ msgid "Administrators"
+#~ msgstr "Адміністратори"
+
+#~ msgid "Tools"
+#~ msgstr "Інструменти"
+
+#~ msgid "id"
+#~ msgstr "ID"
+
+#~ msgid "city"
+#~ msgstr "Місто"
+
+#~ msgid "street"
+#~ msgstr "Вулиця"
+
+#~ msgid "phone"
+#~ msgstr "Телефон"
+
+#~ msgid "router"
+#~ msgstr "Маршрутизатори"
+
+#~ msgid "cash"
+#~ msgstr "Сума"
+
+#~ msgid "iplist"
+#~ msgstr "IP адреси"
+
+#~ msgid "name"
+#~ msgstr "Назва"
+
+#~ msgid "type"
+#~ msgstr "Тип"
+
+#~ msgid "login"
+#~ msgstr "Логін"
+
+#~ msgid "regdate"
+#~ msgstr "Дата додавання"
+
+#~ msgid "pass"
+#~ msgstr "Пароль"
+
+#~ msgid "ip"
+#~ msgstr "IP адреса"
+
+#~ msgid "port"
+#~ msgstr "Порт"
+
+#~ msgid "password"
+#~ msgstr "Пароль"
+
+#~ msgid "theme"
+#~ msgstr "Тема"
+
+#~ msgid "config"
+#~ msgstr "Конфігурація"
+
+#~ msgid "No options"
+#~ msgstr "Нема варіантів"
+
+#~ msgid "Select option"
+#~ msgstr "Виберіть варіант"
+
+#~ msgid "credit"
+#~ msgstr "Кредит"
+
+#~ msgid "house"
+#~ msgstr "Будинок"
+
+#~ msgid "flat"
+#~ msgstr "Квартира"
+
+#~ msgid "pname"
+#~ msgstr "По-батькові"
+
+#~ msgid "fname"
+#~ msgstr "Ім’я"
+
+#~ msgid "header_id"
+#~ msgstr "ID"
+
+#~ msgid "header_sname"
+#~ msgstr "Ім’я"
+
+#~ msgid "header_city"
+#~ msgstr "Місто"
+
+#~ msgid "header_discount"
+#~ msgstr "Знижка"
+
+#~ msgid "header_street"
+#~ msgstr "Адреса"
+
+#~ msgid "header_regdate"
+#~ msgstr "Дата додавання"
+
+#~ msgid "header_phone"
+#~ msgstr "Телефон"
+
+#~ msgid "header_router"
+#~ msgstr "Маршрутизатор"
+
+#~ msgid "header_cash"
+#~ msgstr "Баланс"
+
+#~ msgid "header_iplist"
+#~ msgstr "IP адреси"
+
+#~ msgid "header_comment"
+#~ msgstr "Коментар"
+
+#~ msgid "header_name"
+#~ msgstr "Назва"
+
+#~ msgid "header_type"
+#~ msgstr "Тип"
+
+#~ msgid "header_login"
+#~ msgstr "Логін"
+
+#~ msgid "header_pass"
+#~ msgstr "Пароль"
+
+#~ msgid "header_ip"
+#~ msgstr "IP адреса"
+
+#~ msgid "header_port"
+#~ msgstr "Порт"
+
+#~ msgid "header_password"
+#~ msgstr "Пароль"
+
+#~ msgid "header_theme"
+#~ msgstr "Тема"
+
+#~ msgid "header_config"
+#~ msgstr "Налаштування"
+
+#~ msgid "header_price"
+#~ msgstr "Вартість"
+
+#~ msgid "header_upspeed"
+#~ msgstr "Вихідна швидкість"
+
+#~ msgid "header_downspeed"
+#~ msgstr "Вхідна швидкість"
+
+#~ msgid "Save"
+#~ msgstr "Зберегти"
+
+#~ msgid "Cancel"
+#~ msgstr "Скасувати"
+
+#~ msgid "Logout"
+#~ msgstr "Вихід"
+
+#~ msgid "Enter IP address"
+#~ msgstr "Введіть IP-адрес"
+
+#~ msgid "Enter MAC address"
+#~ msgstr "Введіть MAC-адрес"
+
+#~ msgid "Enter"
+#~ msgstr "Вхід"
+
+#~ msgid "Authorize"
+#~ msgstr "Увійти"
+
+#~ msgid "Error"
+#~ msgstr "Помилка"
+
+#~ msgid "Wrong username or password"
+#~ msgstr "Неправильний логін чи пароль"
+
+#~ msgid "userstats-daily"
+#~ msgstr "Статистика за день"
+
+#~ msgid "userstats-weekly"
+#~ msgstr "Статистика за тиждень"
+
+#~ msgid "userstats-monthly"
+#~ msgstr "Статистика за місяць"
+
+#~ msgid "userstats-yearly"
+#~ msgstr "Статистика за рік"
+
+#~ msgid "User statistics"
+#~ msgstr "Статистика користувача"
+
+#~ msgid "User dont have the router"
+#~ msgstr "Для користувача не вибраний маршрутизатор"
+
+#~ msgid "Type to change password"
+#~ msgstr "Введіть новий пароль"
+
+#~ msgid "Loading..."
+#~ msgstr "Завантаження…"
+
+#~ msgid "Server unavailable..."
+#~ msgstr "Сервер недоступний"
+
+#~ msgid "OFF"
+#~ msgstr "OFF"
+
+#~ msgid "ON"
+#~ msgstr "ON"
+
+#~ msgid "off"
+#~ msgstr "OFF"
+
+#~ msgid "on"
+#~ msgstr "ON"
+
+#~ msgid "Incorrect value"
+#~ msgstr "Неправильне значення"
+
+#~ msgid "Deleting"
+#~ msgstr "Видалення"
+
+#~ msgid "header_realid"
+#~ msgstr "ID"
+
+#~ msgid "header_contractid"
+#~ msgstr "ID угоди"
+
+#~ msgid "contractid"
+#~ msgstr "ID угоди"
+
+#~ msgid "Nothing was found..."
+#~ msgstr "Нічого не знайдено…"
+
+#~ msgid "Router statistics"
+#~ msgstr "Статистика маршрутизатора"
+
+#~ msgid "routerstats-daily"
+#~ msgstr "Статистика за день"
+
+#~ msgid "routerstats-weekly"
+#~ msgstr "Статистика за тиждень"
+
+#~ msgid "routerstats-monthly"
+#~ msgstr "Статистика за місяць"
+
+#~ msgid "routerstats-yearly"
+#~ msgstr "Статистика за рік"
+
+#~ msgid "CPU Stats"
+#~ msgstr "Статистика процесора"
+
+#~ msgid "Router CPU statistics"
+#~ msgstr "Статистика загрузки процесора"
+
+#~ msgid "Interface Stats"
+#~ msgstr "Статистика інтерфейсу"
+
+#~ msgid "Router interface statistics"
+#~ msgstr "Статистика інтерфейсу"
+
+#~ msgid "Outer interface not selected"
+#~ msgstr "Зовнішній інтерфейс не вибрано"
+
+#~ msgid "In traffic"
+#~ msgstr "Вхідний трафік"
+
+#~ msgid "Out traffic"
+#~ msgstr "Вихідний трафік"
+
+#~ msgid "Error:"
+#~ msgstr "Помилка"
+
+#~ msgid "header_editdate"
+#~ msgstr "Дата редагування"
+
+#~ msgid "editdate"
+#~ msgstr "Дата редагування"
+
+#~ msgid "header_paymentdate"
+#~ msgstr "Дата оплати"
+
+#~ msgid "paymentdate"
+#~ msgstr "Дата оплати"
+
+#~ msgid "Select routertype"
+#~ msgstr "Виберіть тип маршрутизатора"
+
+#~ msgid "Scratchcard"
+#~ msgstr "Картки поповнення"
+
+#~ msgid "header_code"
+#~ msgstr "Код"
+
+#~ msgid "header_userid"
+#~ msgstr "Користувач, який активував"
+
+#~ msgid "header_activated"
+#~ msgstr "Активовано"
+
+#~ msgid "header_activationdate"
+#~ msgstr "Дата активації"
+
+#~ msgid "Generate"
+#~ msgstr "Генерувати"
+
+#~ msgid "Number of codes"
+#~ msgstr "Кількість карток"
+
+#~ msgid "Values of codes"
+#~ msgstr "Номінал карток"
+
+#~ msgid "Export"
+#~ msgstr "Експорт"
+
+#~ msgid "Generate codes"
+#~ msgstr "Генерувати картки"
+
+#~ msgid "Please fill out all fields"
+#~ msgstr "Будь ласка, заповніть всі поля"
+
+#~ msgid "Codes"
+#~ msgstr "Коди"
+
+#~ msgid "Empty response"
+#~ msgstr "Неможливо згенерувати коди"
+
+#~ msgid "header_value"
+#~ msgstr "Вартість"
+
+#~ msgid "code"
+#~ msgstr "Код"
+
+#~ msgid "activated"
+#~ msgstr "Активовано"
+
+#~ msgid "value"
+#~ msgstr "Вартість"
+
+#~ msgid "activationdate"
+#~ msgstr "Дата активації"
+
+#~ msgid "userid"
+#~ msgstr "Користувач, який активував"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Copy to clipboard"
+#~ msgstr "Копіювати в буфер"
+
+#~ msgid "Select all"
+#~ msgstr "Виділити все"
+
+#~ msgid "Close"
+#~ msgstr "Закрити"
+
+#~ msgid "Get cash"
+#~ msgstr "Зняти гроші"
+
+#~ msgid "Loading"
+#~ msgstr "Завантаження…"
+
+#~ msgid "Please wait…"
+#~ msgstr "Будь ласка, зачекайте…"
+
+#~ msgid "Show notifications"
+#~ msgstr "Показати сповіщення"
+
+#~ msgid "Notifications are displaying"
+#~ msgstr "Сповіщення відображаються"
+
+#~ msgid "header_user"
+#~ msgstr "Користувач"
+
+#~ msgid "user"
+#~ msgstr "Користувач"
+
+#~ msgid "Export to file"
+#~ msgstr "Експортувати у файл"
+
+#, fuzzy
+#~ msgid "Notifications aren`t displaying"
+#~ msgstr "Сповіщення відображаються"
+
+#, fuzzy
+#~ msgid "Payment log"
+#~ msgstr "Платежі"
+
+#~ msgid "Select parent list"
+#~ msgstr "Виберіть батьківську опцію"
+
+#~ msgid "Path must be specified"
+#~ msgstr "Path must be specified"
+
+#~ msgid "No opts in this "
+#~ msgstr "No opts in this "
+
+#, fuzzy
+#~ msgid "header_"
+#~ msgstr "ID"

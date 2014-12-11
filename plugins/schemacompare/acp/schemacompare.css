@@ -1,0 +1,97 @@
+#v-tabpanel-content>div.schemacompare-tab
+{
+ -webkit-box-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  flex-direction: column;
+  display: flex; 
+  padding: 0;
+}
+#v-tabpanel-content>div.schemacompare-tab>div.query
+{
+  max-height: 400px;
+  display: block;
+  overflow: auto;
+  padding: 20px;
+
+}
+#v-tabpanel-content>div.schemacompare-tab>div.result
+{
+  padding: 20px 0;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-box-flex: 1;
+  flex: 1;
+  display: block;
+  overflow: auto;
+  width: 100%;
+  text-align: center;
+}
+.schemacompare-tab>div.header-wrap
+{
+  display: block;
+  width: 410px;
+  margin: 10px auto;
+}
+
+.schemacompare-tab #schema-update-button
+{
+  position: absolute;
+  margin-left: 24px;
+}
+
+.result .table-name
+{
+  font-size: 300%;
+  text-align: center;
+  width: 100%;
+}
+
+
+.dump-table-name,
+.current-table-name
+{
+  text-align: center;
+}
+.dump-table-name,
+.current-table-name,
+.dump-table-content,
+.current-table-content
+{
+  width: 200px;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.dump-table-content
+{
+  margin-left: 10px;
+}
+
+.column-title
+{
+  margin-top: 4px;
+  padding: 4px 0;
+  padding-left: 4px;
+  color: white;
+}
+.result .property
+{
+  padding-left: 4px;
+}
+.property.equal
+{
+  background-color: #97D397;
+}
+.column-title.equal
+{
+  background-color: green;
+}
+
+.property.not-equal,
+.column-title.not-equal
+{
+  background-color: red;
+  color: white;
+}
+

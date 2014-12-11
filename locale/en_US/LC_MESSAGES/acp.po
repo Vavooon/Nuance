@@ -1,0 +1,2651 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nuance Billing System\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-01-03 18:50+0200\n"
+"PO-Revision-Date: 2014-01-03 18:51+0200\n"
+"Last-Translator: Vavooon <vavooon@gmail.com>\n"
+"Language-Team: Nuance <vavooon@gmail.com>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;__;_ngettext;gettext;gettext_noop;ngettext\n"
+"X-Poedit-Basepath: ..\\..\\..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.6.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: .locale-src\\acp\n"
+"X-Poedit-SearchPath-1: acp\\themes\\default\n"
+
+#: acp\themes\default/deprecatedbrowser.php:15
+#, fuzzy, php-format
+msgid "Your browser %s is deprecated."
+msgstr "Version %s"
+
+#: acp\themes\default/index.php:4
+#, fuzzy, php-format
+msgid "%s - Nuance - Admin panel"
+msgstr "Version %s"
+
+#: acp\themes\default/unsupportedbrowser.php:15
+#, fuzzy, php-format
+msgid "Your browser %s is not supported."
+msgstr "Version %s"
+
+#: .locale-src\acp/strings-manual.js:2
+#, python-format
+msgid "(information are displayed for %d router)"
+msgid_plural "(information are displayed for %d routers)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:3
+msgid "%1 entry displayed on %2"
+msgid_plural "%1 entries displayed on %2"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:4
+msgid "%1 entry"
+msgid_plural "%1 entries"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:6
+#, fuzzy
+msgid "Temporary order "
+msgstr "Orders"
+
+#: .locale-src\acp/strings-manual.js:7
+#, fuzzy
+msgid "ipn"
+msgstr "IP address"
+
+#: .locale-src\acp/strings-manual.js:8
+#, fuzzy
+msgid "header_ipn"
+msgstr "Router type"
+
+#: .locale-src\acp/strings-manual.js:9
+msgid "email"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:10
+#, fuzzy
+msgid "header_email"
+msgstr "Router type"
+
+#: .locale-src\acp/strings-manual.js:14 .locale-src\acp/strings.js:279
+msgid "January"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:14
+msgid "january"
+msgid_plural "january"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:15 .locale-src\acp/strings.js:280
+msgid "February"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:15
+msgid "february"
+msgid_plural "february"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:16 .locale-src\acp/strings.js:281
+msgid "March"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:16
+msgid "march"
+msgid_plural "march"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:17 .locale-src\acp/strings.js:282
+msgid "April"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:17
+msgid "april"
+msgid_plural "april"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:18 .locale-src\acp/strings.js:283
+msgid "May"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:18
+msgid "may"
+msgid_plural "may"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:19 .locale-src\acp/strings.js:284
+msgid "June"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:19
+msgid "june"
+msgid_plural "june"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:20 .locale-src\acp/strings.js:285
+msgid "July"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:20
+msgid "july"
+msgid_plural "july"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:21 .locale-src\acp/strings.js:286
+msgid "August"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:21
+msgid "august"
+msgid_plural "august"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:22 .locale-src\acp/strings.js:287
+msgid "September"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:22
+msgid "september"
+msgid_plural "september"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:23 .locale-src\acp/strings.js:288
+msgid "October"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:23
+msgid "october"
+msgid_plural "october"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:24 .locale-src\acp/strings.js:289
+msgid "November"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:24
+msgid "november"
+msgid_plural "november"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings-manual.js:25 .locale-src\acp/strings.js:290
+msgid "December"
+msgstr ""
+
+#: .locale-src\acp/strings-manual.js:25
+msgid "december"
+msgid_plural "december"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .locale-src\acp/strings.js:1
+#, fuzzy, python-format
+msgid "%d Gbit/s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:2
+#, fuzzy, python-format
+msgid "%d Mbit/s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:3
+#, fuzzy, python-format
+msgid "%d kbit/s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:4
+#, fuzzy, python-format
+msgid "%d bit/s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:5
+#, fuzzy
+msgid "Are you sure you want to delete?"
+msgstr "Are you sure you want to delete administrator %s?"
+
+#: .locale-src\acp/strings.js:6
+msgid "header_routertype"
+msgstr "Router type"
+
+#: .locale-src\acp/strings.js:7
+msgid "header_group"
+msgstr "Group"
+
+#: .locale-src\acp/strings.js:8
+msgid "system-grid-countryCode"
+msgstr "Phone country code"
+
+#: .locale-src\acp/strings.js:9
+msgid "system-ucp-showTariffs"
+msgstr "Show tarifs"
+
+#: .locale-src\acp/strings.js:10
+msgid "Preferences"
+msgstr ""
+
+#: .locale-src\acp/strings.js:11
+#, fuzzy
+msgid "Display login"
+msgstr "Login"
+
+#: .locale-src\acp/strings.js:12
+#, fuzzy
+msgid "Read-only"
+msgstr "Read"
+
+#: .locale-src\acp/strings.js:13
+#, fuzzy
+msgid "You do not have permissions to view this table..."
+msgstr "Tables"
+
+#: .locale-src\acp/strings.js:14
+msgid "read"
+msgstr "Read"
+
+#: .locale-src\acp/strings.js:15
+msgid "create"
+msgstr "Create"
+
+#: .locale-src\acp/strings.js:16
+msgid "edit"
+msgstr "E"
+
+#: .locale-src\acp/strings.js:17
+msgid "delete"
+msgstr "D"
+
+#: .locale-src\acp/strings.js:18
+msgid "Installer"
+msgstr ""
+
+#: .locale-src\acp/strings.js:19
+msgid "Operator"
+msgstr ""
+
+#: .locale-src\acp/strings.js:20
+msgid "Administrator"
+msgstr "Administrator"
+
+#: .locale-src\acp/strings.js:21
+msgid "public"
+msgstr "Public"
+
+#: .locale-src\acp/strings.js:22
+msgid "Select outInterface"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:23
+#, fuzzy
+msgid "Refund all"
+msgstr "Refund"
+
+#: .locale-src\acp/strings.js:24
+#, fuzzy, python-format
+msgid "Refund operation %s"
+msgstr "Refund"
+
+#: .locale-src\acp/strings.js:25
+#, fuzzy
+msgid "Refund remains"
+msgstr "Refund"
+
+#: .locale-src\acp/strings.js:26
+#, fuzzy
+msgid "Don`t refund"
+msgstr "Refund"
+
+#: .locale-src\acp/strings.js:27
+#, fuzzy
+msgid "Refund"
+msgstr "Refund"
+
+#: .locale-src\acp/strings.js:28
+#, fuzzy
+msgid "Local IP"
+msgstr "IP address"
+
+#: .locale-src\acp/strings.js:29
+#, fuzzy
+msgid "Remote IP"
+msgstr "IP address"
+
+#: .locale-src\acp/strings.js:30
+msgid "Not selected"
+msgstr "Not selected"
+
+#: .locale-src\acp/strings.js:31
+msgid "Select referrer"
+msgstr "Select referrer"
+
+#: .locale-src\acp/strings.js:32
+msgid "refundtype"
+msgstr "Refund type"
+
+#: .locale-src\acp/strings.js:33
+msgid "Select refundtype"
+msgstr "Select refundtype"
+
+#: .locale-src\acp/strings.js:34
+msgid "This item is already refunded"
+msgstr ""
+
+#: .locale-src\acp/strings.js:35
+#, fuzzy
+msgid "You can refund only orders"
+msgstr "Refund"
+
+#: .locale-src\acp/strings.js:36
+#, fuzzy, python-format
+msgid "Referral charge from %s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:37
+msgid "routertype"
+msgstr "Type of router"
+
+#: .locale-src\acp/strings.js:38
+msgid "Allow block users"
+msgstr "Allow block users"
+
+#: .locale-src\acp/strings.js:39
+msgid "Make payment"
+msgstr "Make payment"
+
+#: .locale-src\acp/strings.js:40
+msgid "Payments done"
+msgstr "Payments done"
+
+#: .locale-src\acp/strings.js:41
+msgid "Payments"
+msgstr "Payments"
+
+#: .locale-src\acp/strings.js:42
+msgid "Users"
+msgstr "Users"
+
+#: .locale-src\acp/strings.js:43
+msgid "Add"
+msgstr "Add"
+
+#: .locale-src\acp/strings.js:44
+msgid "About"
+msgstr ""
+
+#: .locale-src\acp/strings.js:45
+msgid "Edit"
+msgstr "Edit"
+
+#: .locale-src\acp/strings.js:46
+msgid "Delete"
+msgstr "Delete"
+
+#: .locale-src\acp/strings.js:47
+msgid "Cities"
+msgstr "Cities"
+
+#: .locale-src\acp/strings.js:48
+msgid "Streets"
+msgstr "Streets"
+
+#: .locale-src\acp/strings.js:49
+msgid "Routers"
+msgstr "Routers"
+
+#: .locale-src\acp/strings.js:50
+msgid "Select city"
+msgstr "Select city"
+
+#: .locale-src\acp/strings.js:51
+msgid "Select street"
+msgstr "Select street"
+
+#: .locale-src\acp/strings.js:52
+msgid "Select router"
+msgstr "Select router"
+
+#: .locale-src\acp/strings.js:53
+msgid "Select tariff"
+msgstr "Select tariff"
+
+#: .locale-src\acp/strings.js:54
+msgid "Select city at first"
+msgstr "At first select city"
+
+#: .locale-src\acp/strings.js:55
+msgid "Administrators"
+msgstr "Administrators"
+
+#: .locale-src\acp/strings.js:56
+msgid "Tariffs"
+msgstr "Tariffs"
+
+#: .locale-src\acp/strings.js:57
+msgid "Tools"
+msgstr "Settings"
+
+#: .locale-src\acp/strings.js:58
+msgid "id"
+msgstr "ID"
+
+#: .locale-src\acp/strings.js:59
+msgid "sname"
+msgstr "Second name"
+
+#: .locale-src\acp/strings.js:60
+msgid "city"
+msgstr "City"
+
+#: .locale-src\acp/strings.js:61
+msgid "street"
+msgstr "Street"
+
+#: .locale-src\acp/strings.js:62
+msgid "phone"
+msgstr "Phone"
+
+#: .locale-src\acp/strings.js:63
+msgid "tariff"
+msgstr "Tariff"
+
+#: .locale-src\acp/strings.js:64
+msgid "router"
+msgstr "Router"
+
+#: .locale-src\acp/strings.js:65
+msgid "cash"
+msgstr "Cash balances"
+
+#: .locale-src\acp/strings.js:66
+msgid "iplist"
+msgstr "IP addresses"
+
+#: .locale-src\acp/strings.js:67
+msgid "comment"
+msgstr "Comment"
+
+#: .locale-src\acp/strings.js:68
+msgid "name"
+msgstr "Name"
+
+#: .locale-src\acp/strings.js:69
+msgid "type"
+msgstr "Type"
+
+#: .locale-src\acp/strings.js:70
+msgid "login"
+msgstr "Login"
+
+#: .locale-src\acp/strings.js:71
+msgid "discount"
+msgstr "Discount"
+
+#: .locale-src\acp/strings.js:72
+msgid "regdate"
+msgstr "Registration date"
+
+#: .locale-src\acp/strings.js:73
+msgid "pass"
+msgstr "Password"
+
+#: .locale-src\acp/strings.js:74
+msgid "ip"
+msgstr "IP address"
+
+#: .locale-src\acp/strings.js:75
+msgid "port"
+msgstr "Port"
+
+#: .locale-src\acp/strings.js:76
+msgid "password"
+msgstr "Password"
+
+#: .locale-src\acp/strings.js:77
+msgid "theme"
+msgstr "Theme"
+
+#: .locale-src\acp/strings.js:78
+msgid "config"
+msgstr "Configuration"
+
+#: .locale-src\acp/strings.js:79
+msgid "price"
+msgstr "Price"
+
+#: .locale-src\acp/strings.js:80
+msgid "upspeed"
+msgstr "Upload speed"
+
+#: .locale-src\acp/strings.js:81
+msgid "downspeed"
+msgstr "Download speed"
+
+#: .locale-src\acp/strings.js:82
+msgid "No options"
+msgstr "No options"
+
+#: .locale-src\acp/strings.js:83
+msgid "Select option"
+msgstr "Select option"
+
+#: .locale-src\acp/strings.js:84
+msgid "disabled"
+msgstr "Disabled"
+
+#: .locale-src\acp/strings.js:85
+msgid "credit"
+msgstr "Credit"
+
+#: .locale-src\acp/strings.js:86
+msgid "house"
+msgstr "House"
+
+#: .locale-src\acp/strings.js:87
+msgid "flat"
+msgstr "Flat"
+
+#: .locale-src\acp/strings.js:88
+msgid "pname"
+msgstr "Middle name"
+
+#: .locale-src\acp/strings.js:89
+msgid "fname"
+msgstr "First name"
+
+#: .locale-src\acp/strings.js:90
+msgid "header_id"
+msgstr "ID"
+
+#: .locale-src\acp/strings.js:91
+msgid "header_sname"
+msgstr "First name"
+
+#: .locale-src\acp/strings.js:92
+msgid "header_city"
+msgstr "City"
+
+#: .locale-src\acp/strings.js:93
+msgid "header_discount"
+msgstr "Discount"
+
+#: .locale-src\acp/strings.js:94
+msgid "header_refundtype"
+msgstr "Refund type"
+
+#: .locale-src\acp/strings.js:95
+msgid "header_street"
+msgstr "Address"
+
+#: .locale-src\acp/strings.js:96
+msgid "header_regdate"
+msgstr "Registration date"
+
+#: .locale-src\acp/strings.js:97
+msgid "header_phone"
+msgstr "Phone number"
+
+#: .locale-src\acp/strings.js:98
+msgid "header_tariff"
+msgstr "Tariff"
+
+#: .locale-src\acp/strings.js:99
+msgid "header_router"
+msgstr "Router"
+
+#: .locale-src\acp/strings.js:100
+msgid "header_cash"
+msgstr "Cash balances"
+
+#: .locale-src\acp/strings.js:101
+msgid "header_description"
+msgstr "Description"
+
+#: .locale-src\acp/strings.js:102
+msgid "header_iplist"
+msgstr "IP adresses"
+
+#: .locale-src\acp/strings.js:103
+msgid "header_comment"
+msgstr "Comment"
+
+#: .locale-src\acp/strings.js:104
+msgid "header_name"
+msgstr "Name"
+
+#: .locale-src\acp/strings.js:105
+msgid "header_type"
+msgstr "Type"
+
+#: .locale-src\acp/strings.js:106
+msgid "header_login"
+msgstr "Login"
+
+#: .locale-src\acp/strings.js:107
+msgid "header_pass"
+msgstr "Password"
+
+#: .locale-src\acp/strings.js:108
+msgid "header_ip"
+msgstr "IP adress"
+
+#: .locale-src\acp/strings.js:109
+msgid "header_port"
+msgstr "Port"
+
+#: .locale-src\acp/strings.js:110
+msgid "header_password"
+msgstr "Password"
+
+#: .locale-src\acp/strings.js:111
+msgid "header_theme"
+msgstr "Theme"
+
+#: .locale-src\acp/strings.js:112
+msgid "header_config"
+msgstr "Settings"
+
+#: .locale-src\acp/strings.js:113
+msgid "header_price"
+msgstr "Price"
+
+#: .locale-src\acp/strings.js:114
+msgid "header_upspeed"
+msgstr "Upload speed"
+
+#: .locale-src\acp/strings.js:115
+msgid "header_downspeed"
+msgstr "Download speed"
+
+#: .locale-src\acp/strings.js:116
+msgid "header_public"
+msgstr "Public"
+
+#: .locale-src\acp/strings.js:117
+msgid "header_referrer"
+msgstr "Referrer"
+
+#: .locale-src\acp/strings.js:118
+msgid "referrer"
+msgstr "Referrer"
+
+#: .locale-src\acp/strings.js:119
+msgid "Save"
+msgstr "Save"
+
+#: .locale-src\acp/strings.js:120
+msgid "Cancel"
+msgstr "Cancel"
+
+#: .locale-src\acp/strings.js:121
+msgid "Login"
+msgstr "Login"
+
+#: .locale-src\acp/strings.js:122
+msgid "Logout"
+msgstr "Logout"
+
+#: .locale-src\acp/strings.js:123
+msgid "Enter IP address"
+msgstr "Enter IP address"
+
+#: .locale-src\acp/strings.js:124
+msgid "Enter MAC address"
+msgstr "Enter MAC address"
+
+#: .locale-src\acp/strings.js:125
+msgid "Enter"
+msgstr "Enter"
+
+#: .locale-src\acp/strings.js:126
+msgid "Authorize"
+msgstr "Sign in"
+
+#: .locale-src\acp/strings.js:127
+msgid "Error"
+msgstr "Error"
+
+#: .locale-src\acp/strings.js:128
+msgid "Wrong username or password"
+msgstr "Wrong login or password"
+
+#: .locale-src\acp/strings.js:129
+msgid "Password"
+msgstr "Password"
+
+#: .locale-src\acp/strings.js:130
+msgid "userstats-daily"
+msgstr "Statistics for the day"
+
+#: .locale-src\acp/strings.js:131
+msgid "userstats-weekly"
+msgstr "Statistics for the week"
+
+#: .locale-src\acp/strings.js:132
+msgid "userstats-monthly"
+msgstr "Statistics for the month"
+
+#: .locale-src\acp/strings.js:133
+msgid "userstats-yearly"
+msgstr "Statistics for the year"
+
+#: .locale-src\acp/strings.js:134
+msgid "User statistics"
+msgstr "User statistics"
+
+#: .locale-src\acp/strings.js:135
+msgid "Stats"
+msgstr "Statistics"
+
+#: .locale-src\acp/strings.js:136
+msgid "User dont have the router"
+msgstr "User didn't choose the router"
+
+#: .locale-src\acp/strings.js:137
+msgid "Type to change password"
+msgstr "Please, enter new password"
+
+#: .locale-src\acp/strings.js:138
+msgid "Loading..."
+msgstr "Loading..."
+
+#: .locale-src\acp/strings.js:139
+msgid "Server unavailable..."
+msgstr "Server is unavailable"
+
+#: .locale-src\acp/strings.js:140
+msgid "OFF"
+msgstr "OFF"
+
+#: .locale-src\acp/strings.js:141
+msgid "Fund"
+msgstr "Make payment"
+
+#: .locale-src\acp/strings.js:142
+msgid "ON"
+msgstr "ON"
+
+#: .locale-src\acp/strings.js:143
+msgid "off"
+msgstr "OFF"
+
+#: .locale-src\acp/strings.js:144
+msgid "on"
+msgstr "ON"
+
+#: .locale-src\acp/strings.js:145
+msgid "Incorrect value"
+msgstr "Incorrect value"
+
+#: .locale-src\acp/strings.js:146
+msgid "Deleting"
+msgstr "Deleting"
+
+#: .locale-src\acp/strings.js:147
+msgid "header_realid"
+msgstr "ID"
+
+#: .locale-src\acp/strings.js:148
+msgid "header_contractid"
+msgstr "Contract ID"
+
+#: .locale-src\acp/strings.js:149
+msgid "contractid"
+msgstr "Contract ID"
+
+#: .locale-src\acp/strings.js:150
+msgid "Nothing was found..."
+msgstr "Nothing found"
+
+#: .locale-src\acp/strings.js:151
+msgid "Router statistics"
+msgstr "Router statistics"
+
+#: .locale-src\acp/strings.js:152
+msgid "routerstats-daily"
+msgstr "Statistics for the day"
+
+#: .locale-src\acp/strings.js:153
+msgid "routerstats-weekly"
+msgstr "Statistics for the week"
+
+#: .locale-src\acp/strings.js:154
+msgid "routerstats-monthly"
+msgstr "Statistics for the month"
+
+#: .locale-src\acp/strings.js:155
+msgid "routerstats-yearly"
+msgstr "Statistics for the year"
+
+#: .locale-src\acp/strings.js:156
+msgid "CPU Stats"
+msgstr "CPU statistics"
+
+#: .locale-src\acp/strings.js:157
+msgid "Router CPU statistics"
+msgstr "Loading processor statistics"
+
+#: .locale-src\acp/strings.js:158
+msgid "Interface Stats"
+msgstr "Interface Statistics"
+
+#: .locale-src\acp/strings.js:159
+msgid "Router interface statistics"
+msgstr "Router interface statistics"
+
+#: .locale-src\acp/strings.js:160
+msgid "Outer interface not selected"
+msgstr "The external interface is not selected"
+
+#: .locale-src\acp/strings.js:161
+msgid "In traffic"
+msgstr "Input traffic"
+
+#: .locale-src\acp/strings.js:162
+msgid "Out traffic"
+msgstr "Output traffic"
+
+#: .locale-src\acp/strings.js:163
+msgid "Error:"
+msgstr "Error:"
+
+#: .locale-src\acp/strings.js:164
+msgid "header_editdate"
+msgstr "Date of edit"
+
+#: .locale-src\acp/strings.js:165
+msgid "editdate"
+msgstr "Date of edit"
+
+#: .locale-src\acp/strings.js:166
+msgid "header_paymentdate"
+msgstr "Date of pay"
+
+#: .locale-src\acp/strings.js:167
+msgid "paymentdate"
+msgstr "Date of pay"
+
+#: .locale-src\acp/strings.js:168
+msgid "Select routertype"
+msgstr "Select router type"
+
+#: .locale-src\acp/strings.js:169
+msgid "Scratchcard"
+msgstr "Voucher"
+
+#: .locale-src\acp/strings.js:170
+msgid "header_code"
+msgstr "Code"
+
+#: .locale-src\acp/strings.js:171
+msgid "header_userid"
+msgstr "The user who activated"
+
+#: .locale-src\acp/strings.js:172
+msgid "header_activated"
+msgstr "Activated"
+
+#: .locale-src\acp/strings.js:173
+msgid "header_activationdate"
+msgstr "Activation date"
+
+#: .locale-src\acp/strings.js:174
+msgid "Generate"
+msgstr "Generate"
+
+#: .locale-src\acp/strings.js:175
+msgid "Number of codes"
+msgstr "Number of codes"
+
+#: .locale-src\acp/strings.js:176
+msgid "Values of codes"
+msgstr "Values of codes"
+
+#: .locale-src\acp/strings.js:177
+msgid "Export"
+msgstr "Export"
+
+#: .locale-src\acp/strings.js:178
+msgid "Generate codes"
+msgstr "Generate codes"
+
+#: .locale-src\acp/strings.js:179
+msgid "Please fill out all fields"
+msgstr "Please fill out all fields"
+
+#: .locale-src\acp/strings.js:180
+msgid "Codes"
+msgstr "Codes"
+
+#: .locale-src\acp/strings.js:181
+msgid "Empty response"
+msgstr "Can't generate codes"
+
+#: .locale-src\acp/strings.js:182
+msgid "header_value"
+msgstr "Price"
+
+#: .locale-src\acp/strings.js:183
+msgid "code"
+msgstr "Code"
+
+#: .locale-src\acp/strings.js:184
+msgid "activated"
+msgstr "Activated"
+
+#: .locale-src\acp/strings.js:185
+msgid "value"
+msgstr "Value"
+
+#: .locale-src\acp/strings.js:186
+msgid "activationdate"
+msgstr "Activation date"
+
+#: .locale-src\acp/strings.js:187
+msgid "userid"
+msgstr "The user who activated"
+
+#: .locale-src\acp/strings.js:188
+msgid "Ok"
+msgstr "Ok"
+
+#: .locale-src\acp/strings.js:189
+msgid "Copy to clipboard"
+msgstr "Copy to clipboard"
+
+#: .locale-src\acp/strings.js:190
+msgid "Select all"
+msgstr "Select all"
+
+#: .locale-src\acp/strings.js:191
+msgid "Close"
+msgstr "Close"
+
+#: .locale-src\acp/strings.js:192
+msgid "Get cash"
+msgstr "Get cash"
+
+#: .locale-src\acp/strings.js:193
+msgid "Enter password"
+msgstr "Enter password"
+
+#: .locale-src\acp/strings.js:194
+msgid "Not implemented"
+msgstr "Not implemented"
+
+#: .locale-src\acp/strings.js:195
+msgid "Generated scratchcards"
+msgstr "Generated vouchers"
+
+#: .locale-src\acp/strings.js:196
+msgid "Loading"
+msgstr "Loading…"
+
+#: .locale-src\acp/strings.js:197
+msgid "Please wait…"
+msgstr "Please wait…"
+
+#: .locale-src\acp/strings.js:198
+msgid "Show notifications"
+msgstr "Show notifications"
+
+#: .locale-src\acp/strings.js:199
+msgid "Notifications are displaying"
+msgstr "Notifications are displaying"
+
+#: .locale-src\acp/strings.js:200
+msgid "Clear notifications"
+msgstr "Hide notifications"
+
+#: .locale-src\acp/strings.js:201
+msgid "header_user"
+msgstr "User"
+
+#: .locale-src\acp/strings.js:202
+msgid "user"
+msgstr "User"
+
+#: .locale-src\acp/strings.js:203
+msgid "Select user"
+msgstr "Select user"
+
+#: .locale-src\acp/strings.js:204
+msgid "Export to file"
+msgstr "Export to file"
+
+#: .locale-src\acp/strings.js:205
+msgid "Notifications aren`t displaying"
+msgstr "Notifications willn`t display"
+
+#: .locale-src\acp/strings.js:206
+msgid "Payment log"
+msgstr "Payments"
+
+#: .locale-src\acp/strings.js:207
+msgid "No items to display..."
+msgstr ""
+
+#: .locale-src\acp/strings.js:208
+#, fuzzy
+msgid "Error: updatefail"
+msgstr "Error"
+
+#: .locale-src\acp/strings.js:209
+#, fuzzy
+msgid "Error updatefail"
+msgstr "Error"
+
+#: .locale-src\acp/strings.js:210
+msgid "Payments history"
+msgstr "Payments history"
+
+#: .locale-src\acp/strings.js:211
+msgid "header_startdate"
+msgstr "Start date"
+
+#: .locale-src\acp/strings.js:212
+msgid "header_enddate"
+msgstr "End date"
+
+#: .locale-src\acp/strings.js:213
+msgid "startdate"
+msgstr "Start date"
+
+#: .locale-src\acp/strings.js:214
+msgid "enddate"
+msgstr "End date"
+
+#: .locale-src\acp/strings.js:215
+msgid "header_adddate"
+msgstr "Add date"
+
+#: .locale-src\acp/strings.js:216
+#, fuzzy
+msgid "Table not fount..."
+msgstr "Tables"
+
+#: .locale-src\acp/strings.js:217
+msgid "header_date"
+msgstr "Date"
+
+#: .locale-src\acp/strings.js:218
+msgid "header_sum"
+msgstr "Sum"
+
+#: .locale-src\acp/strings.js:219
+msgid "date"
+msgstr "Date"
+
+#: .locale-src\acp/strings.js:220
+msgid "sum"
+msgstr "Sum"
+
+#: .locale-src\acp/strings.js:221
+msgid "Printf formatted"
+msgstr ""
+
+#: .locale-src\acp/strings.js:222
+msgid "Not formatted"
+msgstr ""
+
+#: .locale-src\acp/strings.js:223
+msgid "Display custom field"
+msgstr ""
+
+#: .locale-src\acp/strings.js:224
+msgid " from "
+msgstr ""
+
+#: .locale-src\acp/strings.js:225
+msgid " to "
+msgstr ""
+
+#: .locale-src\acp/strings.js:226
+#, fuzzy
+msgid "Unknown order"
+msgstr "Unknown"
+
+#: .locale-src\acp/strings.js:227 .locale-src\acp/strings.js:230
+#, fuzzy
+msgid "Order "
+msgstr "Orders"
+
+#: .locale-src\acp/strings.js:228
+msgid "Export users to file"
+msgstr "Export users to file"
+
+#: .locale-src\acp/strings.js:229
+msgid "Export scratchcards to file"
+msgstr "Export scratchcards to file"
+
+#: .locale-src\acp/strings.js:231
+msgid "Fund with scratchcard"
+msgstr "Fund with scratchcard"
+
+#: .locale-src\acp/strings.js:232
+msgid "Fund by "
+msgstr "Fund by "
+
+#: .locale-src\acp/strings.js:233
+msgid "Router is synced"
+msgstr "Routers are synced"
+
+#: .locale-src\acp/strings.js:234
+#, fuzzy
+msgid "Routers are synced"
+msgstr "Routers"
+
+#: .locale-src\acp/strings.js:235
+msgid "Sync all routers"
+msgstr "Sync all routers"
+
+#: .locale-src\acp/strings.js:236
+msgid "Sync router "
+msgstr "Sync router"
+
+#: .locale-src\acp/strings.js:237
+#, fuzzy
+msgid "Clear filter"
+msgstr "Hide notifications"
+
+#: .locale-src\acp/strings.js:238
+#, fuzzy
+msgid "MAC address not found"
+msgstr "Enter MAC address"
+
+#: .locale-src\acp/strings.js:239
+msgid "system-cash-referrerPercentage"
+msgstr "Referrer percentage"
+
+#: .locale-src\acp/strings.js:240
+msgid "system-grid-user-idrenderer"
+msgstr "User ID renderer type"
+
+#: .locale-src\acp/strings.js:241
+msgid "system-main-timezone"
+msgstr "Timezone"
+
+#: .locale-src\acp/strings.js:242
+msgid "system-grid-user-idrenderer-format"
+msgstr "User ID renderer format"
+
+#: .locale-src\acp/strings.js:243
+msgid "system-grid-scratchcard-idrenderer"
+msgstr "Scratchcard ID renderer type"
+
+#: .locale-src\acp/strings.js:244
+msgid "system-grid-scratchcard-idrenderer-format"
+msgstr "Scratchcard ID renderer format"
+
+#: .locale-src\acp/strings.js:245
+msgid "system-main-acpLocale"
+msgstr "ACP locale (need page reload)"
+
+#: .locale-src\acp/strings.js:246
+msgid "system-main-ucpLocale"
+msgstr "UCP locale"
+
+#: .locale-src\acp/strings.js:247
+msgid "system-main-currency"
+msgstr "Currency"
+
+#: .locale-src\acp/strings.js:248
+msgid "system-ucp-contactsPageText"
+msgstr "Contacts page text"
+
+#: .locale-src\acp/strings.js:249
+msgid "system-ucp-mainPageText"
+msgstr "Main page text"
+
+#: .locale-src\acp/strings.js:250
+msgid "system-cash-fractionalPart"
+msgstr "Cash fractional part"
+
+#: .locale-src\acp/strings.js:251
+msgid "system-cash-withdrawalDay"
+msgstr "Withdrawal day"
+
+#: .locale-src\acp/strings.js:252
+msgid "system-cash-notificationsOffset"
+msgstr "Notifications offset"
+
+#: .locale-src\acp/strings.js:253
+msgid "system-cash-showNotifications"
+msgstr "Show notifications"
+
+#: .locale-src\acp/strings.js:254
+#, fuzzy
+msgid "Router preferences"
+msgstr "Router"
+
+#: .locale-src\acp/strings.js:255
+msgid "router-main-inInterface"
+msgstr "Inner interface"
+
+#: .locale-src\acp/strings.js:256
+msgid "router-main-outInterface"
+msgstr "Outter interface"
+
+#: .locale-src\acp/strings.js:257
+msgid "router-main-statPort"
+msgstr "HTTP service port"
+
+#: .locale-src\acp/strings.js:258
+#, fuzzy
+msgid "Nuance Billing System"
+msgstr "System"
+
+#: .locale-src\acp/strings.js:259
+msgid "Official site"
+msgstr ""
+
+#: .locale-src\acp/strings.js:260
+#, fuzzy
+msgid "All rights reserved"
+msgstr "Select all"
+
+#: .locale-src\acp/strings.js:261
+msgid "optSection-main"
+msgstr "Main"
+
+#: .locale-src\acp/strings.js:262
+msgid "optSection-grid"
+msgstr "Grids"
+
+#: .locale-src\acp/strings.js:263
+msgid "optSection-cash"
+msgstr "Cash"
+
+#: .locale-src\acp/strings.js:264
+msgid "optSection-ucp"
+msgstr "UCP"
+
+#: .locale-src\acp/strings.js:265
+msgid "system-cash-notificationsDuration"
+msgstr "Notifications duration"
+
+#: .locale-src\acp/strings.js:266
+msgid "system-cash-withdrawalOffset"
+msgstr "WIthdrawal offset"
+
+#: .locale-src\acp/strings.js:267
+msgid "system-cash-showNofitications"
+msgstr "Show notifications"
+
+#: .locale-src\acp/strings.js:268
+msgid "optSection-stat"
+msgstr "Statistics"
+
+#: .locale-src\acp/strings.js:269
+msgid "Do not filter"
+msgstr ""
+
+#: .locale-src\acp/strings.js:270
+msgid "Filter by ARP"
+msgstr ""
+
+#: .locale-src\acp/strings.js:271
+msgid "Filter by filter rule"
+msgstr ""
+
+#: .locale-src\acp/strings.js:272
+msgid "Filter by mangle"
+msgstr ""
+
+#: .locale-src\acp/strings.js:273
+msgid "router-main-filterType"
+msgstr "Filter type"
+
+#: .locale-src\acp/strings.js:274
+msgid "optSection-license"
+msgstr "License"
+
+#: .locale-src\acp/strings.js:275
+msgid "system-license-key"
+msgstr "License key"
+
+#: .locale-src\acp/strings.js:276
+msgid "Day"
+msgstr ""
+
+#: .locale-src\acp/strings.js:277
+msgid "Month"
+msgstr ""
+
+#: .locale-src\acp/strings.js:278
+msgid "Year"
+msgstr ""
+
+#: .locale-src\acp/strings.js:291
+msgid "Groups"
+msgstr ""
+
+#: .locale-src\acp/strings.js:292
+msgid "acl"
+msgstr "Access rights"
+
+#: .locale-src\acp/strings.js:293
+msgid "table-order"
+msgstr "Orders"
+
+#: .locale-src\acp/strings.js:294
+msgid "detailsid"
+msgstr ""
+
+#: .locale-src\acp/strings.js:295
+msgid "canceled"
+msgstr "Canceled"
+
+#: .locale-src\acp/strings.js:296
+msgid "detailsname"
+msgstr ""
+
+#: .locale-src\acp/strings.js:297
+msgid "table-user"
+msgstr "Users"
+
+#: .locale-src\acp/strings.js:298
+msgid "table-group"
+msgstr "Groups"
+
+#: .locale-src\acp/strings.js:299
+msgid "table-moneyflow"
+msgstr "Moneyflow"
+
+#: .locale-src\acp/strings.js:300
+msgid "description"
+msgstr "Description"
+
+#: .locale-src\acp/strings.js:301
+msgid "table-tariff"
+msgstr "Tariffs"
+
+#: .locale-src\acp/strings.js:302
+msgid "table-city"
+msgstr "Cities"
+
+#: .locale-src\acp/strings.js:303
+msgid "table-street"
+msgstr "Streets"
+
+#: .locale-src\acp/strings.js:304
+msgid "table-router"
+msgstr "Routers"
+
+#: .locale-src\acp/strings.js:305
+msgid "table-master"
+msgstr "Masters"
+
+#: .locale-src\acp/strings.js:306
+msgid "group"
+msgstr "Group"
+
+#: .locale-src\acp/strings.js:307
+msgid "table-scratchcard"
+msgstr "Vouchers"
+
+#: .locale-src\acp/strings.js:308
+msgid "Check connection"
+msgstr ""
+
+#: .locale-src\acp/strings.js:309
+msgid "table"
+msgstr "Tables"
+
+#: .locale-src\acp/strings.js:310
+msgid "preference"
+msgstr "Preferences"
+
+#: .locale-src\acp/strings.js:311
+msgid "system"
+msgstr "System"
+
+#: .locale-src\acp/strings.js:312 .locale-src\acp/strings.js:332
+msgid "Connecting..."
+msgstr ""
+
+#: .locale-src\acp/strings.js:313
+#, fuzzy
+msgid "Connection state is unknown"
+msgstr "Unknown"
+
+#: .locale-src\acp/strings.js:314
+msgid "Cannot establish the connection"
+msgstr ""
+
+#: .locale-src\acp/strings.js:315
+msgid "Connection established"
+msgstr ""
+
+#: .locale-src\acp/strings.js:316
+msgid "remove"
+msgstr "Remove"
+
+#: .locale-src\acp/strings.js:317
+#, fuzzy
+msgid "Please select router"
+msgstr "Select router"
+
+#: .locale-src\acp/strings.js:318
+msgid "statistics"
+msgstr "Іtatistics"
+
+#: .locale-src\acp/strings.js:319
+#, fuzzy
+msgid "Select group"
+msgstr "Group"
+
+#: .locale-src\acp/strings.js:320
+msgid "header_nightupspeed"
+msgstr "Night upload speed"
+
+#: .locale-src\acp/strings.js:321
+msgid "header_nightdownspeed"
+msgstr "Night download speed"
+
+#: .locale-src\acp/strings.js:322
+msgid "nightupspeed"
+msgstr "Night upload speed"
+
+#: .locale-src\acp/strings.js:323
+msgid "nightdownspeed"
+msgstr "Night download speed"
+
+#: .locale-src\acp/strings.js:324
+msgid "optSection-tariff"
+msgstr "Tariffs"
+
+#: .locale-src\acp/strings.js:325
+msgid "system-tariff-nightHourStart"
+msgstr "Night hours begin"
+
+#: .locale-src\acp/strings.js:326
+msgid "system-tariff-nightHourEnd"
+msgstr "Night hours end"
+
+#: .locale-src\acp/strings.js:327
+msgid "Free internet"
+msgstr ""
+
+#: .locale-src\acp/strings.js:328
+msgid "Duration"
+msgstr ""
+
+#: .locale-src\acp/strings.js:329
+msgid "Activate"
+msgstr ""
+
+#: .locale-src\acp/strings.js:330
+#, fuzzy
+msgid "User have no selected tariff"
+msgstr "User didn't choose the router"
+
+#: .locale-src\acp/strings.js:331
+#, fuzzy
+msgid "Please wait..."
+msgstr "Please wait…"
+
+#: .locale-src\acp/strings.js:333
+msgid "system-ucp-IPautoLogin"
+msgstr "Log in users by IP"
+
+#: .locale-src\acp/strings.js:334
+msgid "Cashier"
+msgstr ""
+
+#: .locale-src\acp/strings.js:335
+msgid "checkconnection"
+msgstr "Check connection"
+
+#: .locale-src\acp/strings.js:336
+msgid "tools"
+msgstr "Tools"
+
+#: .locale-src\acp/strings.js:337
+msgid "system-main-companyName"
+msgstr "Company name"
+
+#: .locale-src\acp/strings.js:338
+msgid "system-cash-typeOfCalculation"
+msgstr "Type of calculation"
+
+#: .locale-src\acp/strings.js:339
+msgid "Advance"
+msgstr ""
+
+#: .locale-src\acp/strings.js:340
+msgid "Postpay"
+msgstr ""
+
+#: .locale-src\acp/strings.js:341
+msgid "add"
+msgstr "Add"
+
+#: .locale-src\acp/strings.js:342
+msgid "system-ucp-documents"
+msgstr "Documents"
+
+#: .locale-src\acp/strings.js:343
+#, fuzzy
+msgid "Documents"
+msgstr "Documents"
+
+#: .locale-src\acp/strings.js:344
+#, fuzzy
+msgid "Remove"
+msgstr "Remove"
+
+#: .locale-src\acp/strings.js:345
+#, fuzzy
+msgid "Name"
+msgstr "Name"
+
+#: .locale-src\acp/strings.js:346
+#, fuzzy
+msgid "Description"
+msgstr "Description"
+
+#: .locale-src\acp/strings.js:347
+#, fuzzy
+msgid "File"
+msgstr "Export to file"
+
+#: .locale-src\acp/strings.js:348
+#, fuzzy
+msgid "Select file"
+msgstr "Export to file"
+
+#: .locale-src\acp/strings.js:349
+#, fuzzy
+msgid "Edit document"
+msgstr "E"
+
+#: .locale-src\acp/strings.js:350
+#, fuzzy
+msgid "Add document"
+msgstr "Add"
+
+#: .locale-src\acp/strings.js:351
+#, fuzzy
+msgid "File selected"
+msgstr "Not selected"
+
+#: .locale-src\acp/strings.js:352
+#, fuzzy
+msgid "Select new file"
+msgstr "New"
+
+#: .locale-src\acp/strings.js:353
+#, fuzzy
+msgid "File size should be less than 8M"
+msgstr "Export to file"
+
+#: .locale-src\acp/strings.js:354
+msgid "header_downburstlimit"
+msgstr "Download burst limit"
+
+#: .locale-src\acp/strings.js:355
+msgid "header_upburstlimit"
+msgstr "Upload burst limit"
+
+#: .locale-src\acp/strings.js:356
+msgid "header_downburstthreshold"
+msgstr "Download burst threshold"
+
+#: .locale-src\acp/strings.js:357
+msgid "header_upburstthreshold"
+msgstr "Upload burst threshold"
+
+#: .locale-src\acp/strings.js:358
+msgid "header_downbursttime"
+msgstr "Download burst time"
+
+#: .locale-src\acp/strings.js:359
+msgid "header_upbursttime"
+msgstr "Upload burst time"
+
+#: .locale-src\acp/strings.js:360
+msgid "downburstlimit"
+msgstr "Download burst limit"
+
+#: .locale-src\acp/strings.js:361
+msgid "upburstlimit"
+msgstr "Upload burst limit"
+
+#: .locale-src\acp/strings.js:362
+msgid "downburstthreshold"
+msgstr "Download burst threshold"
+
+#: .locale-src\acp/strings.js:363
+msgid "upburstthreshold"
+msgstr "Upload burst threshold"
+
+#: .locale-src\acp/strings.js:364
+msgid "downbursttime"
+msgstr "Download burst time"
+
+#: .locale-src\acp/strings.js:365
+msgid "upbursttime"
+msgstr "Upload burst time"
+
+#: .locale-src\acp/strings.js:366
+#, fuzzy
+msgid "Order"
+msgstr "Orders"
+
+#: .locale-src\acp/strings.js:367
+msgid " from"
+msgstr ""
+
+#: .locale-src\acp/strings.js:368
+msgid " to"
+msgstr ""
+
+#: .locale-src\acp/strings.js:369
+msgid "Fund by"
+msgstr "Fund by "
+
+#: .locale-src\acp/strings.js:370
+#, fuzzy, python-format
+msgid "Are you sure you want to delete user %s?"
+msgstr "Are you sure you want to delete administrator %s?"
+
+#: .locale-src\acp/strings.js:371
+#, fuzzy, python-format
+msgid "Are you sure you want to delete tariff %s?"
+msgstr "Are you sure you want to delete administrator %s?"
+
+#: .locale-src\acp/strings.js:372
+#, fuzzy, python-format
+msgid "Are you sure you want to delete city %s?"
+msgstr "Are you sure you want to delete administrator %s?"
+
+#: .locale-src\acp/strings.js:373
+#, fuzzy, python-format
+msgid "Are you sure you want to delete street %s?"
+msgstr "Are you sure you want to delete administrator %s?"
+
+#: .locale-src\acp/strings.js:374
+#, fuzzy, python-format
+msgid "Are you sure you want to delete router %s?"
+msgstr "Are you sure you want to delete administrator %s?"
+
+#: .locale-src\acp/strings.js:375
+#, python-format
+msgid "Are you sure you want to delete master %s?"
+msgstr "Are you sure you want to delete administrator %s?"
+
+#: .locale-src\acp/strings.js:376
+#, python-format
+msgid "Are you sure you want to delete group %s?"
+msgstr "Are you sure you want to delete group %s?"
+
+#: .locale-src\acp/strings.js:377
+#, python-format
+msgid "Version %s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:378
+#, fuzzy
+msgid "bit/s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:379
+#, fuzzy
+msgid "kbit/s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:380
+#, fuzzy
+msgid "Mbit/s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:381
+#, fuzzy
+msgid "Gbit/s"
+msgstr "Version %s"
+
+#: .locale-src\acp/strings.js:382
+#, fuzzy
+msgid "Select undefined"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:383
+#, fuzzy
+msgid "Select speed"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:384
+msgid "Force download"
+msgstr ""
+
+#: .locale-src\acp/strings.js:385
+msgid "Load"
+msgstr ""
+
+#: .locale-src\acp/strings.js:386
+msgid "Schema compare"
+msgstr ""
+
+#: .locale-src\acp/strings.js:387
+#, fuzzy
+msgid "Daily"
+msgstr "Statistics for the day"
+
+#: .locale-src\acp/strings.js:388
+msgid "Montly"
+msgstr ""
+
+#: .locale-src\acp/strings.js:389
+msgid "system-cash-billingPeriod"
+msgstr "Billing period"
+
+#: .locale-src\acp/strings.js:390
+msgid "system-ucp-showMoneyflow"
+msgstr "Show moneyflow"
+
+#: .locale-src\acp/strings.js:391
+msgid "system-ucp-showDocuments"
+msgstr "Show documents"
+
+#: .locale-src\acp/strings.js:392
+msgid "%"
+msgstr ""
+
+#: .locale-src\acp/strings.js:393
+msgid "UAH"
+msgstr ""
+
+#: .locale-src\acp/strings.js:394
+#, fuzzy
+msgid "Select discount"
+msgstr "Discount"
+
+#: .locale-src\acp/strings.js:395
+msgid "None"
+msgstr ""
+
+#: .locale-src\acp/strings.js:396
+msgid "Select inInterface"
+msgstr "Select inner interface"
+
+#: .locale-src\acp/strings.js:397
+msgid "Full"
+msgstr ""
+
+#: .locale-src\acp/strings.js:398
+msgid "system-cash-newOrdersWithdrawalType"
+msgstr "The amount will be charged at the tariff plan connecting"
+
+#: .locale-src\acp/strings.js:399
+msgid "Select newOrdersWithdrawalType"
+msgstr "The amount will be charged at the tariff plan connecting"
+
+#: .locale-src\acp/strings.js:400
+#, fuzzy
+msgid "Sum of scratchcard payments"
+msgstr "Sum"
+
+#: .locale-src\acp/strings.js:401
+#, fuzzy
+msgid "Sum of all payments"
+msgstr "Sum"
+
+#: .locale-src\acp/strings.js:402
+msgid "locations"
+msgstr "Locations"
+
+#: .locale-src\acp/strings.js:403
+msgid "offline"
+msgstr "Offline"
+
+#: .locale-src\acp/strings.js:404
+msgid "unknown"
+msgstr "Unknown"
+
+#: .locale-src\acp/strings.js:405
+msgid "online"
+msgstr "Online"
+
+#: .locale-src\acp/strings.js:406
+#, fuzzy, python-format
+msgid "You are logged in as %s"
+msgstr "Are you sure you want to delete administrator %s?"
+
+#: .locale-src\acp/strings.js:407
+msgid "Other"
+msgstr ""
+
+#: .locale-src\acp/strings.js:408
+msgid "Display separate field"
+msgstr ""
+
+#: .locale-src\acp/strings.js:409
+msgid "Dashboard"
+msgstr ""
+
+#: .locale-src\acp/strings.js:410
+msgid "Full month"
+msgstr ""
+
+#: .locale-src\acp/strings.js:411
+msgid "Actual days"
+msgstr ""
+
+#: .locale-src\acp/strings.js:412
+#, fuzzy
+msgid "Sync"
+msgstr "Sync router"
+
+#: .locale-src\acp/strings.js:413
+#, fuzzy
+msgid "Update state"
+msgstr "State"
+
+#: .locale-src\acp/strings.js:414
+#, fuzzy
+msgid "Subscribers statistics"
+msgstr "Іtatistics"
+
+#: .locale-src\acp/strings.js:415
+#, fuzzy
+msgid "Number of all subscribers"
+msgstr "Number of codes"
+
+#: .locale-src\acp/strings.js:416
+#, fuzzy
+msgid "Number of active subscribers"
+msgstr "Number of codes"
+
+#: .locale-src\acp/strings.js:417
+#, fuzzy
+msgid "Number of online subscribers"
+msgstr "Online"
+
+#: .locale-src\acp/strings.js:418
+#, fuzzy
+msgid "Number of disabled subscribers"
+msgstr "Disabled"
+
+#: .locale-src\acp/strings.js:419
+#, fuzzy
+msgid "Tariff statistics"
+msgstr "Tariff"
+
+#: .locale-src\acp/strings.js:420
+#, fuzzy
+msgid "Sum of cashier payments"
+msgstr "Sum"
+
+#: .locale-src\acp/strings.js:421
+#, fuzzy
+msgid "Payments statistics"
+msgstr "Payments"
+
+#: .locale-src\acp/strings.js:422
+#, fuzzy
+msgid "Number of inactive subscribers"
+msgstr "Number of codes"
+
+#: .locale-src\acp/strings.js:423
+#, fuzzy
+msgid "Settlements statistics"
+msgstr "Іtatistics"
+
+#: .locale-src\acp/strings.js:424
+msgid "header_is_new"
+msgstr "New"
+
+#: .locale-src\acp/strings.js:425
+msgid "Messages"
+msgstr ""
+
+#: .locale-src\acp/strings.js:426
+#, fuzzy
+msgid "New message"
+msgstr "New"
+
+#: .locale-src\acp/strings.js:427
+msgid "header_sender"
+msgstr "Sender"
+
+#: .locale-src\acp/strings.js:428
+msgid "header_recipient"
+msgstr "Recipient"
+
+#: .locale-src\acp/strings.js:429
+msgid "header_text"
+msgstr "Text"
+
+#: .locale-src\acp/strings.js:430
+msgid "allow"
+msgstr "Allow"
+
+#: .locale-src\acp/strings.js:431
+msgid "deny"
+msgstr "Deny"
+
+#: .locale-src\acp/strings.js:432
+msgid "header_state"
+msgstr "State"
+
+#: .locale-src\acp/strings.js:433
+msgid "header_online"
+msgstr "Online"
+
+#: .locale-src\acp/strings.js:434
+msgid "header_username"
+msgstr "Name"
+
+#: .locale-src\acp/strings.js:435
+msgid "header_contract"
+msgstr "Contract ID"
+
+#: .locale-src\acp/strings.js:436
+msgid "header_address"
+msgstr "Address"
+
+#: .locale-src\acp/strings.js:437
+msgid "loading"
+msgstr "Loading…"
+
+#: .locale-src\acp/strings.js:438
+msgid "header_credit"
+msgstr "Credit"
+
+#: .locale-src\acp/strings.js:439
+msgid "Update permission expires"
+msgstr ""
+
+#: .locale-src\acp/strings.js:440
+msgid "Allowed plugins"
+msgstr ""
+
+#: .locale-src\acp/strings.js:441
+msgid "plugin-burst"
+msgstr "Burst"
+
+#: .locale-src\acp/strings.js:442
+msgid "plugin-scratchcard"
+msgstr "Vouchers"
+
+#: .locale-src\acp/strings.js:443
+#, fuzzy
+msgid "Some settings were changed. Do you want to save it?"
+msgstr "Are you sure you want to delete administrator %s?"
+
+#: .locale-src\acp/strings.js:444
+msgid "system-cash-creditMonths"
+msgstr "Credit months"
+
+#: .locale-src\acp/strings.js:445
+msgid "system-cash-refundOrdersType"
+msgstr "The amount will be refunded at tariff change"
+
+#: .locale-src\acp/strings.js:446
+msgid "system-cash-newUsersWithdrawalType"
+msgstr "The amount will be charged at the new user connecting"
+
+#: .locale-src\acp/strings.js:447
+msgid "system-cash-swapOrdersWithdrawalType"
+msgstr "The amount will be charged at the tariff plan swap"
+
+#: .locale-src\acp/strings.js:448
+msgid "system-grid-stateUpdateInterval"
+msgstr "State update interval"
+
+#: .locale-src\acp/strings.js:449
+msgid "system-ucp-showTariffsOnlyFromUsersCity"
+msgstr "Show tarifs only from user`s city"
+
+#: .locale-src\acp/strings.js:450
+msgid "system-ucp-permitTariffChange"
+msgstr "Permit tariff change"
+
+#: .locale-src\acp/strings.js:451
+msgid "system-ucp-permitPasswordChange"
+msgstr "Permit password change"
+
+#: .locale-src\acp/strings.js:452
+msgid "system-grid-trimUserName"
+msgstr "Trim usernames"
+
+#: .locale-src\acp/strings.js:453
+msgid "Disable"
+msgstr ""
+
+#: .locale-src\acp/strings.js:454
+msgid "header_readdate"
+msgstr "Read date"
+
+#: .locale-src\acp/strings.js:455
+msgid "Send"
+msgstr ""
+
+#: .locale-src\acp/strings.js:456
+#, fuzzy
+msgid "Mark all as read"
+msgstr "Read"
+
+#: .locale-src\acp/strings.js:457
+#, fuzzy
+msgid "Send broadcast message"
+msgstr "Messages"
+
+#: .locale-src\acp/strings.js:458
+#, fuzzy
+msgid "Message text"
+msgstr "Text"
+
+#: .locale-src\acp/strings.js:459
+#, fuzzy
+msgid "Temporary order"
+msgstr "Orders"
+
+#: .locale-src\acp/strings.js:460
+msgid "header_refund"
+msgstr "Refund type"
+
+#: .locale-src\acp/strings.js:461
+msgid "header_cpuload"
+msgstr "CPU load"
+
+#: .locale-src\acp/strings.js:462
+msgid "header_version"
+msgstr "OS version"
+
+#: .locale-src\acp/strings.js:463
+msgid "header_freeram"
+msgstr "Free RAM"
+
+#: .locale-src\acp/strings.js:464
+msgid "header_disabled"
+msgstr "Disabled"
+
+#: .locale-src\acp/strings.js:465
+msgid "Update"
+msgstr ""
+
+#: .locale-src\acp/strings.js:466
+msgid "beta"
+msgstr ""
+
+#: .locale-src\acp/strings.js:467
+msgid "Owner"
+msgstr ""
+
+#: .locale-src\acp/strings.js:468
+msgid "plugin-manualpayment"
+msgstr "Manual payments"
+
+#: .locale-src\acp/strings.js:469
+msgid "plugin-night"
+msgstr "Day/Night"
+
+#: .locale-src\acp/strings.js:470
+msgid "plugin-manualsync"
+msgstr "Manual sync"
+
+#: .locale-src\acp/strings.js:471
+msgid "plugin-state"
+msgstr "State"
+
+#: .locale-src\acp/strings.js:472
+msgid "plugin-acl"
+msgstr "ACL"
+
+#: .locale-src\acp/strings.js:473
+msgid "plugin-schemacompare"
+msgstr "DB schema compare"
+
+#: .locale-src\acp/strings.js:474
+msgid "Pro"
+msgstr ""
+
+#: .locale-src\acp/strings.js:475
+msgid "Level"
+msgstr ""
+
+#: .locale-src\acp/strings.js:476
+#, fuzzy
+msgid "License info"
+msgstr "License"
+
+#: .locale-src\acp/strings.js:477
+#, fuzzy
+msgid "Dump table"
+msgstr "Tables"
+
+#: .locale-src\acp/strings.js:478
+#, fuzzy
+msgid "Current table"
+msgstr "Tables"
+
+#: .locale-src\acp/strings.js:479
+#, fuzzy
+msgid "Nothing"
+msgstr "Nothing found"
+
+#: .locale-src\acp/strings.js:480
+msgid "Enable"
+msgstr ""
+
+#: .locale-src\acp/strings.js:481
+#, fuzzy
+msgid "Nothing to do"
+msgstr "Nothing found"
+
+#: .locale-src\acp/strings.js:482
+msgid "subscriber-main-permitTariffChange"
+msgstr "Permit tariff change"
+
+#: .locale-src\acp/strings.js:483
+msgid "subscriber-main-permitPasswordChange"
+msgstr "Permit password change"
+
+#: .locale-src\acp/strings.js:484
+msgid "X"
+msgstr ""
+
+#: .locale-src\acp/strings.js:485
+#, fuzzy
+msgid "Potential payments statistics"
+msgstr "Payments"
+
+#: .locale-src\acp/strings.js:486
+#, fuzzy
+msgid "Sum"
+msgstr "Sum"
+
+#: .locale-src\acp/strings.js:487
+#, fuzzy
+msgid "recipient_is_admin"
+msgstr "Recipient"
+
+#: .locale-src\acp/strings.js:488
+#, fuzzy
+msgid "is_new"
+msgstr "New"
+
+#: .locale-src\acp/strings.js:489
+#, fuzzy
+msgid "text"
+msgstr "Text"
+
+#: .locale-src\acp/strings.js:490
+msgid "readdate"
+msgstr "Read date"
+
+#: .locale-src\acp/strings.js:491
+#, fuzzy
+msgid "sender_is_admin"
+msgstr "Sender"
+
+#: .locale-src\acp/strings.js:492
+#, fuzzy
+msgid "sender"
+msgstr "Sender"
+
+#: .locale-src\acp/strings.js:493
+#, fuzzy
+msgid "recipient"
+msgstr "Recipient"
+
+#: .locale-src\acp/strings.js:494
+msgid "table-message"
+msgstr "Messages"
+
+#: .locale-src\acp/strings.js:495
+msgid "plugin-message"
+msgstr "Messages"
+
+#: .locale-src\acp/strings.js:496
+#, fuzzy
+msgid "Log"
+msgstr "Payments"
+
+#: .locale-src\acp/strings.js:497
+msgid "header_targetsection"
+msgstr "Target"
+
+#: .locale-src\acp/strings.js:498
+#, fuzzy
+msgid "header_olddata"
+msgstr "Router type"
+
+#: .locale-src\acp/strings.js:499
+msgid "header_action"
+msgstr "Action"
+
+#: .locale-src\acp/strings.js:500
+msgid "header_subtype"
+msgstr "Subtype"
+
+#: .locale-src\acp/strings.js:501
+msgid "header_master"
+msgstr "Master"
+
+#: .locale-src\acp/strings.js:502
+#, fuzzy
+msgid "header_newdata"
+msgstr "Router type"
+
+#: .locale-src\acp/strings.js:503
+#, fuzzy
+msgid "header_targetid"
+msgstr "Router type"
+
+#: .locale-src\acp/strings.js:504
+#, fuzzy
+msgid "Remove from database"
+msgstr "Remove"
+
+#: .locale-src\acp/strings.js:505
+#, fuzzy
+msgid "Add to database"
+msgstr "Add"
+
+#: .locale-src\acp/strings.js:506
+msgid "master"
+msgstr "Masters"
+
+#: .locale-src\acp/strings.js:507
+msgid "moneyflow"
+msgstr "Moneyflow"
+
+#: .locale-src\acp/strings.js:508
+msgid "order"
+msgstr "Orders"
+
+#: .locale-src\acp/strings.js:509
+msgid "scratchcard"
+msgstr "Scratchcard"
+
+#: .locale-src\acp/strings.js:510
+#, fuzzy
+msgid "message"
+msgstr "Messages"
+
+#: .locale-src\acp/strings.js:511
+msgid "Changes in database"
+msgstr ""
+
+#: .locale-src\acp/strings.js:512
+msgid "subject"
+msgstr ""
+
+#: .locale-src\acp/strings.js:513
+msgid "table-log"
+msgstr "Log"
+
+#: .locale-src\acp/strings.js:514
+msgid "subtype"
+msgstr "Type"
+
+#: .locale-src\acp/strings.js:515
+msgid "action"
+msgstr "Action"
+
+#: .locale-src\acp/strings.js:516
+msgid "targetid"
+msgstr ""
+
+#: .locale-src\acp/strings.js:517
+msgid "olddata"
+msgstr ""
+
+#: .locale-src\acp/strings.js:518
+msgid "newdata"
+msgstr ""
+
+#: .locale-src\acp/strings.js:519
+#, fuzzy
+msgid "Unselect all"
+msgstr "Select all"
+
+#: .locale-src\acp/strings.js:520
+msgid "Монтажник"
+msgstr ""
+
+#: .locale-src\acp/strings.js:521
+msgid "Withdraw funds"
+msgstr ""
+
+#: .locale-src\acp/strings.js:522
+msgid "temp"
+msgstr ""
+
+#: .locale-src\acp/strings.js:523
+#, fuzzy
+msgid "Bad login"
+msgstr "Login"
+
+#: .locale-src\acp/strings.js:524
+#, fuzzy
+msgid "Undefined value"
+msgstr "Value"
+
+#: .locale-src\acp/strings.js:525
+#, fuzzy
+msgid "Unsuccessful login"
+msgstr "Login"
+
+#: .locale-src\acp/strings.js:526
+#, fuzzy
+msgid "Successful login"
+msgstr "Login"
+
+#: .locale-src\acp/strings.js:527
+#, fuzzy
+msgid "Empty value"
+msgstr "Value"
+
+#: .locale-src\acp/strings.js:528
+msgid "router-ppp-disablePPPSecretsOfBlockedUsers"
+msgstr "Disable PPP secrets of blocked users"
+
+#: .locale-src\acp/strings.js:529
+msgid "optSection-ppp"
+msgstr "PPP"
+
+#: .locale-src\acp/strings.js:530
+msgid "system-ucp-restrictUsersLoggedByIP"
+msgstr "Restrict users logged by IP"
+
+#: .locale-src\acp/strings.js:531
+#, fuzzy
+msgid "targetsection"
+msgstr "Target"
+
+#: .locale-src\acp/strings.js:532
+msgid "refund"
+msgstr "Refund"
+
+#: .locale-src\acp/strings.js:533
+msgid "optSection-statistics"
+msgstr "Statistics"
+
+#: .locale-src\acp/strings.js:534
+msgid "system-statistics-paymentsOffset"
+msgstr "Payments offset"
+
+#: .locale-src\acp/strings.js:535
+#, fuzzy
+msgid "Select month"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:536
+#, fuzzy
+msgid "show"
+msgstr "Show notifications"
+
+#: .locale-src\acp/strings.js:537
+#, fuzzy
+msgid "New cash"
+msgstr "New"
+
+#: .locale-src\acp/strings.js:538
+#, fuzzy
+msgid "Comment"
+msgstr "Comment"
+
+#: .locale-src\acp/strings.js:539
+#, fuzzy
+msgid "User"
+msgstr "User"
+
+#: .locale-src\acp/strings.js:540
+msgid "Not required"
+msgstr ""
+
+#: .locale-src\acp/strings.js:541
+#, fuzzy
+msgid "Payment sum"
+msgstr "Sum"
+
+#: .locale-src\acp/strings.js:542
+msgid "Search…"
+msgstr ""
+
+#: .locale-src\acp/strings.js:543
+#, fuzzy
+msgid "system-main-acpTheme"
+msgstr "Timezone"
+
+#: .locale-src\acp/strings.js:544
+#, fuzzy
+msgid "system-main-ucpTheme"
+msgstr "Timezone"
+
+#: .locale-src\acp/strings.js:545
+#, fuzzy
+msgid "You can refund only orders and payments"
+msgstr "Payments"
+
+#: .locale-src\acp/strings.js:546
+msgid "No"
+msgstr ""
+
+#: .locale-src\acp/strings.js:547
+msgid "Yes"
+msgstr ""
+
+#: .locale-src\acp/strings.js:548
+#, fuzzy
+msgid "Select state"
+msgstr "State"
+
+#: .locale-src\acp/strings.js:549
+#, fuzzy
+msgid "Read"
+msgstr "Read"
+
+#: .locale-src\acp/strings.js:550
+#, fuzzy
+msgid "New"
+msgstr "New"
+
+#: .locale-src\acp/strings.js:551
+#, fuzzy
+msgid "Select name"
+msgstr "Name"
+
+#: .locale-src\acp/strings.js:552
+#, fuzzy
+msgid "Select new"
+msgstr "New"
+
+#: .locale-src\acp/strings.js:553
+#, fuzzy
+msgid "Select disabled"
+msgstr "Disabled"
+
+#: .locale-src\acp/strings.js:554
+#, fuzzy
+msgid "Select credit"
+msgstr "Credit"
+
+#: .locale-src\acp/strings.js:555
+#, fuzzy
+msgid "system-ucp-groupTariffsByCities"
+msgstr "Show tarifs"
+
+#: .locale-src\acp/strings.js:556
+#, fuzzy
+msgid "Select Місто"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:557
+#, fuzzy
+msgid "Select Вулиця"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:558
+#, fuzzy
+msgid "Select Маршрутизатор"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:559
+#, fuzzy
+msgid "Select Реферал"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:560
+msgid "Маршрутизатор"
+msgstr ""
+
+#: .locale-src\acp/strings.js:561
+msgid "state"
+msgstr "State"
+
+#: .locale-src\acp/strings.js:562
+msgid "Місто"
+msgstr ""
+
+#: .locale-src\acp/strings.js:563
+msgid "Вулиця"
+msgstr ""
+
+#: .locale-src\acp/strings.js:564
+msgid "Тариф"
+msgstr ""
+
+#: .locale-src\acp/strings.js:565
+msgid "Реферал"
+msgstr ""
+
+#: .locale-src\acp/strings.js:566
+#, fuzzy
+msgid "new"
+msgstr "New"
+
+#: .locale-src\acp/strings.js:567
+#, fuzzy
+msgid "Send message"
+msgstr "Messages"
+
+#: .locale-src\acp/strings.js:568
+#, fuzzy
+msgid "fcity"
+msgstr "City"
+
+#: .locale-src\acp/strings.js:569
+msgid "There are no available filters"
+msgstr ""
+
+#: .locale-src\acp/strings.js:570
+#, fuzzy
+msgid "plugin-routerlink"
+msgstr "Burst"
+
+#: .locale-src\acp/strings.js:571
+#, fuzzy
+msgid "Open Web interface"
+msgstr "Interface Statistics"
+
+#: .locale-src\acp/strings.js:572
+msgid "Open SSH"
+msgstr ""
+
+#: .locale-src\acp/strings.js:573
+msgid "Open Telnet"
+msgstr ""
+
+#: .locale-src\acp/strings.js:574
+#, fuzzy
+msgid "header_permittedstreet"
+msgstr "Router type"
+
+#: .locale-src\acp/strings.js:575
+#, fuzzy
+msgid "header_permittedcity"
+msgstr "Router type"
+
+#: .locale-src\acp/strings.js:576
+msgid "permittedcity"
+msgstr ""
+
+#: .locale-src\acp/strings.js:577
+#, fuzzy
+msgid "Select permittedstreet"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:578
+#, fuzzy
+msgid "Select permittedcity"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:579
+msgid "permittedstreet"
+msgstr ""
+
+#: .locale-src\acp/strings.js:580
+#, fuzzy
+msgid "Select only one permittedcity"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:581
+#, fuzzy
+msgid "Select only one city"
+msgstr "Select city"
+
+#: .locale-src\acp/strings.js:582
+#, fuzzy
+msgid "plugin-export"
+msgstr "Export"
+
+#: .locale-src\acp/strings.js:583
+#, fuzzy
+msgid "plugin-tableexport"
+msgstr "Burst"
+
+#: .locale-src\acp/strings.js:584
+msgid "Open WinBox"
+msgstr ""
+
+#: .locale-src\acp/strings.js:585
+#, fuzzy
+msgid "Select ucpTheme"
+msgstr "Select outter interface"
+
+#: .locale-src\acp/strings.js:586
+msgid "system-cash-newUsersAutoFund"
+msgstr "Automatically fund new users"
+
+#~ msgid "ferrr"
+#~ msgstr "Faugh!"
+
+#~ msgid "Select swapOrdersWithdrawalType"
+#~ msgstr "The amount will be charged at the tariff plan change"
+
+#, fuzzy
+#~ msgid "header_checkconnection"
+#~ msgstr "Check connection"
+
+#~ msgid "system-main-currencyFormat"
+#~ msgstr "Currency display format"
+
+#~ msgid "Select parent list"
+#~ msgstr "Виберіть батьківську опцію"
+
+#~ msgid "Path must be specified"
+#~ msgstr "Path must be specified"
+
+#~ msgid "No opts in this "
+#~ msgstr "No opts in this "

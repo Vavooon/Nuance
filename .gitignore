@@ -1,0 +1,10 @@
+*.mo
+*.log
+*.swp
+*.txt
+.build/
+.doc/
+.locale-src/
+.other/
+db.sql
+config.php
