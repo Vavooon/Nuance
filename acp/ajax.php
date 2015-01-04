@@ -571,11 +571,6 @@ if ($sessionId)
       appendtranslation($_GET['line']);
       $response->success=true;
     break;
-    case 'updatelicenseinfo':
-      $licenseManager=new LicenseManager;
-      $licenseManager->loadLicenseInfo(true);
-      $response->success=true;
-    break;
     case 'gettimezone':
      $tzlist=array();
      $assocTzlist=array();

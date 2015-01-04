@@ -27,12 +27,6 @@ else
   $currentLanguage = configgetvalue('system', 'main', NULL, 'ucpLocale');
 }
 loadLocale ( 'ucp', $currentLanguage);
-if (!$licenseManager->checkPermission('ucp'))
-{
-  $errorText=__("You do not have permission to use UCP");
-  require_once $usertheme."/error.php";
-  die();
-}
 
 
 $ipRequest=" WHERE iplist LIKE '%\"".$_SERVER['REMOTE_ADDR']."\"%'";

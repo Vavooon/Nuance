@@ -19,8 +19,6 @@ $supportedBrowsers=array(
 $browserVersion=intval($browser['majorVersion']);
 $browserFullName=($browser['name']=="Unknown") ? '' : $browser['fullName'];
 checkUpdate();
-$licenseManager=new LicenseManager;
-$allowedPlugins=$licenseManager->checkPermission('allowedPlugins');
 loadLocale ( 'acp' );
 if (!array_key_exists($browser['name'], $supportedBrowsers))
 {

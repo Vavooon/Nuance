@@ -14,10 +14,6 @@ $default=
       "timezone": "Europe/Kiev",
       "currency": "UAH"
     },
-    "license":
-    {
-      "key": ""
-    },
     "cash" :
     {
       "typeOfCalculation": "advance",

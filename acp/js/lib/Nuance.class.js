@@ -5316,29 +5316,16 @@ var Nuance =
     }
     this.onAdd=function()
     {
-      var maxEntries=licenseManager.checkPermission(name) || Infinity;
-      if (dataOrder.length<maxEntries)
-      {
-        var form=new Nuance.AddPopup(
-          {
-            store: self.store,
-            customFields: opts.customFields, 
-            onlyIncludedFields: opts.onlyIncludedFields,
-            excludedFields: self.excludedFields, 
-            includedFields: opts.includedFields, 
-            recordId: 0
-          }
-        );
-      }
-      else
-      {
-        new Nuance.MessageBox(
-          {
-            title: _("License restriction"), 
-            text: '&nbsp;'+_('You have been reached maximum table entries permitted by your license.<br>Please <a target="_blank" href="http://nuance-bs.com/">upgrade your license</a>.')
-          }
-        );
-      }
+      var form=new Nuance.AddPopup(
+        {
+          store: self.store,
+          customFields: opts.customFields, 
+          onlyIncludedFields: opts.onlyIncludedFields,
+          excludedFields: self.excludedFields, 
+          includedFields: opts.includedFields, 
+          recordId: 0
+        }
+      );
     }
     this.onDel=function()
     {
@@ -6774,19 +6761,5 @@ var Nuance =
     }
 
 
-  },
-  LicenseManager: function()
-  {
-    var self=this;
-
-    var licenseData=configProxy.getValue('var', 'main', 'licenseData');
-
-    this.checkPermission=function(name)
-    {
-      if (typeof licenseData=='object')
-      {
-        return licenseData.restrictions[name];
-      }
-    }
   }
 }
