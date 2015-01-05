@@ -295,12 +295,6 @@ function getUrlParams(params)
 }
 var gt=new Gettext();
 function _ (msgid) {
-  var str=gt.gettext(msgid);
-  if (str==msgid && debug)
-  {
-    console.warn("Found untranslated line: "+str);
-    str && Nuance.AjaxRequest("GET", "./ajax.php?action=addtranslationline&line="+str);
-  }
   return gt.gettext(msgid);
 }
 
