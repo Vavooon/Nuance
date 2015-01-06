@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nuance Billing System\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-25 19:01+0200\n"
-"PO-Revision-Date: 2013-12-25 19:02+0200\n"
+"POT-Creation-Date: 2015-01-06 20:14+0200\n"
+"PO-Revision-Date: 2015-01-06 20:14+0200\n"
 "Last-Translator: Vavooon <vavooon@gmail.com>\n"
 "Language-Team: Nuance <vavooon@gmail.com>\n"
 "Language: ru_RU\n"
@@ -15,28 +15,65 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.7.1\n"
 "X-Poedit-SearchPath-0: .locale-src\\ucp\n"
 "X-Poedit-SearchPath-1: ucp\n"
 "X-Poedit-SearchPath-2: include\n"
 
-#: ucp/documents.php:20
+#: include/ucp.php:272
+msgid "Home"
+msgstr "Главная"
+
+#: include/ucp.php:276
+msgid "My info"
+msgstr "Моя информация"
+
+#: include/ucp.php:281
+msgid "Moneyflow"
+msgstr "История платежей"
+
+#: include/ucp.php:285
+msgid "Fund by card"
+msgstr "Пополнение карточкой"
+
+#: include/ucp.php:291
+msgid "Tariffs"
+msgstr "Тарифы"
+
+#: include/ucp.php:295
+msgid "Documents"
+msgstr "Документы"
+
+#: include/ucp.php:301
+msgid "Messages"
+msgstr "Мои сообщения"
+
+#: include/ucp.php:316
+msgid "Contacts"
+msgstr "Контакты"
+
+#: include/ucp.php:341
+#, php-format
+msgid "%s - Nuance - User panel"
+msgstr "%s - Nuance - Панель пользователя"
+
+#: ucp/documents.php:19
 msgid "Download"
 msgstr "Скачать"
 
-#: ucp/documents.php:24
+#: ucp/documents.php:23
 msgid "View"
 msgstr "Просмотр"
 
-#: ucp/editprofile.php:27
+#: ucp/editprofile.php:25
 msgid "Your password was successfully changed."
 msgstr "Ваш пароль был успешно изменён."
 
-#: ucp/editprofile.php:50
+#: ucp/editprofile.php:47
 msgid "Your tariff will be changed from the next month."
 msgstr "Ваш тариф будет изменён со следующего месяца."
 
-#: ucp/editprofile.php:59
+#: ucp/editprofile.php:55
 msgid "Your tariff has been changed."
 msgstr "Ваш тариф был изменён."
 
@@ -90,7 +127,7 @@ msgstr "Списание за услугу"
 msgid "Fund by cashier"
 msgstr "Пополнение кассиром"
 
-#: ucp/paywithcard.php:65
+#: ucp/paywithcard.php:64
 #, php-format
 msgid ""
 "After updating service \"%s\" from %s to %s will be automatically paid for "
@@ -99,119 +136,67 @@ msgstr ""
 "После пополнения услуга \"%s\" от %s до %s будет автоматически оплачена за "
 "%s."
 
-#: ucp/tariffs.php:117
+#: ucp/tariffs.php:119
 msgid "Name"
 msgstr "Название"
 
-#: ucp/tariffs.php:118
+#: ucp/tariffs.php:120
 msgid "Download speed"
 msgstr "Входящая скорость"
 
-#: ucp/tariffs.php:119
+#: ucp/tariffs.php:121
 msgid "Upload speed"
 msgstr "Исходящая скорость"
 
-#: ucp/tariffs.php:120
+#: ucp/tariffs.php:122
 msgid "Night download speed"
 msgstr "Ночная входящая скорость"
 
-#: ucp/tariffs.php:121
+#: ucp/tariffs.php:123
 msgid "Night upload speed"
 msgstr "Ночная исходящая скорость"
 
-#: ucp/tariffs.php:122
+#: ucp/tariffs.php:124
 msgid "Price"
 msgstr "Стоимость"
 
-#: ucp/tariffs.php:133
+#: ucp/tariffs.php:134
 #, php-format
 msgid "Night rates are valid from %s to %s"
 msgstr "Ночные тарифы действуют с %s по %s"
 
-#: include/ucp.php:32
-msgid "You do not have permission to use UCP"
-msgstr "У вас нет прав для использования личного кабинета"
+#~ msgid "You do not have permission to use UCP"
+#~ msgstr "У вас нет прав для использования личного кабинета"
 
-#: include/ucp.php:268
-msgid "Home"
-msgstr "Главная"
+#~ msgid "%s RUB"
+#~ msgid_plural "%s RUB"
+#~ msgstr[0] "%s рубль"
+#~ msgstr[1] "%s рубля"
+#~ msgstr[2] "%s рублей"
 
-#: include/ucp.php:272
-msgid "My info"
-msgstr "Моя информация"
+#~ msgid "%s USD"
+#~ msgid_plural "%s USD"
+#~ msgstr[0] "%s доллар"
+#~ msgstr[1] "%s доллара"
+#~ msgstr[2] "%s долларов"
 
-#: include/ucp.php:277
-msgid "Moneyflow"
-msgstr "История платежей"
+#~ msgid "%s UAH"
+#~ msgid_plural "%s UAH"
+#~ msgstr[0] "%s гривна"
+#~ msgstr[1] "%s гривны"
+#~ msgstr[2] "%s гривен"
 
-#: include/ucp.php:281
-msgid "Fund by card"
-msgstr "Пополнение карточкой"
+#~ msgid "%d Gbit/s"
+#~ msgstr "%d Гбит/с"
 
-#: include/ucp.php:287
-msgid "Tariffs"
-msgstr "Тарифы"
+#~ msgid "%d Mbit/s"
+#~ msgstr "%d Мбит/с"
 
-#: include/ucp.php:291
-msgid "Documents"
-msgstr "Документы"
+#~ msgid "%d kbit/s"
+#~ msgstr "%d кбит/с"
 
-#: include/ucp.php:297
-msgid "Messages"
-msgstr "Мои сообщения"
-
-#: include/ucp.php:311
-msgid "Contacts"
-msgstr "Контакты"
-
-#: include/ucp.php:338
-#, php-format
-msgid "%s - Nuance - User panel"
-msgstr "%s - Nuance - Панель пользователя"
-
-#: .locale-src\ucp/strings.js:1
-#, python-format
-msgid "%s RUB"
-msgid_plural "%s RUB"
-msgstr[0] "%s рубль"
-msgstr[1] "%s рубля"
-msgstr[2] "%s рублей"
-
-#: .locale-src\ucp/strings.js:2
-#, python-format
-msgid "%s USD"
-msgid_plural "%s USD"
-msgstr[0] "%s доллар"
-msgstr[1] "%s доллара"
-msgstr[2] "%s долларов"
-
-#: .locale-src\ucp/strings.js:3
-#, python-format
-msgid "%s UAH"
-msgid_plural "%s UAH"
-msgstr[0] "%s гривна"
-msgstr[1] "%s гривны"
-msgstr[2] "%s гривен"
-
-#: .locale-src\ucp/strings.js:4
-#, python-format
-msgid "%d Gbit/s"
-msgstr "%d Гбит/с"
-
-#: .locale-src\ucp/strings.js:5
-#, python-format
-msgid "%d Mbit/s"
-msgstr "%d Мбит/с"
-
-#: .locale-src\ucp/strings.js:6
-#, python-format
-msgid "%d kbit/s"
-msgstr "%d кбит/с"
-
-#: .locale-src\ucp/strings.js:7
-#, python-format
-msgid "%d bit/s"
-msgstr "%d бит/с"
+#~ msgid "%d bit/s"
+#~ msgstr "%d бит/с"
 
 #~ msgid "Wrong code"
 #~ msgstr "Неверный код"

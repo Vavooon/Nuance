@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nuance Billing System\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-02 19:05+0200\n"
-"PO-Revision-Date: 2013-10-02 19:06+0200\n"
+"POT-Creation-Date: 2015-01-06 20:14+0200\n"
+"PO-Revision-Date: 2015-01-06 20:14+0200\n"
 "Last-Translator: Vavooon <vavooon@gmail.com>\n"
 "Language-Team: Nuance <vavooon@gmail.com>\n"
 "Language: uk_UA\n"
@@ -15,28 +15,65 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.7.1\n"
 "X-Poedit-SearchPath-0: .locale-src\\ucp\n"
 "X-Poedit-SearchPath-1: ucp\n"
 "X-Poedit-SearchPath-2: include\n"
 
-#: ucp/documents.php:20
+#: include/ucp.php:272
+msgid "Home"
+msgstr "Головна"
+
+#: include/ucp.php:276
+msgid "My info"
+msgstr "Мої дані"
+
+#: include/ucp.php:281
+msgid "Moneyflow"
+msgstr "Історія платежів"
+
+#: include/ucp.php:285
+msgid "Fund by card"
+msgstr "Поповнити карткою"
+
+#: include/ucp.php:291
+msgid "Tariffs"
+msgstr "Тарифи"
+
+#: include/ucp.php:295
+msgid "Documents"
+msgstr "Документи"
+
+#: include/ucp.php:301
+msgid "Messages"
+msgstr "Повідомлення"
+
+#: include/ucp.php:316
+msgid "Contacts"
+msgstr "Контакти"
+
+#: include/ucp.php:341
+#, php-format
+msgid "%s - Nuance - User panel"
+msgstr "%s - Nuance - Особистий кабінет"
+
+#: ucp/documents.php:19
 msgid "Download"
 msgstr "Завантажити"
 
-#: ucp/documents.php:24
+#: ucp/documents.php:23
 msgid "View"
 msgstr "Переглянути"
 
-#: ucp/editprofile.php:24
+#: ucp/editprofile.php:25
 msgid "Your password was successfully changed."
 msgstr "Ваш пароль було успішно змінено."
 
-#: ucp/editprofile.php:42
+#: ucp/editprofile.php:47
 msgid "Your tariff will be changed from the next month."
 msgstr "Ваш тариф буде змінено з наступного місяця."
 
-#: ucp/editprofile.php:46
+#: ucp/editprofile.php:55
 msgid "Your tariff has been changed."
 msgstr "Ваш тариф було успішно змінено."
 
@@ -52,145 +89,11 @@ msgstr "Увімкнено"
 msgid "Disabled"
 msgstr "Вимкнено"
 
-#: ucp/moneyflow.php:57
-msgid "Fund with scratchcard"
-msgstr "Оплата карткою"
-
-#: ucp/moneyflow.php:62
-msgid "Refund operation"
-msgstr "Повернення коштів"
-
-#: ucp/moneyflow.php:72
-#, php-format
-msgid "Referral charge from %s"
-msgstr "Реферальне нарахування від %s"
-
-#: ucp/moneyflow.php:85
-#, php-format
-msgid "Order %s from %s to %s"
-msgstr "Зняття за послугу %s з %s по %s"
-
-#: ucp/moneyflow.php:96
-msgid "Unknown order"
-msgstr "Оплата послуги"
-
-#: ucp/moneyflow.php:102
-msgid "Fund by cashier"
-msgstr "Поповнення касиром"
-
-#: ucp/themes/default/badcard.php:2 ucp/themes/default/badlogin.php:2
-msgid "Wrong code"
-msgstr "Неправильний код"
-
-#: ucp/themes/default/badcard.php:5 ucp/themes/default/badlogin.php:5
-msgid "Try again"
-msgstr "Спробувати знову"
-
-#: ucp/themes/default/disabled.php:2
-msgid "Your account is disabled"
-msgstr "Ваш обліковий запис вимкнено"
-
-#: ucp/themes/default/editpassword.php:2
-msgid "Enter new password:"
-msgstr "Введіть новий пароль:"
-
-#: ucp/themes/default/editpassword.php:5 ucp/themes/default/info.php:48
-msgid "Change password"
-msgstr "Змінити пароль"
-
-#: ucp/themes/default/edittariff.php:2
-msgid "Select new tariff:"
-msgstr "Виберіть новий тариф:"
-
-#: ucp/themes/default/edittariff.php:29 ucp/themes/default/info.php:43
-msgid "Change tariff"
-msgstr "Змінити тариф"
-
-#: ucp/themes/default/goodcard.php:2
-#, php-format
-msgid "Your account has been funded for %s."
-msgstr "Ваш рахунок було поповнено на %s ."
-
-#: ucp/themes/default/header.php:4
-#, php-format
-msgid "%s - Nuance - User panel"
-msgstr "%s - Nuance - Особистий кабінет"
-
-#: ucp/themes/default/header.php:15
-msgid "Select language"
-msgstr "Виберіть мову"
-
-#: ucp/themes/default/header.php:39
-#, php-format
-msgid "You are logged in as <br>%s"
-msgstr "Ви увійшли як <br>%s"
-
-#: ucp/themes/default/header.php:43 ucp/themes/default/info.php:2
-#: include/ucp.php:265
-msgid "My info"
-msgstr "Мої дані"
-
-#: ucp/themes/default/header.php:45
-msgid "Log out"
-msgstr "Вийти"
-
-#: ucp/themes/default/header.php:51
-msgid "User panel"
-msgstr "Особистий кабінет"
-
-#: ucp/themes/default/header.php:52 ucp/themes/default/info.php:10
-msgid "Username"
-msgstr "Ім’я користувача"
-
-#: ucp/themes/default/header.php:53
-msgid "Password"
-msgstr "Пароль"
-
-#: ucp/themes/default/header.php:55 ucp/themes/default/login.php:14
-msgid "Log in"
-msgstr "Увійти"
-
-#: ucp/themes/default/info.php:5
-msgid "Account ID"
-msgstr "Номер договору"
-
-#: ucp/themes/default/info.php:14
-msgid "Service state"
-msgstr "Стан послуги"
-
-#: ucp/themes/default/info.php:19
-msgid "Current tariff"
-msgstr "Поточний тариф"
-
-#: ucp/themes/default/info.php:22
-msgid "Next tariff"
-msgstr "Наступний тариф"
-
-#: ucp/themes/default/info.php:26
-msgid "Tariff"
-msgstr "Тариф"
-
-#: ucp/themes/default/info.php:26
-msgid "Not selected"
-msgstr "Не вибрано"
-
-#: ucp/themes/default/info.php:30
-msgid "Balance"
-msgstr "Баланс"
-
-#: ucp/themes/default/info.php:34
-msgid "Discount"
-msgstr "Знижка"
-
-#: ucp/themes/default/info.php:40
-msgid "Actions"
-msgstr "Дії"
-
-#: ucp/themes/default/login.php:2
+#: ucp/login.php:23
 msgid "Wrong login or password. Please try again…"
 msgstr "Неправильний логін чи пароль. Будь ласка, спробуйте ще раз…"
 
-#: ucp/themes/default/login.php:4
+#: ucp/login.php:27
 msgid ""
 "You are logged in in automatic mode. Please enter your login and password to "
 "unlock all opportunities."
@@ -198,103 +101,33 @@ msgstr ""
 "Ви увійшли в автоматичному режимі. Для розблокування всіх можливостей "
 "увійдіть, використовуючи ваші логін та пароль."
 
-#: ucp/themes/default/login.php:8
-msgid "Username:"
-msgstr "Ім’я користувача:"
+#: ucp/moneyflow.php:58
+msgid "Fund with scratchcard"
+msgstr "Оплата карткою"
 
-#: ucp/themes/default/login.php:10
-msgid "Password:"
-msgstr "Пароль:"
+#: ucp/moneyflow.php:63
+msgid "Refund operation"
+msgstr "Повернення коштів"
 
-#: ucp/themes/default/login.php:17
-msgid "OR"
-msgstr "АБО"
+#: ucp/moneyflow.php:73
+#, php-format
+msgid "Referral charge from %s"
+msgstr "Реферальне нарахування від %s"
 
-#: ucp/themes/default/login.php:21
-msgid "Log in by IP"
-msgstr "Увійти по IP"
+#: ucp/moneyflow.php:86
+#, php-format
+msgid "Order %s from %s to %s"
+msgstr "Зняття за послугу %s з %s по %s"
 
-#: ucp/themes/default/messagehasbeenhidden.php:2
-msgid "Message has been hidden. You can using the internet."
-msgstr ""
-"Повідомлення було приховане. Тепер ви можете продовжити користування "
-"інтернетом."
+#: ucp/moneyflow.php:97
+msgid "Unknown order"
+msgstr "Оплата послуги"
 
-#: ucp/themes/default/messagehasbeensent.php:2
-msgid "Your message has been sent."
-msgstr "Ваше повідомлення було відправлене."
+#: ucp/moneyflow.php:103
+msgid "Fund by cashier"
+msgstr "Поповнення касиром"
 
-#: ucp/themes/default/messageslist.php:11
-msgid "Incoming message"
-msgstr "Вхідне повідомлення"
-
-#: ucp/themes/default/messageslist.php:11
-msgid "Outgoing message"
-msgstr "Вихідне повідомлення"
-
-#: ucp/themes/default/messageslist.php:22
-msgid "Mark all as read"
-msgstr "Позначити усі прочитаними"
-
-#: ucp/themes/default/messageslist.php:25
-msgid "New message"
-msgstr "Нове повідомлення"
-
-#: ucp/themes/default/moneyflow.php:3 include/ucp.php:270
-msgid "Moneyflow"
-msgstr "Історія платежів"
-
-#: ucp/themes/default/moneyflow.php:13
-msgid "Sum"
-msgstr "Сума"
-
-#: ucp/themes/default/moneyflow.php:14
-msgid "Date"
-msgstr "Дата"
-
-#: ucp/themes/default/moneyflow.php:15
-msgid "Details"
-msgstr "Деталі"
-
-#: ucp/themes/default/nocosts-notification.php:3
-#: ucp/themes/default/strings.php:3
-msgid ""
-"You do not have the funds to continue the use of the Internet in the next "
-"month."
-msgstr ""
-"У вас недостатньо коштів для продовження користування Інтернетом в "
-"наступному місяці."
-
-#: ucp/themes/default/nocosts-notification.php:4
-#: ucp/themes/default/nocosts-permanent.php:3 ucp/themes/default/strings.php:4
-msgid "Fund your account, please."
-msgstr "Поповніть, будь ласка, ваш рахунок."
-
-#: ucp/themes/default/nocosts-notification.php:12
-#: ucp/themes/default/nocosts-permanent.php:9
-msgid "Your account ID"
-msgstr "Номер вашого рахунку"
-
-#: ucp/themes/default/nocosts-notification.php:15
-#: ucp/themes/default/nocosts-permanent.php:12
-msgid "Minimal payment"
-msgstr "Мінімальний платіж"
-
-#: ucp/themes/default/nocosts-notification.php:22
-msgid "Continue to use the Internet"
-msgstr "Продовжити користування Інтернетом"
-
-#: ucp/themes/default/nocosts-notification.php:24
-msgid "Please log in into the UCP in order to hide this notification."
-msgstr ""
-"Будь ласка, увійдіть в особистий кабінет для того, щоб приховати це "
-"повідомлення."
-
-#: ucp/themes/default/nocosts-permanent.php:2
-msgid "You do not have the funds to continue the use of the Internet."
-msgstr "У вас недостатньо коштів для продовження користування Інтернетом."
-
-#: ucp/themes/default/paywithcard.php:10
+#: ucp/paywithcard.php:64
 #, php-format
 msgid ""
 "After updating service \"%s\" from %s to %s will be automatically paid for "
@@ -303,135 +136,229 @@ msgstr ""
 "Після поповнення вам автоматично буде підключено послугу<br> \"%s\" з %s по "
 "%s за %s."
 
-#: ucp/themes/default/paywithcard.php:19
-msgid "Enter the code completion:"
-msgstr "Введіть код поповнення:"
+#: ucp/tariffs.php:119
+msgid "Name"
+msgstr "Назва"
 
-#: ucp/themes/default/paywithcard.php:23
-msgid "Fund"
-msgstr "Внести кошти"
+#: ucp/tariffs.php:120
+msgid "Download speed"
+msgstr "Вхідна швидкість"
 
-#: ucp/themes/default/showmessage.php:8
-msgid "Reply"
-msgstr "Відповісти"
+#: ucp/tariffs.php:121
+msgid "Upload speed"
+msgstr "Вихідна швидкість"
 
-#: ucp/themes/default/showmessage.php:11
-msgid "Mark as read"
-msgstr "Позначити як прочитане"
+#: ucp/tariffs.php:122
+msgid "Night download speed"
+msgstr "Нічна вхідна швидкість"
 
-#: ucp/themes/default/showmessage.php:18
-msgid "Back to list"
-msgstr "Назад до списку"
+#: ucp/tariffs.php:123
+msgid "Night upload speed"
+msgstr "Нічна вихідна швидкість"
 
-#: ucp/themes/default/strings.php:2 .locale-src\ucp/strings.js:3
-#, python-format, php-format
-msgid "%s UAH"
-msgid_plural "%s UAH"
-msgstr[0] "%s гривня"
-msgstr[1] "%s гривні"
-msgstr[2] "%s гривень"
+#: ucp/tariffs.php:124
+msgid "Price"
+msgstr "Вартість"
 
-#: ucp/themes/default/tariffs.php:2
+#: ucp/tariffs.php:134
 #, php-format
 msgid "Night rates are valid from %s to %s"
 msgstr "Нічні тарифи діють з %s по %s"
 
-#: ucp/themes/default/tariffs.php:5
-msgid "Available tariffs"
-msgstr "Доступні тарифи"
+#~ msgid "Wrong code"
+#~ msgstr "Неправильний код"
 
-#: ucp/themes/default/tariffs.php:13
-msgid "Name"
-msgstr "Назва"
+#~ msgid "Try again"
+#~ msgstr "Спробувати знову"
 
-#: ucp/themes/default/tariffs.php:14
-msgid "Download speed"
-msgstr "Вхідна швидкість"
+#~ msgid "Your account is disabled"
+#~ msgstr "Ваш обліковий запис вимкнено"
 
-#: ucp/themes/default/tariffs.php:15
-msgid "Upload speed"
-msgstr "Вихідна швидкість"
+#~ msgid "Enter new password:"
+#~ msgstr "Введіть новий пароль:"
 
-#: ucp/themes/default/tariffs.php:17
-msgid "Night download speed"
-msgstr "Нічна вхідна швидкість"
+#~ msgid "Change password"
+#~ msgstr "Змінити пароль"
 
-#: ucp/themes/default/tariffs.php:18
-msgid "Night upload speed"
-msgstr "Нічна вихідна швидкість"
+#~ msgid "Select new tariff:"
+#~ msgstr "Виберіть новий тариф:"
 
-#: ucp/themes/default/tariffs.php:20
-msgid "Price"
-msgstr "Вартість"
+#~ msgid "Change tariff"
+#~ msgstr "Змінити тариф"
 
-#: ucp/themes/default/wrongdevice.php:3
-msgid "Your device is unauthorized. Please call support."
-msgstr ""
-"Ваш пристрій не є авторизованим. Будь ласка, зверніться в техпідтримку. "
+#~ msgid "Your account has been funded for %s."
+#~ msgstr "Ваш рахунок було поповнено на %s ."
 
-#: include/ucp.php:21
-msgid "You do not have permission to use UCP"
-msgstr "У вас немає можливості використовувати особистий кабінет"
+#~ msgid "Select language"
+#~ msgstr "Виберіть мову"
 
-#: include/ucp.php:261
-msgid "Home"
-msgstr "Головна"
+#~ msgid "You are logged in as <br>%s"
+#~ msgstr "Ви увійшли як <br>%s"
 
-#: include/ucp.php:274
-msgid "Fund by card"
-msgstr "Поповнити карткою"
+#~ msgid "Log out"
+#~ msgstr "Вийти"
 
-#: include/ucp.php:280
-msgid "Tariffs"
-msgstr "Тарифи"
+#~ msgid "User panel"
+#~ msgstr "Особистий кабінет"
 
-#: include/ucp.php:284
-msgid "Documents"
-msgstr "Документи"
+#~ msgid "Username"
+#~ msgstr "Ім’я користувача"
 
-#: include/ucp.php:290
-msgid "Messages"
-msgstr "Повідомлення"
+#~ msgid "Password"
+#~ msgstr "Пароль"
 
-#: include/ucp.php:304
-msgid "Contacts"
-msgstr "Контакти"
+#~ msgid "Log in"
+#~ msgstr "Увійти"
 
-#: .locale-src\ucp/strings.js:1
-#, python-format
-msgid "%s RUB"
-msgid_plural "%s RUB"
-msgstr[0] "%s рубель"
-msgstr[1] "%s рублі"
-msgstr[2] "%s рублів"
+#~ msgid "Account ID"
+#~ msgstr "Номер договору"
 
-#: .locale-src\ucp/strings.js:2
-#, python-format
-msgid "%s USD"
-msgid_plural "%s USD"
-msgstr[0] "%s долар"
-msgstr[1] "%s долари"
-msgstr[2] "%s доларів"
+#~ msgid "Service state"
+#~ msgstr "Стан послуги"
 
-#: .locale-src\ucp/strings.js:4
-#, python-format
-msgid "%d Gbit/s"
-msgstr "%d Гбіт/с"
+#~ msgid "Current tariff"
+#~ msgstr "Поточний тариф"
 
-#: .locale-src\ucp/strings.js:5
-#, python-format
-msgid "%d Mbit/s"
-msgstr "%d Мбіт/с"
+#~ msgid "Next tariff"
+#~ msgstr "Наступний тариф"
 
-#: .locale-src\ucp/strings.js:6
-#, python-format
-msgid "%d kbit/s"
-msgstr "%d кбіт/с"
+#~ msgid "Tariff"
+#~ msgstr "Тариф"
 
-#: .locale-src\ucp/strings.js:7
-#, python-format
-msgid "%d bit/s"
-msgstr "%d біт/с"
+#~ msgid "Not selected"
+#~ msgstr "Не вибрано"
+
+#~ msgid "Balance"
+#~ msgstr "Баланс"
+
+#~ msgid "Discount"
+#~ msgstr "Знижка"
+
+#~ msgid "Actions"
+#~ msgstr "Дії"
+
+#~ msgid "Username:"
+#~ msgstr "Ім’я користувача:"
+
+#~ msgid "Password:"
+#~ msgstr "Пароль:"
+
+#~ msgid "OR"
+#~ msgstr "АБО"
+
+#~ msgid "Log in by IP"
+#~ msgstr "Увійти по IP"
+
+#~ msgid "Message has been hidden. You can using the internet."
+#~ msgstr ""
+#~ "Повідомлення було приховане. Тепер ви можете продовжити користування "
+#~ "інтернетом."
+
+#~ msgid "Your message has been sent."
+#~ msgstr "Ваше повідомлення було відправлене."
+
+#~ msgid "Incoming message"
+#~ msgstr "Вхідне повідомлення"
+
+#~ msgid "Outgoing message"
+#~ msgstr "Вихідне повідомлення"
+
+#~ msgid "Mark all as read"
+#~ msgstr "Позначити усі прочитаними"
+
+#~ msgid "New message"
+#~ msgstr "Нове повідомлення"
+
+#~ msgid "Sum"
+#~ msgstr "Сума"
+
+#~ msgid "Date"
+#~ msgstr "Дата"
+
+#~ msgid "Details"
+#~ msgstr "Деталі"
+
+#~ msgid ""
+#~ "You do not have the funds to continue the use of the Internet in the next "
+#~ "month."
+#~ msgstr ""
+#~ "У вас недостатньо коштів для продовження користування Інтернетом в "
+#~ "наступному місяці."
+
+#~ msgid "Fund your account, please."
+#~ msgstr "Поповніть, будь ласка, ваш рахунок."
+
+#~ msgid "Your account ID"
+#~ msgstr "Номер вашого рахунку"
+
+#~ msgid "Minimal payment"
+#~ msgstr "Мінімальний платіж"
+
+#~ msgid "Continue to use the Internet"
+#~ msgstr "Продовжити користування Інтернетом"
+
+#~ msgid "Please log in into the UCP in order to hide this notification."
+#~ msgstr ""
+#~ "Будь ласка, увійдіть в особистий кабінет для того, щоб приховати це "
+#~ "повідомлення."
+
+#~ msgid "You do not have the funds to continue the use of the Internet."
+#~ msgstr "У вас недостатньо коштів для продовження користування Інтернетом."
+
+#~ msgid "Enter the code completion:"
+#~ msgstr "Введіть код поповнення:"
+
+#~ msgid "Fund"
+#~ msgstr "Внести кошти"
+
+#~ msgid "Reply"
+#~ msgstr "Відповісти"
+
+#~ msgid "Mark as read"
+#~ msgstr "Позначити як прочитане"
+
+#~ msgid "Back to list"
+#~ msgstr "Назад до списку"
+
+#~ msgid "%s UAH"
+#~ msgid_plural "%s UAH"
+#~ msgstr[0] "%s гривня"
+#~ msgstr[1] "%s гривні"
+#~ msgstr[2] "%s гривень"
+
+#~ msgid "Available tariffs"
+#~ msgstr "Доступні тарифи"
+
+#~ msgid "Your device is unauthorized. Please call support."
+#~ msgstr ""
+#~ "Ваш пристрій не є авторизованим. Будь ласка, зверніться в техпідтримку. "
+
+#~ msgid "You do not have permission to use UCP"
+#~ msgstr "У вас немає можливості використовувати особистий кабінет"
+
+#~ msgid "%s RUB"
+#~ msgid_plural "%s RUB"
+#~ msgstr[0] "%s рубель"
+#~ msgstr[1] "%s рублі"
+#~ msgstr[2] "%s рублів"
+
+#~ msgid "%s USD"
+#~ msgid_plural "%s USD"
+#~ msgstr[0] "%s долар"
+#~ msgstr[1] "%s долари"
+#~ msgstr[2] "%s доларів"
+
+#~ msgid "%d Gbit/s"
+#~ msgstr "%d Гбіт/с"
+
+#~ msgid "%d Mbit/s"
+#~ msgstr "%d Мбіт/с"
+
+#~ msgid "%d kbit/s"
+#~ msgstr "%d кбіт/с"
+
+#~ msgid "%d bit/s"
+#~ msgstr "%d біт/с"
 
 #~ msgid "Hide notification"
 #~ msgstr "ПОзначити "

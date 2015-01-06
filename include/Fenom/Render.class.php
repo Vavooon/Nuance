@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Fenom.
  *
@@ -7,7 +8,9 @@
  * For the full copyright and license information, please view the license.md
  * file that was distributed with this source code.
  */
+
 namespace Fenom;
+
 use Fenom;
 use Symfony\Component\Yaml\Exception\RuntimeException;
 
@@ -17,37 +20,44 @@ use Symfony\Component\Yaml\Exception\RuntimeException;
  */
 class Render extends \ArrayObject
 {
+
     private static $_props = array(
-        "name" => "runtime",
-        "base_name" => "",
-        "scm" => false,
-        "time" => 0,
-        "depends" => array(),
-        "macros" => array()
+            "name" => "runtime",
+            "base_name" => "",
+            "scm" => false,
+            "time" => 0,
+            "depends" => array(),
+            "macros" => array()
     );
+
     /**
      * @var \Closure
      */
     protected $_code;
+
     /**
      * Template name
      * @var string
      */
     protected $_name = 'runtime';
+
     /**
      * Provider's schema
      * @var bool
      */
     protected $_scm = false;
+
     /**
      * Basic template name
      * @var string
      */
     protected $_base_name = 'runtime';
+
     /**
      * @var Fenom
      */
     protected $_fenom;
+
     /**
      * Timestamp of compilation
      * @var float
@@ -169,22 +179,27 @@ class Render extends \ArrayObject
         return $this->_time;
     }
 
-
     /**
      * Validate template
      * @return bool
      */
     public function isValid()
     {
-        if (count($this->_depends[0]) === 1) { // if no external dependencies, only self
+        if (count($this->_depends[0]) === 1)
+        { // if no external dependencies, only self
             $provider = $this->_fenom->getProvider($this->_scm);
-            if ($provider->getLastModified($this->_name) !== $this->_time) {
+            if ($provider->getLastModified($this->_name) !== $this->_time)
+            {
                 return false;
             }
-        } else {
-            foreach ($this->_depends as $scm => $templates) {
+        }
+        else
+        {
+            foreach ($this->_depends as $scm => $templates)
+            {
                 $provider = $this->_fenom->getProvider($scm);
-                if (!$provider->verify($templates)) {
+                if (!$provider->verify($templates))
+                {
                     return false;
                 }
             }
@@ -199,7 +214,8 @@ class Render extends \ArrayObject
      */
     public function getMacro($name)
     {
-        if (empty($this->_macros[$name])) {
+        if (empty($this->_macros[$name]))
+        {
             throw new RuntimeException('macro not found');
         }
         return $this->_macros[$name];
@@ -226,10 +242,13 @@ class Render extends \ArrayObject
     public function fetch(array $values)
     {
         ob_start();
-        try {
+        try
+        {
             $this->display($values);
             return ob_get_clean();
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e)
+        {
             ob_end_clean();
             throw $e;
         }
@@ -248,13 +267,16 @@ class Render extends \ArrayObject
 
     public function __get($name)
     {
-        if ($name == 'info') {
+        if ($name == 'info')
+        {
             return array(
-                'name' => $this->_name,
-                'schema' => $this->_scm,
-                'time' => $this->_time
+                    'name' => $this->_name,
+                    'schema' => $this->_scm,
+                    'time' => $this->_time
             );
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -263,4 +285,5 @@ class Render extends \ArrayObject
     {
         return $name == 'info';
     }
+
 }

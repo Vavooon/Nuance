@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Fenom.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the license.md
  * file that was distributed with this source code.
  */
+
 namespace Fenom;
 
 /**
@@ -20,6 +22,7 @@ class Scope extends \ArrayObject
     public $line = 0;
     public $name;
     public $level = 0;
+
     /**
      * @var Template
      */
@@ -83,10 +86,14 @@ class Scope extends \ArrayObject
      */
     public function hasTag($tag, $level)
     {
-        if (isset($this->_action["tags"][$tag])) {
-            if ($level) {
+        if (isset($this->_action["tags"][$tag]))
+        {
+            if ($level)
+            {
                 return isset($this->_action["float_tags"][$tag]);
-            } else {
+            }
+            else
+            {
                 return true;
             }
         }
@@ -153,6 +160,7 @@ class Scope extends \ArrayObject
 
     public function unEscapeContent()
     {
-
+        
     }
+
 }

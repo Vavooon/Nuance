@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Fenom.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the license.md
  * file that was distributed with this source code.
  */
+
 namespace Fenom;
 
 /**
@@ -25,9 +27,11 @@ class Modifier
      */
     public static function dateFormat($date, $format = "%b %e, %Y")
     {
-        if (is_string($date) && !is_numeric($date)) {
+        if (is_string($date) && !is_numeric($date))
+        {
             $date = strtotime($date);
-            if (!$date) $date = time();
+            if (!$date)
+                $date = time();
         }
         return strftime($format, $date);
     }
@@ -39,9 +43,11 @@ class Modifier
      */
     public static function date($date, $format = "Y m d")
     {
-        if (is_string($date) && !is_numeric($date)) {
+        if (is_string($date) && !is_numeric($date))
+        {
             $date = strtotime($date);
-            if (!$date) $date = time();
+            if (!$date)
+                $date = time();
         }
         return date($format, $date);
     }
@@ -55,7 +61,8 @@ class Modifier
      */
     public static function escape($text, $type = 'html')
     {
-        switch (strtolower($type)) {
+        switch (strtolower($type))
+        {
             case "url":
                 return urlencode($text);
             case "html";
@@ -74,7 +81,8 @@ class Modifier
      */
     public static function unescape($text, $type = 'html')
     {
-        switch (strtolower($type)) {
+        switch (strtolower($type))
+        {
             case "url":
                 return urldecode($text);
             case "html";
@@ -96,21 +104,33 @@ class Modifier
      */
     public static function truncate($string, $length = 80, $etc = '...', $by_words = false, $middle = false)
     {
-        if ($middle) {
-            if (preg_match('#^(.{' . $length . '}).*?(.{' . $length . '})?$#usS', $string, $match)) {
-                if (count($match) == 3) {
-                    if ($by_words) {
+        if ($middle)
+        {
+            if (preg_match('#^(.{' . $length . '}).*?(.{' . $length . '})?$#usS', $string, $match))
+            {
+                if (count($match) == 3)
+                {
+                    if ($by_words)
+                    {
                         return preg_replace('#\s.*$#usS', "", $match[1]) . $etc . preg_replace('#^.*\s#usS', "", $match[2]);
-                    } else {
+                    }
+                    else
+                    {
                         return $match[1] . $etc . $match[2];
                     }
                 }
             }
-        } else {
-            if (preg_match('#^(.{' . $length . '})#usS', $string, $match)) {
-                if ($by_words) {
+        }
+        else
+        {
+            if (preg_match('#^(.{' . $length . '})#usS', $string, $match))
+            {
+                if ($by_words)
+                {
                     return preg_replace('#\s.*$#usS', "", $match[1]) . $etc;
-                } else {
+                }
+                else
+                {
                     return $match[1] . $etc;
                 }
             }
@@ -128,9 +148,12 @@ class Modifier
     public static function strip($str, $to_line = false)
     {
         $str = trim($str);
-        if ($to_line) {
+        if ($to_line)
+        {
             return preg_replace('#[\s]+#ms', ' ', $str);
-        } else {
+        }
+        else
+        {
             return preg_replace('#[ \t]{2,}#', ' ', $str);
         }
     }
@@ -142,13 +165,20 @@ class Modifier
      */
     public static function length($item)
     {
-        if (is_string($item)) {
+        if (is_string($item))
+        {
             return strlen(preg_replace('#[\x00-\x7F]|[\x80-\xDF][\x00-\xBF]|[\xE0-\xEF][\x00-\xBF]{2}#s', ' ', $item));
-        } elseif (is_array($item)) {
+        }
+        elseif (is_array($item))
+        {
             return count($item);
-        } elseif ($item instanceof \Countable) {
+        }
+        elseif ($item instanceof \Countable)
+        {
             return count($item);
-        } else {
+        }
+        else
+        {
             return 0;
         }
     }
@@ -161,9 +191,12 @@ class Modifier
      */
     public static function in($value, $haystack)
     {
-        if (is_array($haystack)) {
+        if (is_array($haystack))
+        {
             return in_array($value, $haystack) || array_key_exists($value, $haystack);
-        } elseif (is_string($haystack)) {
+        }
+        elseif (is_string($haystack))
+        {
             return strpos($haystack, $value) !== false;
         }
         return false;
@@ -177,4 +210,5 @@ class Modifier
     {
         return is_array($value) || ($value instanceof \Iterator);
     }
+
 }
