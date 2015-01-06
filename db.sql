@@ -1,52 +1,32 @@
--- MySQL dump 10.14  Distrib 5.5.31-MariaDB, for Win64 (x86)
---
--- Host: localhost    Database: nuance
--- ------------------------------------------------------
--- Server version	5.5.31-MariaDB
+-- --------------------------------------------------------
+-- Сервер:                       127.0.0.1
+-- Версія сервера:               5.5.31-MariaDB - mariadb.org binary distribution
+-- ОС сервера:                   Win64
+-- HeidiSQL Версія:              9.1.0.4882
+-- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Current Database: `nuance`
---
+-- Dumping database structure for nuance_new
+CREATE DATABASE IF NOT EXISTS `nuance_new` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `nuance_new`;
 
-/*!40000 DROP DATABASE IF EXISTS `nuance`*/;
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `nuance` /*!40100 DEFAULT CHARACTER SET utf8 */;
-
-USE `nuance`;
-
---
--- Table structure for table `city`
---
-
-DROP TABLE IF EXISTS `city`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `city` (
+-- Dumping structure for таблиця nuance_new.city
+CREATE TABLE IF NOT EXISTS `city` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(15) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `config`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `config`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `config` (
+
+-- Dumping structure for таблиця nuance_new.config
+CREATE TABLE IF NOT EXISTS `config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `type` varchar(50) DEFAULT NULL,
   `ownerid` int(11) DEFAULT NULL,
@@ -56,53 +36,55 @@ CREATE TABLE `config` (
   `value` longtext,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `group`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `group` (
+
+-- Dumping structure for таблиця nuance_new.group
+CREATE TABLE IF NOT EXISTS `group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` tinytext,
   `acl` text COMMENT 'acl',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `log`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `log`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `log` (
+
+-- Dumping structure for таблиця nuance_new.ip
+CREATE TABLE IF NOT EXISTS `ip` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user` int(10) unsigned NOT NULL COMMENT 'link',
+  `router` int(10) unsigned NOT NULL COMMENT 'link',
+  `ip` tinytext NOT NULL,
+  `mac` tinytext NOT NULL,
+  `port` tinytext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for таблиця nuance_new.log
+CREATE TABLE IF NOT EXISTS `log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `type` tinytext,
   `subtype` tinytext,
-  `master` int(10) unsigned DEFAULT NULL,
+  `master` int(10) unsigned DEFAULT NULL COMMENT 'link',
   `action` tinytext,
   `targetsection` tinytext,
   `targetid` int(10) unsigned DEFAULT NULL,
-  `olddata` tinytext,
-  `newdata` tinytext,
+  `olddata` text,
+  `newdata` text,
   `date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `master`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `master`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `master` (
+
+-- Dumping structure for таблиця nuance_new.master
+CREATE TABLE IF NOT EXISTS `master` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(60) CHARACTER SET latin1 DEFAULT NULL,
   `password` varchar(64) CHARACTER SET latin1 DEFAULT NULL COMMENT 'md5password',
@@ -110,16 +92,12 @@ CREATE TABLE `master` (
   `disabled` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `message`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `message`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `message` (
+
+-- Dumping structure for таблиця nuance_new.message
+CREATE TABLE IF NOT EXISTS `message` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `sender` int(10) DEFAULT NULL,
   `sender_is_admin` tinyint(1) DEFAULT NULL,
@@ -132,16 +110,12 @@ CREATE TABLE `message` (
   `readdate` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `moneyflow`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `moneyflow`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `moneyflow` (
+
+-- Dumping structure for таблиця nuance_new.moneyflow
+CREATE TABLE IF NOT EXISTS `moneyflow` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(11) unsigned DEFAULT NULL COMMENT 'link',
   `detailsname` tinytext NOT NULL,
@@ -153,16 +127,12 @@ CREATE TABLE `moneyflow` (
   `comment` text COMMENT 'multitext',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `order`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `order`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order` (
+
+-- Dumping structure for таблиця nuance_new.order
+CREATE TABLE IF NOT EXISTS `order` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(10) unsigned DEFAULT NULL,
   `detailsname` varchar(50) DEFAULT NULL,
@@ -174,16 +144,28 @@ CREATE TABLE `order` (
   `enddate` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `router`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `router`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `router` (
+
+-- Dumping structure for таблиця nuance_new.ppp
+CREATE TABLE IF NOT EXISTS `ppp` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user` int(10) unsigned NOT NULL COMMENT 'link',
+  `router` int(10) unsigned NOT NULL COMMENT 'link',
+  `login` tinytext NOT NULL,
+  `password` tinytext NOT NULL,
+  `localip` tinytext NOT NULL,
+  `remoteip` tinytext NOT NULL,
+  `pppservice` tinytext NOT NULL COMMENT 'charlink',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for таблиця nuance_new.router
+CREATE TABLE IF NOT EXISTS `router` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
   `routertype` varchar(20) CHARACTER SET latin1 DEFAULT NULL COMMENT 'charlink',
@@ -194,33 +176,24 @@ CREATE TABLE `router` (
   `comment` text COMMENT 'multitext',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `routerupdatequeue`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `routerupdatequeue`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `routerupdatequeue` (
+
+-- Dumping structure for таблиця nuance_new.routerupdatequeue
+CREATE TABLE IF NOT EXISTS `routerupdatequeue` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `router` int(10) unsigned DEFAULT '0',
   `mode` varchar(50) DEFAULT NULL,
   `user` int(10) unsigned DEFAULT '0',
-  `fff` int(10) unsigned DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `scratchcard`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `scratchcard`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `scratchcard` (
+
+-- Dumping structure for таблиця nuance_new.scratchcard
+CREATE TABLE IF NOT EXISTS `scratchcard` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `code` char(16) DEFAULT NULL,
   `value` int(10) unsigned DEFAULT NULL COMMENT 'money',
@@ -230,31 +203,23 @@ CREATE TABLE `scratchcard` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `street`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `street`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `street` (
+
+-- Dumping structure for таблиця nuance_new.street
+CREATE TABLE IF NOT EXISTS `street` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `city` int(11) DEFAULT NULL COMMENT 'link',
   `name` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `tariff`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `tariff`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tariff` (
+
+-- Dumping structure for таблиця nuance_new.tariff
+CREATE TABLE IF NOT EXISTS `tariff` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
   `price` int(11) DEFAULT NULL COMMENT 'money',
@@ -273,16 +238,12 @@ CREATE TABLE `tariff` (
   `comment` text COMMENT 'multitext',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `user`
---
+-- Data exporting was unselected.
 
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
+
+-- Dumping structure for таблиця nuance_new.user
+CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `login` tinytext,
   `password` tinytext COMMENT 'generatepassword',
@@ -308,16 +269,11 @@ CREATE TABLE `user` (
   `comment` mediumtext COMMENT 'multitext',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+-- Data exporting was unselected.
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2013-09-25 21:57:19
 INSERT INTO `master` (`id`, `login`, `password`, `group`) VALUES (1, 'demo', 'fe01ce2a7fbac8fafaed7c982a04e229', 1); 
