@@ -1,7 +1,6 @@
 <?php
 
 // Set runtime preferences
-
 $sessionId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : false;
 
 $path = dirname(__FILE__);
@@ -25,13 +24,11 @@ $responseTemplate = array
 
 set_time_limit(0);
 
-
 // Include config
 include $path . "/default.php";
 include $path . "/Altorouter.class.php";
 include_once $path . "/cache.php";
 include $path . "/../config.php";
-
 
 $loggedTables = array(
         'user' => array('editdate'),
