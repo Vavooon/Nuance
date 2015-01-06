@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Fenom.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the license.md
  * file that was distributed with this source code.
  */
+
 use Fenom\ProviderInterface;
 use Fenom\Template;
 
@@ -17,6 +19,7 @@ use Fenom\Template;
  */
 class Fenom
 {
+
     const VERSION = '1.4';
 
     /* Actions */
@@ -48,7 +51,6 @@ class Fenom
     const DEFAULT_FUNC_OPEN = 'Fenom\Compiler::stdFuncOpen';
     const DEFAULT_FUNC_CLOSE = 'Fenom\Compiler::stdFuncClose';
     const SMART_FUNC_PARSER = 'Fenom\Compiler::smartFuncParser';
-
     const MAX_MACRO_RECURSIVE = 32;
 
     /**
@@ -56,17 +58,17 @@ class Fenom
      * @see setOptions
      */
     private static $_options_list = array(
-        "disable_accessor" => self::DENY_ACCESSOR,
-        "disable_methods" => self::DENY_METHODS,
-        "disable_native_funcs" => self::DENY_NATIVE_FUNCS,
-        "disable_cache" => self::DISABLE_CACHE,
-        "force_compile" => self::FORCE_COMPILE,
-        "auto_reload" => self::AUTO_RELOAD,
-        "force_include" => self::FORCE_INCLUDE,
-        "auto_escape" => self::AUTO_ESCAPE,
-        "force_verify" => self::FORCE_VERIFY,
-        "auto_trim" => self::AUTO_TRIM,
-        "disable_statics" => self::DENY_STATICS,
+            "disable_accessor" => self::DENY_ACCESSOR,
+            "disable_methods" => self::DENY_METHODS,
+            "disable_native_funcs" => self::DENY_NATIVE_FUNCS,
+            "disable_cache" => self::DISABLE_CACHE,
+            "force_compile" => self::FORCE_COMPILE,
+            "auto_reload" => self::AUTO_RELOAD,
+            "force_include" => self::FORCE_INCLUDE,
+            "auto_escape" => self::AUTO_ESCAPE,
+            "force_verify" => self::FORCE_VERIFY,
+            "auto_trim" => self::AUTO_TRIM,
+            "disable_statics" => self::DENY_STATICS,
     );
 
     /**
@@ -103,6 +105,7 @@ class Fenom
      * @var ProviderInterface
      */
     private $_provider;
+
     /**
      * @var Fenom\ProviderInterface[]
      */
@@ -112,141 +115,141 @@ class Fenom
      * @var string[] list of modifiers [modifier_name => callable]
      */
     protected $_modifiers = array(
-        "upper" => 'strtoupper',
-        "up" => 'strtoupper',
-        "lower" => 'strtolower',
-        "low" => 'strtolower',
-        "date_format" => 'Fenom\Modifier::dateFormat',
-        "date" => 'Fenom\Modifier::date',
-        "truncate" => 'Fenom\Modifier::truncate',
-        "escape" => 'Fenom\Modifier::escape',
-        "e" => 'Fenom\Modifier::escape', // alias of escape
-        "unescape" => 'Fenom\Modifier::unescape',
-        "strip" => 'Fenom\Modifier::strip',
-        "length" => 'Fenom\Modifier::length',
-        "iterable" => 'Fenom\Modifier::isIterable'
+            "upper" => 'strtoupper',
+            "up" => 'strtoupper',
+            "lower" => 'strtolower',
+            "low" => 'strtolower',
+            "date_format" => 'Fenom\Modifier::dateFormat',
+            "date" => 'Fenom\Modifier::date',
+            "truncate" => 'Fenom\Modifier::truncate',
+            "escape" => 'Fenom\Modifier::escape',
+            "e" => 'Fenom\Modifier::escape', // alias of escape
+            "unescape" => 'Fenom\Modifier::unescape',
+            "strip" => 'Fenom\Modifier::strip',
+            "length" => 'Fenom\Modifier::length',
+            "iterable" => 'Fenom\Modifier::isIterable'
     );
 
     /**
      * @var array of allowed PHP functions
      */
     protected $_allowed_funcs = array(
-        "count" => 1, "is_string" => 1, "is_array" => 1, "is_numeric" => 1, "is_int" => 1, 'constant' => 1,
-        "is_object" => 1, "strtotime" => 1, "gettype" => 1, "is_double" => 1, "json_encode" => 1, "json_decode" => 1,
-        "ip2long" => 1, "long2ip" => 1, "strip_tags" => 1, "nl2br" => 1, "explode" => 1, "implode" => 1
+            "count" => 1, "is_string" => 1, "is_array" => 1, "is_numeric" => 1, "is_int" => 1, 'constant' => 1,
+            "is_object" => 1, "strtotime" => 1, "gettype" => 1, "is_double" => 1, "json_encode" => 1, "json_decode" => 1,
+            "ip2long" => 1, "long2ip" => 1, "strip_tags" => 1, "nl2br" => 1, "explode" => 1, "implode" => 1
     );
 
     /**
      * @var array[] of compilers and functions
      */
     protected $_actions = array(
-        'foreach' => array( // {foreach ...} {break} {continue} {foreachelse} {/foreach}
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::foreachOpen',
-            'close' => 'Fenom\Compiler::foreachClose',
-            'tags' => array(
-                'foreachelse' => 'Fenom\Compiler::foreachElse',
-                'break' => 'Fenom\Compiler::tagBreak',
-                'continue' => 'Fenom\Compiler::tagContinue',
+            'foreach' => array(// {foreach ...} {break} {continue} {foreachelse} {/foreach}
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::foreachOpen',
+                    'close' => 'Fenom\Compiler::foreachClose',
+                    'tags' => array(
+                            'foreachelse' => 'Fenom\Compiler::foreachElse',
+                            'break' => 'Fenom\Compiler::tagBreak',
+                            'continue' => 'Fenom\Compiler::tagContinue',
+                    ),
+                    'float_tags' => array('break' => 1, 'continue' => 1)
             ),
-            'float_tags' => array('break' => 1, 'continue' => 1)
-        ),
-        'if' => array( // {if ...} {elseif ...} {else} {/if}
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::ifOpen',
-            'close' => 'Fenom\Compiler::stdClose',
-            'tags' => array(
-                'elseif' => 'Fenom\Compiler::tagElseIf',
-                'else' => 'Fenom\Compiler::tagElse'
+            'if' => array(// {if ...} {elseif ...} {else} {/if}
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::ifOpen',
+                    'close' => 'Fenom\Compiler::stdClose',
+                    'tags' => array(
+                            'elseif' => 'Fenom\Compiler::tagElseIf',
+                            'else' => 'Fenom\Compiler::tagElse'
+                    )
+            ),
+            'switch' => array(// {switch ...} {case ..., ...}  {default} {/switch}
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::switchOpen',
+                    'close' => 'Fenom\Compiler::switchClose',
+                    'tags' => array(
+                            'case' => 'Fenom\Compiler::tagCase',
+                            'default' => 'Fenom\Compiler::tagDefault'
+                    ),
+                    'float_tags' => array('break' => 1)
+            ),
+            'for' => array(// {for ...} {break} {continue} {/for}
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::forOpen',
+                    'close' => 'Fenom\Compiler::forClose',
+                    'tags' => array(
+                            'forelse' => 'Fenom\Compiler::forElse',
+                            'break' => 'Fenom\Compiler::tagBreak',
+                            'continue' => 'Fenom\Compiler::tagContinue',
+                    ),
+                    'float_tags' => array('break' => 1, 'continue' => 1)
+            ),
+            'while' => array(// {while ...} {break} {continue} {/while}
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::whileOpen',
+                    'close' => 'Fenom\Compiler::stdClose',
+                    'tags' => array(
+                            'break' => 'Fenom\Compiler::tagBreak',
+                            'continue' => 'Fenom\Compiler::tagContinue',
+                    ),
+                    'float_tags' => array('break' => 1, 'continue' => 1)
+            ),
+            'include' => array(// {include ...}
+                    'type' => self::INLINE_COMPILER,
+                    'parser' => 'Fenom\Compiler::tagInclude'
+            ),
+            'insert' => array(// {include ...}
+                    'type' => self::INLINE_COMPILER,
+                    'parser' => 'Fenom\Compiler::tagInsert'
+            ),
+            'var' => array(// {var ...}
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::varOpen',
+                    'close' => 'Fenom\Compiler::varClose'
+            ),
+            'block' => array(// {block ...} {parent} {/block}
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::tagBlockOpen',
+                    'close' => 'Fenom\Compiler::tagBlockClose',
+                    'tags' => array(//                'parent' => 'Fenom\Compiler::tagParent' // not implemented yet
+                    ),
+                    'float_tags' => array('parent' => 1)
+            ),
+            'extends' => array(// {extends ...}
+                    'type' => self::INLINE_COMPILER,
+                    'parser' => 'Fenom\Compiler::tagExtends'
+            ),
+            'use' => array(// {use}
+                    'type' => self::INLINE_COMPILER,
+                    'parser' => 'Fenom\Compiler::tagUse'
+            ),
+            'filter' => array(// {filter} ... {/filter}
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::filterOpen',
+                    'close' => 'Fenom\Compiler::filterClose'
+            ),
+            'macro' => array(
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::macroOpen',
+                    'close' => 'Fenom\Compiler::macroClose'
+            ),
+            'import' => array(
+                    'type' => self::INLINE_COMPILER,
+                    'parser' => 'Fenom\Compiler::tagImport'
+            ),
+            'cycle' => array(
+                    'type' => self::INLINE_COMPILER,
+                    'parser' => 'Fenom\Compiler::tagCycle'
+            ),
+            'raw' => array(
+                    'type' => self::INLINE_COMPILER,
+                    'parser' => 'Fenom\Compiler::tagRaw'
+            ),
+            'autoescape' => array(
+                    'type' => self::BLOCK_COMPILER,
+                    'open' => 'Fenom\Compiler::autoescapeOpen',
+                    'close' => 'Fenom\Compiler::autoescapeClose'
             )
-        ),
-        'switch' => array( // {switch ...} {case ..., ...}  {default} {/switch}
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::switchOpen',
-            'close' => 'Fenom\Compiler::switchClose',
-            'tags' => array(
-                'case' => 'Fenom\Compiler::tagCase',
-                'default' => 'Fenom\Compiler::tagDefault'
-            ),
-            'float_tags' => array('break' => 1)
-        ),
-        'for' => array( // {for ...} {break} {continue} {/for}
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::forOpen',
-            'close' => 'Fenom\Compiler::forClose',
-            'tags' => array(
-                'forelse' => 'Fenom\Compiler::forElse',
-                'break' => 'Fenom\Compiler::tagBreak',
-                'continue' => 'Fenom\Compiler::tagContinue',
-            ),
-            'float_tags' => array('break' => 1, 'continue' => 1)
-        ),
-        'while' => array( // {while ...} {break} {continue} {/while}
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::whileOpen',
-            'close' => 'Fenom\Compiler::stdClose',
-            'tags' => array(
-                'break' => 'Fenom\Compiler::tagBreak',
-                'continue' => 'Fenom\Compiler::tagContinue',
-            ),
-            'float_tags' => array('break' => 1, 'continue' => 1)
-        ),
-        'include' => array( // {include ...}
-            'type' => self::INLINE_COMPILER,
-            'parser' => 'Fenom\Compiler::tagInclude'
-        ),
-        'insert' => array( // {include ...}
-            'type' => self::INLINE_COMPILER,
-            'parser' => 'Fenom\Compiler::tagInsert'
-        ),
-        'var' => array( // {var ...}
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::varOpen',
-            'close' => 'Fenom\Compiler::varClose'
-        ),
-        'block' => array( // {block ...} {parent} {/block}
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::tagBlockOpen',
-            'close' => 'Fenom\Compiler::tagBlockClose',
-            'tags' => array(//                'parent' => 'Fenom\Compiler::tagParent' // not implemented yet
-            ),
-            'float_tags' => array('parent' => 1)
-        ),
-        'extends' => array( // {extends ...}
-            'type' => self::INLINE_COMPILER,
-            'parser' => 'Fenom\Compiler::tagExtends'
-        ),
-        'use' => array( // {use}
-            'type' => self::INLINE_COMPILER,
-            'parser' => 'Fenom\Compiler::tagUse'
-        ),
-        'filter' => array( // {filter} ... {/filter}
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::filterOpen',
-            'close' => 'Fenom\Compiler::filterClose'
-        ),
-        'macro' => array(
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::macroOpen',
-            'close' => 'Fenom\Compiler::macroClose'
-        ),
-        'import' => array(
-            'type' => self::INLINE_COMPILER,
-            'parser' => 'Fenom\Compiler::tagImport'
-        ),
-        'cycle' => array(
-            'type' => self::INLINE_COMPILER,
-            'parser' => 'Fenom\Compiler::tagCycle'
-        ),
-        'raw' => array(
-            'type' => self::INLINE_COMPILER,
-            'parser' => 'Fenom\Compiler::tagRaw'
-        ),
-        'autoescape' => array(
-            'type' => self::BLOCK_COMPILER,
-            'open' => 'Fenom\Compiler::autoescapeOpen',
-            'close' => 'Fenom\Compiler::autoescapeClose'
-        )
     );
 
     /**
@@ -260,17 +263,23 @@ class Fenom
      */
     public static function factory($source, $compile_dir = '/tmp', $options = 0)
     {
-        if (is_string($source)) {
+        if (is_string($source))
+        {
             $provider = new Fenom\Provider($source);
-        } elseif ($source instanceof ProviderInterface) {
+        }
+        elseif ($source instanceof ProviderInterface)
+        {
             $provider = $source;
-        } else {
+        }
+        else
+        {
             throw new InvalidArgumentException("Source must be a valid path or provider object");
         }
         $fenom = new static($provider);
         /* @var Fenom $fenom */
         $fenom->setCompileDir($compile_dir);
-        if ($options) {
+        if ($options)
+        {
             $fenom->setOptions($options);
         }
         return $fenom;
@@ -293,7 +302,8 @@ class Fenom
      */
     public function setCompileDir($dir)
     {
-        if(!is_writable($dir)) {
+        if (!is_writable($dir))
+        {
             throw new LogicException("Cache directory $dir is not writable");
         }
         $this->_compile_dir = $dir;
@@ -327,7 +337,6 @@ class Fenom
         return $this;
     }
 
-
     public function getPostFilters()
     {
         return $this->post_filters;
@@ -342,7 +351,6 @@ class Fenom
         $this->filters[] = $cb;
         return $this;
     }
-
 
     public function getFilters()
     {
@@ -372,8 +380,8 @@ class Fenom
     public function addCompiler($compiler, $parser)
     {
         $this->_actions[$compiler] = array(
-            'type' => self::INLINE_COMPILER,
-            'parser' => $parser
+                'type' => self::INLINE_COMPILER,
+                'parser' => $parser
         );
         return $this;
     }
@@ -385,10 +393,11 @@ class Fenom
      */
     public function addCompilerSmart($compiler, $storage)
     {
-        if (method_exists($storage, "tag" . $compiler)) {
+        if (method_exists($storage, "tag" . $compiler))
+        {
             $this->_actions[$compiler] = array(
-                'type' => self::INLINE_COMPILER,
-                'parser' => array($storage, "tag" . $compiler)
+                    'type' => self::INLINE_COMPILER,
+                    'parser' => array($storage, "tag" . $compiler)
             );
         }
         return $this;
@@ -406,10 +415,10 @@ class Fenom
     public function addBlockCompiler($compiler, $open_parser, $close_parser = self::DEFAULT_CLOSE_COMPILER, array $tags = array())
     {
         $this->_actions[$compiler] = array(
-            'type' => self::BLOCK_COMPILER,
-            'open' => $open_parser,
-            'close' => $close_parser ? : self::DEFAULT_CLOSE_COMPILER,
-            'tags' => $tags,
+                'type' => self::BLOCK_COMPILER,
+                'open' => $open_parser,
+                'close' => $close_parser ? : self::DEFAULT_CLOSE_COMPILER,
+                'tags' => $tags,
         );
         return $this;
     }
@@ -425,27 +434,38 @@ class Fenom
     public function addBlockCompilerSmart($compiler, $storage, array $tags, array $floats = array())
     {
         $c = array(
-            'type' => self::BLOCK_COMPILER,
-            "tags" => array(),
-            "float_tags" => array()
+                'type' => self::BLOCK_COMPILER,
+                "tags" => array(),
+                "float_tags" => array()
         );
-        if (method_exists($storage, $compiler . "Open")) {
+        if (method_exists($storage, $compiler . "Open"))
+        {
             $c["open"] = array($storage, $compiler . "Open");
-        } else {
+        }
+        else
+        {
             throw new \LogicException("Open compiler {$compiler}Open not found");
         }
-        if (method_exists($storage, $compiler . "Close")) {
+        if (method_exists($storage, $compiler . "Close"))
+        {
             $c["close"] = array($storage, $compiler . "Close");
-        } else {
+        }
+        else
+        {
             throw new \LogicException("Close compiler {$compiler}Close not found");
         }
-        foreach ($tags as $tag) {
-            if (method_exists($storage, "tag" . $tag)) {
+        foreach ($tags as $tag)
+        {
+            if (method_exists($storage, "tag" . $tag))
+            {
                 $c["tags"][$tag] = array($storage, "tag" . $tag);
-                if ($floats && in_array($tag, $floats)) {
+                if ($floats && in_array($tag, $floats))
+                {
                     $c['float_tags'][$tag] = 1;
                 }
-            } else {
+            }
+            else
+            {
                 throw new \LogicException("Tag compiler $tag (tag{$compiler}) not found");
             }
         }
@@ -462,9 +482,9 @@ class Fenom
     public function addFunction($function, $callback, $parser = self::DEFAULT_FUNC_PARSER)
     {
         $this->_actions[$function] = array(
-            'type' => self::INLINE_FUNCTION,
-            'parser' => $parser,
-            'function' => $callback,
+                'type' => self::INLINE_FUNCTION,
+                'parser' => $parser,
+                'function' => $callback,
         );
         return $this;
     }
@@ -477,9 +497,9 @@ class Fenom
     public function addFunctionSmart($function, $callback)
     {
         $this->_actions[$function] = array(
-            'type' => self::INLINE_FUNCTION,
-            'parser' => self::SMART_FUNC_PARSER,
-            'function' => $callback,
+                'type' => self::INLINE_FUNCTION,
+                'parser' => self::SMART_FUNC_PARSER,
+                'function' => $callback,
         );
         return $this;
     }
@@ -494,10 +514,10 @@ class Fenom
     public function addBlockFunction($function, $callback, $parser_open = self::DEFAULT_FUNC_OPEN, $parser_close = self::DEFAULT_FUNC_CLOSE)
     {
         $this->_actions[$function] = array(
-            'type' => self::BLOCK_FUNCTION,
-            'open' => $parser_open,
-            'close' => $parser_close,
-            'function' => $callback,
+                'type' => self::BLOCK_FUNCTION,
+                'open' => $parser_open,
+                'close' => $parser_close,
+                'function' => $callback,
         );
         return $this;
     }
@@ -521,11 +541,16 @@ class Fenom
      */
     public function getModifier($modifier, Template $template = null)
     {
-        if (isset($this->_modifiers[$modifier])) {
+        if (isset($this->_modifiers[$modifier]))
+        {
             return $this->_modifiers[$modifier];
-        } elseif ($this->isAllowedFunction($modifier)) {
+        }
+        elseif ($this->isAllowedFunction($modifier))
+        {
             return $modifier;
-        } else {
+        }
+        else
+        {
             return $this->_loadModifier($modifier, $template);
         }
     }
@@ -549,9 +574,12 @@ class Fenom
      */
     public function getTag($tag, Template $template = null)
     {
-        if (isset($this->_actions[$tag])) {
+        if (isset($this->_actions[$tag]))
+        {
             return $this->_actions[$tag];
-        } else {
+        }
+        else
+        {
             return $this->_loadTag($tag, $template);
         }
     }
@@ -572,9 +600,12 @@ class Fenom
      */
     public function isAllowedFunction($function)
     {
-        if ($this->_options & self::DENY_NATIVE_FUNCS) {
+        if ($this->_options & self::DENY_NATIVE_FUNCS)
+        {
             return isset($this->_allowed_funcs[$function]);
-        } else {
+        }
+        else
+        {
             return is_callable($function);
         }
     }
@@ -586,8 +617,10 @@ class Fenom
     public function getTagOwners($tag)
     {
         $tags = array();
-        foreach ($this->_actions as $owner => $params) {
-            if (isset($params["tags"][$tag])) {
+        foreach ($this->_actions as $owner => $params)
+        {
+            if (isset($params["tags"][$tag]))
+            {
                 $tags[] = $owner;
             }
         }
@@ -614,7 +647,8 @@ class Fenom
      */
     public function setOptions($options)
     {
-        if (is_array($options)) {
+        if (is_array($options))
+        {
             $options = self::_makeMask($options, self::$_options_list, $this->_options);
         }
         $this->_storage = array();
@@ -638,13 +672,19 @@ class Fenom
      */
     public function getProvider($scm = false)
     {
-        if ($scm) {
-            if (isset($this->_providers[$scm])) {
+        if ($scm)
+        {
+            if (isset($this->_providers[$scm]))
+            {
                 return $this->_providers[$scm];
-            } else {
+            }
+            else
+            {
                 throw new InvalidArgumentException("Provider for '$scm' not found");
             }
-        } else {
+        }
+        else
+        {
             return $this->_provider;
         }
     }
@@ -710,17 +750,25 @@ class Fenom
     {
         $options |= $this->_options;
         $key = dechex($options) . "@" . $template;
-        if (isset($this->_storage[$key])) {
+        if (isset($this->_storage[$key]))
+        {
             /** @var Fenom\Template $tpl */
             $tpl = $this->_storage[$key];
-            if (($this->_options & self::AUTO_RELOAD) && !$tpl->isValid()) {
+            if (($this->_options & self::AUTO_RELOAD) && !$tpl->isValid())
+            {
                 return $this->_storage[$key] = $this->compile($template, true, $options);
-            } else {
+            }
+            else
+            {
                 return $tpl;
             }
-        } elseif ($this->_options & self::FORCE_COMPILE) {
+        }
+        elseif ($this->_options & self::FORCE_COMPILE)
+        {
             return $this->compile($template, $this->_options & self::DISABLE_CACHE & ~self::FORCE_COMPILE, $options);
-        } else {
+        }
+        else
+        {
             return $this->_storage[$key] = $this->_load($template, $options);
         }
     }
@@ -732,11 +780,15 @@ class Fenom
      */
     public function templateExists($template)
     {
-        if ($provider = strstr($template, ":", true)) {
-            if (isset($this->_providers[$provider])) {
+        if ($provider = strstr($template, ":", true))
+        {
+            if (isset($this->_providers[$provider]))
+            {
                 return $this->_providers[$provider]->templateExists(substr($template, strlen($provider) + 1));
             }
-        } else {
+        }
+        else
+        {
             return $this->_provider->templateExists($template);
         }
         return false;
@@ -752,11 +804,13 @@ class Fenom
     protected function _load($tpl, $opts)
     {
         $file_name = $this->_getCacheName($tpl, $opts);
-        if (is_file($this->_compile_dir . "/" . $file_name)) {
+        if (is_file($this->_compile_dir . "/" . $file_name))
+        {
             $fenom = $this; // used in template
             $_tpl = include($this->_compile_dir . "/" . $file_name);
             /* @var Fenom\Render $_tpl */
-            if (!($this->_options & self::AUTO_RELOAD) || ($this->_options & self::AUTO_RELOAD) && $_tpl->isValid()) {
+            if (!($this->_options & self::AUTO_RELOAD) || ($this->_options & self::AUTO_RELOAD) && $_tpl->isValid())
+            {
                 return $_tpl;
             }
         }
@@ -789,17 +843,20 @@ class Fenom
     {
         $options = $this->_options | $options;
         $template = $this->getRawTemplate()->load($tpl);
-        if ($store) {
+        if ($store)
+        {
             $cache = $this->_getCacheName($tpl, $options);
             $tpl_tmp = tempnam($this->_compile_dir, $cache);
             $tpl_fp = fopen($tpl_tmp, "w");
-            if (!$tpl_fp) {
+            if (!$tpl_fp)
+            {
                 throw new \RuntimeException("Can't to open temporary file $tpl_tmp. Directory " . $this->_compile_dir . " is writable?");
             }
             fwrite($tpl_fp, $template->getTemplateCode());
             fclose($tpl_fp);
             $file_name = $this->_compile_dir . "/" . $cache;
-            if (!rename($tpl_tmp, $file_name)) {
+            if (!rename($tpl_tmp, $file_name))
+            {
                 throw new \RuntimeException("Can't to move $tpl_tmp to $file_name");
             }
         }
@@ -834,7 +891,6 @@ class Fenom
         return $this->getRawTemplate()->source($name, $code);
     }
 
-
     /**
      * Create bit-mask from associative array use fully associative array possible keys with bit values
      * @static
@@ -846,17 +902,25 @@ class Fenom
      */
     private static function _makeMask(array $values, array $options, $mask = 0)
     {
-        foreach ($values as $key => $value) {
-            if (isset($options[$key])) {
-                if ($value) {
+        foreach ($values as $key => $value)
+        {
+            if (isset($options[$key]))
+            {
+                if ($value)
+                {
                     $mask |= $options[$key];
-                } else {
+                }
+                else
+                {
                     $mask &= ~$options[$key];
                 }
-            } else {
+            }
+            else
+            {
                 throw new \RuntimeException("Undefined parameter $value");
             }
         }
         return $mask;
     }
+
 }

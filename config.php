@@ -7,8 +7,6 @@ define('DB_USER', 'nuance');
 define('DB_PASS', 'password');
 define('DB_TABLE_PREFIX', "");
 //define('DB_TABLE_PREFIX', "mesh_");
-
-
 // Path should be finished with slash '/'
 
 define('UPLOADED_FILES_PATH', "../ucp/upload/");

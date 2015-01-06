@@ -1,7 +1,6 @@
 <?php
 
-$default=
-'{
+$default = '{
   "system" : 
   {
     "main" :
@@ -106,9 +105,9 @@ $default=
     }
   }
 }';
-$default=json_decode($default, true);
+$default = json_decode($default, true);
 if (json_last_error())
 {
-  die("Cannot parse default config");
+    die("Cannot parse default config");
 }
 ?>
