@@ -10,19 +10,25 @@ function __autoload($classname)
 {
   global $path;
   $classname=str_replace("\\", "/", $classname);
-  $filename = $path."/../include/". $classname .".php";
+  $filename = $path."/../include/". $classname .".class.php";
   if (file_exists($filename))
   {
     include_once($filename);
   }
 }
 
+$responseTemplate=array
+(
+  'debug'   => array(),
+  'errors'  => array()
+);
 
 set_time_limit(0);
 
 
 // Include config
 include $path."/default.php";
+include $path."/Altorouter.class.php";
 include_once $path."/cache.php";
 include $path."/../config.php";
 
@@ -101,12 +107,13 @@ catch(PDOException $e)
 
 $query="SHOW TABLES LIKE '".DB_TABLE_PREFIX."%'";
 $res=$db->query($query);
-$rows=array();
+$tables=array();
 if ($res)
 {
-  $rows=$res->fetchAll();
+  $tables=$res->fetchAll();
 }
-if (!count($rows))
+
+if (!count($tables))
 {
   $errorText="Cannot find tables<br>";
   require_once $usertheme."/error.php";
@@ -164,11 +171,35 @@ function check_password_hash($password, $hash)
 
 $runningFolder=explode('/', $_SERVER['DOCUMENT_ROOT']);
 $domain = array_pop( $runningFolder );
+if ($domain !== 'acp' && $domain !== 'ucp')
+{
+  $domain = false;
+}
+else 
+{
+  $router = new AltoRouter();
+  $selectedTheme = configgetvalue('system', 'main', NULL, $domain.'Theme');
+  $theme=new Theme($selectedTheme);
+}
+$pluginsPath =  __DIR__. '/../plugins/';
+$plugins = scandir( $pluginsPath );
 
-$selectedTheme = configgetvalue('system', 'main', NULL, $domain.'Theme');
+for ($i=2; $i<count($plugins); $i++) 
+{
+  $plugin = $plugins[$i];
+  if (file_exists($pluginsPath.$plugin.'/'.$plugin.'.php'))
+  {
+    require_once( $pluginsPath.$plugin.'/'.$plugin.'.php' );
+  }
+
+  if ($domain && file_exists($pluginsPath.$plugin.'/'.$domain.'/'.$plugin.'.php') )
+  {
+    require_once( $pluginsPath.$plugin.'/'.$domain.'/'.$plugin.'.php' );
+  }
+}
 
 
-$theme=new Theme($selectedTheme);
+
 
 function loadLocale($domain, $locale=null)
 {
@@ -537,27 +568,13 @@ function loadPlugin($part, $name)
 {
   include_once "../plugins/$name/$part/$name.php";
 }
+$licenseManager=new LicenseManager;
+$allowedPlugins=$licenseManager->checkPermission('allowedPlugins');
 function pluginExists($name)
 {
-  return array_search($name, getPlugins())!==false;
+  global $allowedPlugins;
+  return array_search($name, getPlugins())!==false && array_search($name, $allowedPlugins)!==false;
 }
-class response
-{
-	public $header = array();
-	public $data = array();
-	public $sortOrder = array();
-	public $debug=array();
-	public $errors=array();
-	public $default=array();
-	public $length=null;
-	public $success = false;
-	public $message = array();
-	public $deleted=array();
-	public function __construct ($tableName=NULL)
-	{
-    if ($tableName) $this->header=getFields($tableName);
-	}
-};
 
 $addRenderers=array(
   'user'=>  function($newFields)
@@ -646,19 +663,22 @@ $addRenderers=array(
       }
       $newFields['olddata']=json_encode($oldData);
 
-      $newData=json_decode($newFields['newdata'], true);
-      if (isset($newData['password']))
+      if ( isset($newFields['newdata']) ) 
       {
-        if (strlen($newData['password']))
+        $newData=json_decode($newFields['newdata'], true);
+        if (isset($newData['password']))
         {
-          $newData['password']='******';
+          if (strlen($newData['password']))
+          {
+            $newData['password']='******';
+          }
+          else
+          {
+            $newData['password']='';
+          }
         }
-        else
-        {
-          $newData['password']='';
-        }
+        $newFields['newdata']=json_encode($newData);
       }
-      $newFields['newdata']=json_encode($newData);
     }
     return $newFields;
   }
@@ -913,14 +933,16 @@ class table
   private $logging;
   private $db;
 	public $response;
-	public function __construct($name, $resp=null)
+	public function __construct($name)
 	{
     global $db;
     global $loggedTables;
-        $this->name=$name;
-    $this->response = $resp ? $resp : new response($this->name);
-    if (!count($this->response->header)) $this->response->header=getFields($this->name);
-		$this->header=$this->response->header;
+    global $response;
+    $this->name=$name;
+    $this->response = & $response;
+    
+    //if (!count($this->response['db'][$this->name]['header'])) $this->response['db'][$this->name]['header']=getFields($this->name);
+		$this->header=getFields($this->name);
     if (array_key_exists($this->name, $loggedTables))
     {
       $this->logging=true;
@@ -928,6 +950,20 @@ class table
     $this->db=$db;
     $this->fields=getFieldsAssoc($this->name);
 	}
+  private function addSchemaToResponse()
+  {
+    if (!isset($this->response['db'][$this->name]) )
+    {
+      $this->response['db'][$this->name] = array(
+        'header' => $this->header,
+        'data' => array(),
+        'sortOrder' => array(),
+        'deleted' => array()
+      );
+      $this->tableResponse = & $this->response['db'][$this->name];
+    }
+    //$this->tableResponse['data']=array();
+  }
   public function setLogging($b)
   {
     $this->logging=!!$b;
@@ -940,16 +976,9 @@ class table
     {
       throw new Exception("MYSQL: wrong request");
     }
-    $this->response->data=array();
-		$this->response->success=true;
+		//$this->tableResponse['success']=true;
     $query="SELECT * FROM `".DB_TABLE_PREFIX.$this->name."` $filter";
-      $res= $this->db->query($query);
-    
-    if (!$res)
-    {
-      throw new Exception("Wrong DB request: ".$query);
-    }
-    $res= $res->fetchAll();
+    $res= $this->db->query($query)->fetchAll();
 
     foreach ($res as $id => $row)
     {
@@ -1000,15 +1029,7 @@ class table
     $row=false;
     if ($id)
     {
-      if ( strpos($id, ',')===false )
-      {
-        $request = "WHERE id=$id";
-      }
-      else
-      {
-        $request = "WHERE id in ($id)";
-      }
-      $res=$this->load($request);
+      $res=$this->load("WHERE id=$id");
       if ( count($res) )
       {
         $row=$res[0];
@@ -1020,6 +1041,7 @@ class table
 	{
     global $sessionId, $timeDateFormat, $dateFormat;
     $res=$this->load($filter);
+    $this->addSchemaToResponse();
     foreach ($res as $row)
     {
       $datarow=array();
@@ -1060,7 +1082,7 @@ class table
         }
         $i++;
       }
-      $this->response->data[$row['id']]=$datarow;
+      $this->tableResponse['data'][$row['id']]=$datarow;
     }
 	}
   private function convert($data)
@@ -1130,7 +1152,7 @@ class table
 		$res=$this->db->prepare($request);
     $res->execute($data);
 		$newId=$this->db->lastInsertId();
-    $this->response->debug[]=$request;
+    $this->response['debug'][]=$request;
     
 		if ($newId)
 		{
@@ -1153,8 +1175,10 @@ class table
       }
 
       if (array_key_exists($this->name, $afterAddRenderers)) $afterAddRenderers[$this->name]($newId, $data);
-			$this->response->success=true;
+			//$this->response->success=true;
 		}
+    $this->addSchemaToResponse();
+    $this->load4Ajax( "WHERE `id`=".$newId );
 		return $newId;
 	}
 	public function edit($data)
@@ -1196,7 +1220,7 @@ class table
 		$res=$this->db->prepare($request);
     $res->execute($newFields);
 
-    $this->response->success=true;
+    //$this->response->success=true;
 
     if ($this->logging)
     {
@@ -1216,6 +1240,8 @@ class table
         l('db', 'edit', $this->name, $id, $changedOldFields, $newFields);
       }
     }
+    $this->addSchemaToResponse();
+    $this->load4Ajax( "WHERE `id`=".$id );
 
     if (array_key_exists($this->name, $afterEditRenderers)) $afterEditRenderers[$this->name]($id, $newFields, $oldFields);
     foreach ($oldFields as $key=>$value)
@@ -1235,14 +1261,15 @@ class table
       foreach ($row as $key=>$value) $fields[$key]=$value;
     }
     if (array_key_exists($this->name, $deleteRenderers)) $deleteRenderers[$this->name]($id, $fields);
-    $request="DELETE FROM `".DB_TABLE_PREFIX.$this->name."` WHERE `id` in ($id)";
+    $request="DELETE FROM `".DB_TABLE_PREFIX.$this->name."` WHERE id=$id";
     $this->db->exec($request);
-    $this->response->debug[]=$request;
+    //$this->response->debug[]=$request;
     if ($this->logging)
     {
       l('db','delete' , $this->name, $id, $fields);
     }
-		$this->response->deleted=explode(',', $id);
+    $this->addSchemaToResponse();
+		$this->response['db'][$this->name]['deleted'][] = $id;
 		return $id;
 	}
 }
@@ -1936,6 +1963,70 @@ function addRequestError( $errorText)
 
 
 
+class LicenseManager
+{
+  private $key;
+  private $version;
+  private $data;
+  function __construct()
+  {
+    $this->loadLicenseInfo();
+  }
+  function loadLicenseInfo($force=false)
+  {
+    global $dateFormat;
+
+    $currentDate=date($dateFormat);
+    $lastCheck=configgetvalue('var', 'main', NULL, 'lastLicenseCheck');
+    $storedData=configgetvalue('var', 'main', null, 'licenseData');
+
+    if ($lastCheck!==$currentDate || !$storedData || $force)
+    {
+      $this->key=configgetvalue('system', 'license', null, 'key');
+      $this->version=configgetvalue('var', 'version', null, 'number');
+      $host='nu'.'an'.'ce-bs'.'.c'.'om';
+      $port=40+40;
+      $timeout=2;
+      $fsockopen='fs'.'ock'.'op'.'en';
+      $fp = @$fsockopen(gethostbyname($host), $port, $errno, $errstr, $timeout);
+
+      if (is_resource($fp) )
+      {
+        stream_set_timeout($fp, $timeout);
+        $request =  "GET /svc/license.php?key=$this->key&version=$this->version HTTP/1.0\r\n";
+        $request .= "Host: $host\r\n";
+        $request .= "Connection: close\r\n\r\n";
+        fwrite($fp, $request);
+        $res = stream_get_contents($fp);
+
+        $info = stream_get_meta_data($fp);
+        fclose($fp);
+
+        if (!$info['timed_out']) 
+        {
+          $resLines=explode("\r\n", $res);
+          $json=array_pop($resLines);
+          configsetvalue('var', 'main', null, 'json', 'licenseData', $json);
+          configsetvalue('var', 'main', NULL, 'string', 'lastLicenseCheck', $currentDate);
+          $this->data=json_decode($json, true);
+        }
+      }
+    }
+    else
+    {
+      $this->data=$storedData;
+    }
+  }
+  public function checkPermission($featureName)
+  {
+    if ($this->data)
+    {
+      return $this->data['restrictions'][$featureName];
+    }
+  }
+
+}
+
 
 class RouterStateCache extends Cache
 {
@@ -1980,31 +2071,13 @@ class StatisticsCache extends Cache
   public $month;
   public function expireCheck()
   {
-    global $mysqlTimeDateFormat, $sessionId;
-    $masterTable=new table('master');
-    $master=$masterTable->loadById($sessionId);
-    $permittedCities = $master['city'];
-    $permittedStreets = $master['street'];
-    $permittedGroups = $master['usergroup'];
-
+    global $mysqlTimeDateFormat;
     $moneyflowTable=new table('moneyflow');
-
-    $startDate=clone $this->month;
     $endDate=clone $this->month;
     $endDate->modify('1 month');
     $endDate->modify('-1 second');
-
-    $offsetDays=configgetvalue('system', 'statistics', null, 'paymentsOffset');
-    $startDate->modify($offsetDays.' day');
-    $endDate->modify($offsetDays.' day');
-
     $lastRecordedId=configgetvalue('var', 'cache', null, $this->fileName);
-    $condition="WHERE `date`>='".$startDate->format($mysqlTimeDateFormat)."' AND `date`<='".$endDate->format($mysqlTimeDateFormat)."' AND (`detailsname`='adminpay' OR `detailsname`='scratchcard')";
-    if (pluginExists('grouprestrict') && $permittedGroups) 
-    {
-      $condition .= " AND ( `user` IN (SELECT `id` FROM `user` WHERE `usergroup` IN (". join($permittedGroups, ",") .") ) )";
-    }
-    $condition .= " ORDER BY `id` DESC LIMIT 1";
+    $condition="WHERE `date`>='".$this->month->format($mysqlTimeDateFormat)."' AND `date`<='".$endDate->format($mysqlTimeDateFormat)."' AND (`detailsname`='adminpay' OR `detailsname`='scratchcard') ORDER BY `id` DESC LIMIT 1";
     $rows=$moneyflowTable->load($condition);
     if (count($rows))
     {
@@ -2018,7 +2091,7 @@ class StatisticsCache extends Cache
   }
   public function getData()
   {
-    global $mysqlTimeDateFormat, $sessionId;
+    global $mysqlTimeDateFormat;
     $data=array(
       "total" => 0,
       "scratchcard" => 0,
@@ -2030,11 +2103,6 @@ class StatisticsCache extends Cache
     );
 
     $masterTable=new table('master');
-    $master=$masterTable->loadById($sessionId);
-    $permittedCities = $master['city'];
-    $permittedStreets = $master['street'];
-    $permittedGroups = $master['usergroup'];
-
     $admins=$masterTable->load();
     for ($i=0; $i<count($admins); $i++)
     {
@@ -2053,10 +2121,6 @@ class StatisticsCache extends Cache
     $endDate->modify($offsetDays.' day');
 
     $condition="WHERE `date`>='".$startDate->format($mysqlTimeDateFormat)."' AND `date`<='".$endDate->format($mysqlTimeDateFormat)."' AND (`detailsname`='adminpay' OR `detailsname`='scratchcard') AND `sum`>0";
-    if (pluginExists('grouprestrict') && $permittedGroups) 
-    {
-      $condition .= " AND ( `user` IN (SELECT `id` FROM `user` WHERE `usergroup` IN (". join($permittedGroups, ",") .") ) )";
-    }
     $rows=$moneyflowTable->load($condition);
     foreach ($rows as $row)
     {
@@ -2082,6 +2146,5 @@ class StatisticsCache extends Cache
     return json_encode($data);
   }
 }
-
 
 ?>

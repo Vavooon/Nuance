@@ -1,3 +1,4 @@
+var c = console.log.bind(console);
 RegExp.escape = function(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
@@ -7,6 +8,33 @@ Date.prototype.getTime=function()
   return Math.round(this.getJsTime() / 1000);
 }
 var tabPanelDivider=0;
+
+Object.defineProperty( Object.prototype, 'hasPath', {
+  value: function (path) 
+  {
+    var currentObject = this;
+
+    for (var i=0; i<path.length; i++)
+    {
+      if (typeof currentObject[path[i]] !== 'undefined')
+      {
+        if (typeof currentObject[path[i]] == 'object')
+        {
+          currentObject = currentObject[path[i]];
+        }
+        if (i+1 == path.length)
+        {
+          return true;
+        }
+      }
+      else
+      {
+        return false;
+      }
+    }
+  },
+  enumerable: false
+});
 
 Array.prototype.pushUnique=function(value)
 {
@@ -254,7 +282,6 @@ function sprintf( ) {	// Return a formatted string
 
   return format.replace(regex, doFormat);
 }
-var c = console.log.bind(console);
 
 JSON.oldParse=JSON.parse;
 JSON.parse=function(str)
@@ -295,6 +322,12 @@ function getUrlParams(params)
 }
 var gt=new Gettext();
 function _ (msgid) {
+  var str=gt.gettext(msgid);
+  if (str==msgid && debug)
+  {
+    console.warn("Found untranslated line: "+str);
+    str && Nuance.AjaxRequest("GET", "./ajax.php?action=addtranslationline&line="+str);
+  }
   return gt.gettext(msgid);
 }
 
@@ -491,6 +524,49 @@ var Nuance =
         }
       };
     },
+    AjaxProxy: function (o)
+    {
+      var self=this,
+          response = null,
+          listeners = [];
+
+      this.trigger =function (newResponse)
+      {
+        response = newResponse;
+        for (var i=0; i<listeners.length; i++)
+        {
+          if (response.hasPath(listeners[i][0]))
+          {
+            listeners[i][1]( response );
+          }
+        }
+      }
+      this.get=function( path, params, callback )
+      {
+        function onSuccess (data)
+        {
+          self.trigger( data );
+        }
+        Nuance.AjaxRequest("GET", path, params, onSuccess);
+      }
+      this.post=function( path, params, callback )
+      {
+        function onSuccess (data)
+        {
+          self.trigger( data );
+          callback && callback( data );
+        }
+        Nuance.AjaxRequest("POST", path, params, onSuccess);
+      }
+      this.on = function( path, callback, immediately )
+      {
+        listeners.push( [ path, callback ] );
+        if (immediately && response.hasPath(path))
+        {
+          callback(response);
+        }
+      }
+    },
     ConfigProxy: function (o)
     {
       var self=this;
@@ -504,30 +580,28 @@ var Nuance =
         path: '*'
       };
       Nuance.EventMixin.call(this, o);
-      var saveParams=mergeProps(params, {action: 'configedit'});
-      var loadPath="./ajax.php?action=configlist";
-      var savePath="./ajax.php?"+getUrlParams(mergeProps(params, {action: 'configedit'}));
+      var loadPath="/config/get";
       o.onload && this.on('afterload', o.onload);
-      this.load=function()
+      var onsuccess=function(resp)
       {
-        var onsuccess=function(resp)
+        self.__config=mergeProps( self.__config, resp.config.data, true );
+        self.__default=mergeProps( self.__default, resp.config.defaults, true );
+        var owner = (owner===undefined) ? defaultOwner : owner;
+        for (var type in onedit)
         {
-          self.__config=resp['data'] || {};
-          self.__default=resp['default'] || {};
-          var owner = (owner===undefined) ? defaultOwner : owner;
-          for (var type in onedit)
+          for (var i in onedit[type])
           {
-            for (var i in onedit[type])
+            if (onedit[type][i])
             {
-              if (onedit[type][i])
-              {
-                onedit[type][i]();
-              }
+              onedit[type][i]();
             }
           }
-          self.trigger('afterload');
         }
-        Nuance.AjaxRequest("GET", loadPath, null, onsuccess);
+        self.trigger('afterload');
+      }
+      this.load=function()
+      {
+        ajaxProxy.get(loadPath, null, onsuccess);
       }
       this.save=function(type, path, name, value, owner)
       {
@@ -542,19 +616,22 @@ var Nuance =
             value=JSON.stringify(value);
           break;
         }
-        var reqParams=
-        {
-          path: path,
-          name: name,
-          vartype: varType,
-          value: value,
-          owner: owner
-        }
         function onSuccess(o)
         {
           self.trigger('afteredit', o);
         }
-        Nuance.AjaxRequest("POST", "./ajax.php?"+getUrlParams(mergeProps(params, {type: type, ownerid: owner, action: 'configedit'}, true)), reqParams, onSuccess);
+        ajaxProxy.post('/config/set', mergeProps(params, 
+           {
+             type: type
+           , ownerid: owner
+           , action: 'configedit'
+           , path: path
+           , name: name
+           , vartype: varType
+           , value: value
+           }
+           , true) 
+        );
       }
       this.getValue= function(type, path, name, owner)
       {
@@ -598,13 +675,43 @@ var Nuance =
         }
         this.save(type, path, name, value, owner);
       }
-      if (o.autoLoad) this.load();
+      ajaxProxy.on(['config'], onsuccess);
     },
     AjaxRequest: function(method, path, post, onsuccess, onerror, simpleResponse)
     {
       if (!path) throw new Error(_("Path must be specified"));
       var xmlHttp=new XMLHttpRequest;
-      xmlHttp.open(method, path, true);
+
+      var postString=false;
+      if (typeof post==='object')
+      {
+        var postValues=[];
+        for (var i in post)
+        {
+          postValues.push( i+'='+encodeURIComponent(post[i]) );
+        }
+        postString=postValues.join('&');
+      }
+      else if (typeof post==='string')
+      {
+        postString=post;
+      }
+
+      if (method==='GET') 
+      {
+        if (postString)
+        {
+          xmlHttp.open(method, path + '?' + postString, true);
+        }
+        else
+        {
+          xmlHttp.open(method, path, true);
+        }
+      }
+      else 
+      {
+        xmlHttp.open(method, path, true);
+      }
       if (method==='POST')
       {
         xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -625,8 +732,8 @@ var Nuance =
               }
               catch(e)
               {
-                c(_("Error:"));
-                c(e.stack);
+                console.log(_("Error:"));
+                console.log(e.stack);
                 onerror && onerror(xmlHttp.status);
               }
             }
@@ -637,20 +744,6 @@ var Nuance =
             onerror && onerror(xmlHttp.status, xmlHttp.status ? JSON.parse(xmlHttp.responseText) : null);
           }
         }
-      }
-      var postString=false;
-      if (typeof post==='object')
-      {
-        var postValues=[];
-        for (var i in post)
-        {
-          postValues.push( i+'='+encodeURIComponent(post[i]) );
-        }
-        postString=postValues.join('&');
-      }
-      else if (typeof post==='string')
-      {
-        postString=post;
       }
       xmlHttp.send(postString);
       return xmlHttp;
@@ -832,7 +925,8 @@ var Nuance =
       TextField: function(o)
       {
         this.body=ce ( 'div', {className: 'text-field-wrap field-wrap'}, o.target);
-        this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
         var self=this,
             disabled=o.disabled;
         self.el=ce ( 'input', {className: 'text field'}, this.body);
@@ -873,8 +967,10 @@ var Nuance =
       DiscountField: function(o)
       {
         this.body=ce ( 'div', {className: 'discount-field-wrap field-wrap'}, o.target);
-        this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
-        this.wrap=ce ( 'div', {className: 'flex-wrap' }, this.body);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+        var flexWrap = ce ( 'div', {className: 'flex-helper-wrap' }, this.body);
+        this.wrap=ce ( 'div', {className: 'flex-wrap' }, flexWrap);
         var self=this,
             disabled=o.disabled;
         self.el=ce ( 'input', {className: 'text field discount'}, this.wrap);
@@ -974,7 +1070,8 @@ var Nuance =
       SpeedField: function(o)
       {
         this.body=ce ( 'div', {className: 'speed-field-wrap field-wrap'}, o.target);
-        this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
         this.wrap=ce ( 'div', {className: 'flex-wrap' }, this.body);
         var self=this,
             disabled=o.disabled;
@@ -1139,12 +1236,14 @@ var Nuance =
 
 
         this.body=ce ( 'div', {className: 'date-field-wrap field-wrap'}, o.target);
-        this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
         var self=this,
             yearsCount = o.yearsCount || 10,
             yearsOffset= o.yearsOffset || -9,
             disabled=false;
-        self.el=ce ( 'div', {className: 'flex-wrap date field'}, this.body);
+        var flexWrap = ce ( 'div', {className: 'flex-helper-wrap' }, this.body);
+        self.el=ce ( 'div', {className: 'flex-wrap date field'}, flexWrap);
         var dayField=new Nuance.input.ComboBox({
           selectPlaceholder: _('Day'),
           store: dayStore,
@@ -1279,7 +1378,9 @@ var Nuance =
       },
       PhoneNumberField: function(o)
       {
-        this.body=ce ( 'div', {className: 'phone-field-wrap field-wrap', innerHTML: o.title ? o.title+'<br />' : ""}, o.target);
+        this.body=ce ( 'div', {className: 'phone-field-wrap field-wrap'}, o.target);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
         var self=this,
             realValue,
             disabled=false,
@@ -1309,12 +1410,14 @@ var Nuance =
       PasswordField: function(o)
       {
         this.body=ce ( 'div', {className: 'password-field-wrap field-wrap'}, o.target);
-        this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
-        this.wrap=ce ( 'div', {className: 'flex-wrap' }, this.body);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+        var flexWrap = ce ( 'div', {className: 'field' }, this.body);
+        this.wrap=ce ( 'div', {className: 'flex-wrap' }, flexWrap);
         var self=this,
             disabled=false,
             realValue;
-        self.el=ce ( 'input', {type: 'password', className: 'text password field', placeholder: o.value ? _("Type to change password") : ''}, this.wrap);
+        this.el=ce ( 'input', {type: 'password', className: 'text password field', placeholder: o.value ? _("Type to change password") : ''}, this.wrap);
 
         if (o.name) self.el.name=o.name;
         this.setValue=function(value)
@@ -1345,8 +1448,10 @@ var Nuance =
       ViewPasswordField: function(o)
       {
         this.body=ce ( 'div', {className: 'view-password-field-wrap password-field-wrap field-wrap'}, o.target);
-        this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
-        this.wrap=ce ( 'div', {className: 'flex-wrap' }, this.body);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+        var flexWrap = ce ( 'div', {className: 'flex-helper-wrap' }, this.body);
+        this.wrap=ce ( 'div', {className: 'flex-wrap' }, flexWrap);
         var self=this,
             disabled=false,
             realValue;
@@ -1447,7 +1552,8 @@ var Nuance =
       CheckBox: function(o)
       {
         this.body=ce ( 'div', {className: 'checkbox-field-wrap field-wrap'}, o.target);
-        this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
         var self=this,
             checked=false,
             partial=false,
@@ -1537,7 +1643,8 @@ var Nuance =
       ComboBox: function(o)
       {
         this.body=ce ( 'div',  {className: 'combobox-field-wrap field-wrap'} , o.target);
-        this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
         var el = ce ( 'div',  {className: 'combobox field'}, this.body);
         var activeVal=ce ( 'input',  {className: 'top-option option', onselectstart: falsefunc, onsmousedrag: falsefunc}, el);
         var arrowEl=ce ( 'div',  {className: 'arrow'}, el);
@@ -1991,17 +2098,12 @@ var Nuance =
         );
         if (store.getState()=='idle')
         {
-          store.load();
           self.setValue(self.getValue());
         }
         else if (store.getState()=='loading')
         {
           el.classList.add('loading');
           self.setDisabled(true);
-        }
-        else if (store.getState()=='loading')
-        {
-          loadOptions(store.data);
         }
 
       };
@@ -2042,8 +2144,10 @@ var Nuance =
       var self=this;
       this.form=o.form;
       this.body=ce ( 'div', {className: 'tariff-field-wrap field-wrap'}, o.target);
-      this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
-      this.wrap=ce ( 'div', {className: 'flex-wrap' }, this.body);
+        var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+        this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+      var flexWrap = ce ( 'div', {className: 'flex-helper-wrap' }, this.body);
+      this.wrap=ce ( 'div', {className: 'flex-wrap' }, flexWrap);
       var tariffCombobox=new Nuance.input.ComboBox({name: 'tariff', store: o.store, value: o.value, parentList: o.parentList, target: this.wrap});
       var changeButton = ce ('div', {className: 'change-tariff-button button icon onlyicon arrowright', onclick: changeButtonClick}, this.wrap);
 
@@ -2262,7 +2366,8 @@ var Nuance =
     TextArea: function (o)
     {
       this.body=ce ( 'div',  {className: 'textarea-field-wrap field-wrap double'}, o.target);
-      this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, this.body);
+      var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+      this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
       var el=ce ( 'textarea', {className: 'multitext field'}, this.body),
           self=this,
           disabled=false;
@@ -2310,7 +2415,8 @@ var Nuance =
     TariffList: function(o)
     {  
       this.body=ce ( 'div', {className: 'tariff-list field-wrap field-wrap'}, o.target);
-      this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
+      var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+      this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
       var self=this,
           disabled=false,
           addButton=new Nuance.input.Button({target: this.body, iconClass: 'add', onclick: function(){new TariffRow({target: table})}}),
@@ -2348,6 +2454,56 @@ var Nuance =
         new TariffRow({target: table});
       }
       new TariffRow({target: table});
+    },
+    AccountField: function (o)
+    {
+      var self=this;
+      this.body=ce ( 'div', {className: 'account-field-wrap field-wrap double'}, o.target);
+
+      var pppStore = Nuance.stores.ppp;
+      var pppNs = pppStore.ns;
+      var ipStore = Nuance.stores.ip;
+      var ipNs = ipStore.ns;
+
+      function ipRow (o)
+      {
+        this.body=ce ( 'div', {className: 'ip-field-wrap field-wrap double'}, o.target);
+
+        var row=ce ( 'div',  {className: 'ip-row'}, this.body);
+        var firstSubRow=ce ( 'div',  {className: 'ip-sub-row'}, row);
+        var secondSubRow=ce ( 'div',  {className: 'ip-sub-row'}, row);
+        var field = ipStore.getById(o.recordId, true);
+
+        var ipField=new Nuance.input.TextField({value: field.ip4, target: firstSubRow});
+        var toMacButton=new Nuance.input.Button({target: firstSubRow, iconClass: 'pin'});
+        var macField=new Nuance.input.TextField({value: field.mac, target: firstSubRow});
+        var deleteButton=new Nuance.input.Button({target: firstSubRow, onclick: this.remove, iconClass: 'remove'});
+
+        var portField=new Nuance.input.TextField({value: field.port, target: secondSubRow});
+        var routerField=new Nuance.input.TextField({value: field.router, target: secondSubRow});
+
+        
+
+      }
+      var ipRows = [];
+      for (var i in ipStore.data)
+      {
+        var row = ipStore.data[i];
+        if (row[ipNs.user] == o.recordId )
+        {
+          ipRows.push( new ipRow({recordId: row[ipNs.id], target: this.body }) );
+        }
+      }
+
+      /*
+      for (var i=0; i<pppStore.data.length; i++)
+      {
+        var pppSectet = pppStore[i];
+        if (pppSecret[ns.user] === o.recordId )
+        {
+          ipmacRows.push( new ipmacRow({recordId: o.recordId }) );
+        }
+      }*/
     },
     IpList: function (o)
     {
@@ -2557,7 +2713,8 @@ var Nuance =
       var self = this,
           disabled=false;
       this.body=ce ( 'div', {className: 'permissionlist-field-wrap field-wrap double'}, o.target);
-      this.title=ce ( 'span', {className: 'title', innerHTML: o.title ? o.title : ""}, this.body);
+      var titleWrap = ce ( 'span', {className: 'title-wrap'}, this.body);
+      this.title=ce ( 'span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
       var el = ce ( 'div',  {className: 'acl field'}, this.body);
 
       function generateAclMap ()
@@ -2951,6 +3108,7 @@ var Nuance =
         buttons=[],
         closeAnimation=false,
         wasClosed=false;
+    Nuance.EventMixin.call(this, o);
     function addClasses()
     {
       var popups=document.getElementsByClassName('popups-wrap');
@@ -3086,8 +3244,7 @@ var Nuance =
       prefix: 'preferences'
     });
 
-    var saveMessage=ce('div', {className: 'save-message flex-wrap'}, tabPanel.contentEl);
-    saveMessage.style.display='none';
+    var saveMessage=ce('div', {className: 'save-message flex-wrap', style: 'display: none;'}, tabPanel.contentEl);
     var saveMessageText=ce('div', {className: 'save-message-text', innerHTML: _("Some settings were changed. Do you want to save it?")}, saveMessage);
     function saveChanges()
     {
@@ -3302,7 +3459,7 @@ var Nuance =
 
 
   },
-  PreferencesPopup: function (o)
+  RouterUserPreferencesActivity: function (o)
   {
     /*
      * OPTIONS:
@@ -3322,13 +3479,8 @@ var Nuance =
         defaults=configProxy.getDefaults(type, owner),
         currentOwnerConfig=mergeProps(defaults, config, true);
 
-    o.winLayout='triple';
-    o.bodyLayout='double';
-    o.btnLayout='double';
-    o.title=_('Preferences');
-    var okClick=function()
+    this.save = function()
     {
-      self.close();
       for (var d=0; d<fields.length; d++)
       {
         var field=fields[d];
@@ -3340,19 +3492,17 @@ var Nuance =
         }
       }
     }
-    o.buttons=[{onclick: okClick, value: _("Save"), submit: true, iconClass: 'edit'}, {onclick: function(){self.close()}, value: _("Cancel"), iconClass: 'remove'}];
-    Nuance.Popup.call(this, o);
-    this.body.classList.add('preferences-popup');
     var fields=[];
     var fieldsTree={};
     this.fields=fields;
+    /*
     this.getValues=function()
     {
       var values=[];
       for (var i=0;i<fields.length; i++)
       {
         var index=fields[i].index;
-        if (index != -1) values[index]=fields[i].getValue();
+        if (index !== -1) values[index]=fields[i].getValue();
       }
       return values;
     };
@@ -3363,12 +3513,12 @@ var Nuance =
         if (fields[i].getName()==fieldName) return fields[i];
       }
     }
+    */
     var sections=[];
     for (var i in currentOwnerConfig)
     {
       sections.push(i);
     }
-    var prevSection;
     for (var n=0; n<sections.length; n++)
     {
       var i=sections[n];
@@ -3441,60 +3591,14 @@ var Nuance =
         fieldsTree[i][name]=field;
       }
     }
-    var focusIsSet=false;
     for (var i=0; i<fields.length; i++)
     {
-      if (!focusIsSet && fields[i].el && typeof fields[i].el.focus=='function')
+      if (fields[i].el && typeof fields[i].el.focus=='function')
       {
         fields[i].el.focus();
-        focusIsSet=false;
-      }
-      var field=fields[i];
-      if (field.section==='grid' && field.getName()==='user-idrenderer')
-      {
-        
+        break;
       }
     }
-
-    // Cranch: disable some fields which depends on others
-    
-    if (configType==='system')
-    {
-      fieldsTree.grid['user-idrenderer'].addEventListener('change',function()
-      {
-        fieldsTree.grid['user-idrenderer-format'].setDisabled(fieldsTree.grid['user-idrenderer'].getValue()!==1);
-      });
-
-      fieldsTree.grid['scratchcard-idrenderer'].addEventListener('change',function()
-      {
-        fieldsTree.grid['scratchcard-idrenderer-format'].setDisabled(fieldsTree.grid['scratchcard-idrenderer'].getValue()!==1);
-      });
-
-      var typeOfCalculationField=fieldsTree.cash['typeOfCalculation'];
-      typeOfCalculationField.addEventListener('change',function()
-      {
-        var typeOfCalculation=typeOfCalculationField.getValue();
-        switch (typeOfCalculation)
-        {
-          case 'advance':
-            fieldsTree.cash['creditMonths'].setDisabled(true);
-            fieldsTree.cash['creditMonths'].setValue(0);
-          break;
-          case 'postpay':
-            fieldsTree.cash['creditMonths'].setDisabled(true);
-            fieldsTree.cash['creditMonths'].setValue(1);
-          break;
-          case 'other':
-            fieldsTree.cash['creditMonths'].setDisabled(false);
-          break;
-        }
-
-      });
-
-      fieldsTree.tariff['nightHourStart'].setValue('00:00:00');
-      fieldsTree.tariff['nightHourStart'].setDisabled(true);
-    }
-
   },
   BroadcastChatPopup: function(o)
   {
@@ -3686,7 +3790,6 @@ var Nuance =
     var timerId=setInterval(refreshContent, 10000);
     infoWindow.onclose=function(){clearTimeout(timerId);};
   },
-
   StorePopup : function(o)
   {
     /*
@@ -3714,7 +3817,7 @@ var Nuance =
     {
       throw new Error('includedFields option must be specified wnen using onlyIncludedFields');
     }
-    o.winLayout='double';
+    o.winLayout=o.winLayout || 'triple';
     o.bodyLayout='double';
     o.btnLayout='double';
     Nuance.Popup.call(this, o);
@@ -3777,6 +3880,7 @@ var Nuance =
       switch (htype)
       {
         case 'id':
+        case 'iplist': 
         case 'hidden': continue;
         case 'multitext' : field=new Nuance.input.TextArea(fieldOpts); break;
         case 'speed' : field=new Nuance.input.SpeedField(fieldOpts); break;
@@ -3784,7 +3888,7 @@ var Nuance =
         case 'bit':
         case 'tinyint': field=new Nuance.input.CheckBox(fieldOpts); break;
         case 'acl': field=new Nuance.input.PermissionList(fieldOpts); break;
-        case 'iplist': field=new Nuance.input.IpList(fieldOpts); break;
+        //case 'iplist': field=new Nuance.input.IpList(fieldOpts); break;
         case 'tarifflist': field=new Nuance.input.TariffList(fieldOpts); break;
         case 'md5password': field=new Nuance.input.PasswordField(fieldOpts); break;
         case 'password': field=new Nuance.input.ViewPasswordField(fieldOpts); break;
@@ -3844,7 +3948,7 @@ var Nuance =
         fields[d].el.focus();
         break;
       }
-    }
+    } 
   },
   LogPopup:function(opts)
   {
@@ -4138,19 +4242,18 @@ var Nuance =
 
           function onSuccess(response)
           {
-            var newSumToPay=money(response.data.partial)-currentCash;
+            var newSumToPay=money(response.cashtopay[userId].partial)-currentCash;
             if (newSumToPay<=0)
             {
-              newSumToPay=response.data.full;
+              newSumToPay=response.cashtopay[userId].full;
             }
 
             fields.sum.setValue(smoneyf(newSumToPay));
             fields.newcash.setValue(smoneyf(currentCash + newSumToPay));
             fields.sum.el.select();
           }
-          Nuance.AjaxRequest("GET", "ajax.php?action=getcashtopay&id="+userId, null, onSuccess);
-          //fields.user.setValue(userId);
-
+          ajaxProxy.on( ['cashtopay', userId ], onSuccess );
+          ajaxProxy.get('/cashtopay/get?id=' + userId);
         }
       }
     }
@@ -4166,9 +4269,10 @@ var Nuance =
     o.title=_("Add");
     var okClick=function()
     {
+      self.trigger('save');
+      o.onAdd && o.onAdd();
       self.close();
-      store.add(self.getValues());
-    };
+    }
     o.buttons=[{onclick: okClick, value: _("Add"), submit: true, iconClass: 'add'}, {onclick: function(){self.close()}, value: _("Cancel"), iconClass: 'remove'}];
     Nuance.StorePopup.call(this, o);
   },
@@ -4180,8 +4284,8 @@ var Nuance =
 
     var okClick=function()
     {
-      self.close();
-      store.edit(o.recordId, self.getValues());
+      self.trigger('save');
+      o.onEdit && o.onEdit();
     }
     o.buttons=[{onclick: okClick, value: _("Save"), submit: true, iconClass: 'ok'}, {onclick: function(){self.close()}, value: _("Cancel"), iconClass: 'remove'}];
     Nuance.StorePopup.call(this, o);
@@ -4199,8 +4303,7 @@ var Nuance =
   DeletePopup : function(o)
   {
     var self=this,
-        store=o.store,
-        selectedItems = o.recordId;
+        store=o.store;
     o.winLayout='double';
     o.bodyLayout='double';
     o.btnLayout='double';
@@ -4208,34 +4311,20 @@ var Nuance =
     var okClick=function()
     {
       self.close();
-      store.del(selectedItems);
+      store.del(o.recordId);
     }
     var store=o.store;
     var storeName=store.name;
     var id=o.recordId;
-
     if (storeName==='user')
     {
-      var formattedIdsArray=[];
-      for (var i=0; i<selectedItems.length; i++)
-      {
-        formattedIdsArray.push( idRenderer (selectedItems[i], store.getById(selectedItems[i]), store.ns) );
-      }
-      var formattedIds = formattedIdsArray.join(', ');
+      var formattedId=idRenderer (id, store.getById(id), store.ns);
     }
-    else 
+    else
     {
-      var formattedIds = selectedItems.join(', ');
+      var formattedId=id;
     }
-
-    if (selectedItems.length === 1)
-    {
-      var removeText=sprintf (_("Are you sure you want to delete "+storeName+" %s?"), formattedIds);
-    }
-    else if (selectedItems.length > 1)
-    {
-      var removeText=sprintf (gt.ngettext("Are you sure you want to delete %d "+storeName+": %s?", "Are you sure you want to delete %d "+storeName+": %s?", selectedItems.length), selectedItems.length, formattedIds );
-    }
+    var removeText=sprintf (_("Are you sure you want to delete "+storeName+" %s?"), formattedId);
     o.buttons=[{onclick: okClick, value: _("Delete"), submit: true, iconClass: 'trash'}, {onclick: function(){self.close()}, value: _("Cancel"), iconClass: 'remove'}];
     o.body=ce(  'div',  {className: 'popup-body', name: 'popup-body', innerHTML: removeText});
     Nuance.Popup.call(this, o);
@@ -4244,9 +4333,9 @@ var Nuance =
   {
     var prefix = o.prefix ? o.prefix+'-' : '',
         self=this,
-        tabPanelBody = this.tabPanelBody || ce( 'div',  { id: prefix+'tabpanel-body' }, o.target );
-    var tabPanelSwitch = this.tabPanelSwitch || ce( 'ul',  { id: prefix+'tabpanel-switch' }, tabPanelBody );
-    var tabPanelContent = this.tabPanelContent || ce ( 'div',  { id: prefix+'tabpanel-content' },tabPanelBody);
+        tabPanelBody = this.tabPanelBody || ce( 'div',  { id: prefix+'tabpanel-body', className: 'tabpanel-body' }, o.target );
+    var tabPanelSwitch = this.tabPanelSwitch || ce( 'ul',  { id: prefix+'tabpanel-switch', className: 'tabpanel-switch'  }, tabPanelBody );
+    var tabPanelContent = this.tabPanelContent || ce ( 'div',  { id: prefix+'tabpanel-content', className: 'tabpanel-content'  },tabPanelBody);
     var groups={};
     var selectedTab,
         tabsSwitchesByIndex=[],
@@ -4405,11 +4494,14 @@ var Nuance =
     {
       return 'loaded';
     }
+    Nuance.EventMixin.call(this, o);
     this.owner = o.owner;
     this.name=o.name || o.target;
     Nuance.stores[this.name]=this;
-    this.data=o.data;
     this.header=o.header;
+    this.errors=o.errors|| [];
+    this.data=o.data || {};
+    this.sortOrder=o.sortOrder || {};
     this.getNameById=((typeof o.getNameByIdFn!='function') ? function(id)
         {
           return (this.data[id]) ? this.data[id][this.ns.name] : "";
@@ -4438,7 +4530,9 @@ var Nuance =
         callbacks[eventName]=[callback];
       }
       else
+      {
         callbacks[eventName].push(callback);
+      }
     }
     this.fireEvent=function(eventName, args)
     {
@@ -4464,11 +4558,38 @@ var Nuance =
     this.load=function()
     {
     };
-    this.send=function(action, id, values)
+    this.send=function(action, id, postData, cb)
     {
+      var callback = cb || falsefunc;
+
+      var beforeEvent=new Nuance.Event({type: "before"+action});
+      self.trigger('before'+action, beforeEvent, id, postData);
+
+      var afterEvent=new Nuance.Event({type: "after"+action});
+      self.trigger('after'+action, afterEvent, id, postData);
+      callback( postData );
     };
-    this.add=function(values)
+    this.add=function(values, callback)
     {
+      if (values)
+      {
+        if (Array.isArray(values))
+        {
+          var postData=new URLParams;
+          for (var i=0;i<values.length;i++)
+          {
+            if (typeof values[i]!=='undefined')
+            {
+              postData[self.header[i][0]]=values[i];
+            }
+          }
+        }
+        else
+        {
+          var postData=new URLParams(values);
+        }
+        this.send('add', null, postData, callback);
+      }
     };
     this.edit=function(id, values)
     {
@@ -4583,19 +4704,33 @@ var Nuance =
         }
       }
     };
+
+    var onSuccess = function( response ) 
+    {
+      if (o.subscribePath) 
+      {
+        var storeData = response;
+        for (var i=0; i<o.subscribePath.length; i++)
+        {
+          storeData = storeData[o.subscribePath[i]];
+        }
+        loadData( storeData );
+      }
+      else
+      {
+        loadData( response.db[o.target]);
+      }
+      state='loaded';
+      self.trigger('afterload');
+      if (typeof callback==='function') callback();
+    }
     this.load=function(callback)
     {
       state='loading';
       self.trigger('beforeload');
-      var onSuccess = function(json) 
-      {
-        loadData(json);
-        state='loaded';
-        self.trigger('afterload');
-        if (typeof callback==='function') callback();
-      }
+      
 
-      var path=o.path ?  o.path:"./ajax.php?action=dblist&target="+o.target+'&filter='+filterStr;
+      var path=o.path ?  o.path:"db/"+o.target+'/get?filter='+filterStr;
       Nuance.AjaxRequest("GET", path, null, onSuccess);
     };
     this.on('afterload', function()
@@ -4620,9 +4755,11 @@ var Nuance =
         var afterEvent=new Nuance.Event({type: "after"+action});
         self.trigger('after'+action, afterEvent, id, postData);
         callback(response, postData);
+        c('onsucc')
       }
 
-      Nuance.AjaxRequest("POST", "./ajax.php?action=db"+action+"&target="+target, (postData ? postData.toString() : null), onsuccess, onerror);
+      ajaxProxy.post( "/db/"+target+"/"+action, (postData ? postData.toString() : null), onsuccess );
+    //ajaxProxy.on(['db', o.target], onSuccess,false);
 
     };
     this.add=function(values, callback)
@@ -4675,7 +4812,7 @@ var Nuance =
       if (postData.length)
       {
         postData.id=id;
-        this.send('edit', id, postData, callback);
+        this.send('set', id, postData, callback);
       }
       else
       {
@@ -4684,22 +4821,26 @@ var Nuance =
     };
     this.del=function(id, callback)
     { 
-      var postData=new URLParams({id: id.join(',')});
-      this.send('remove', id, postData, callback);
+      var postData=new URLParams({id: id});
+      this.send('del', id, postData, callback);
     };
     this.remove=this.del;
 
     this.setFilter(o.filter);
-    o.autoLoad && this.load();
+    o.forceLoad && this.load();
+    ajaxProxy.on( o.subscribePath || ['db', o.target], onSuccess,false);
 
     // Add self to the global stores list
-    if (!Nuance.stores[this.name])
+    if (this.name)
     {
-      Nuance.stores[this.name]=this;
-    }
-    else
-    {
-      throw new Error("Store with name '"+this.name+"' already exists");
+      if (!Nuance.stores[this.name])
+      {
+        Nuance.stores[this.name]=this;
+      }
+      else
+      {
+        throw new Error("Store with name '"+this.name+"' already exists");
+      }
     }
 
   },
@@ -4847,7 +4988,7 @@ var Nuance =
       {
 
         var months={};
-        response=r;
+        response=r.statistics;
         var currentDate=new Date;
         var n=0;
         for (var i in response.bymonth)
@@ -4881,7 +5022,8 @@ var Nuance =
         displayStatistics();
         monthSelector.on('change', displayStatistics);
       }
-      Nuance.AjaxRequest('GET', 'ajax.php?action=getstatistics', null, onLoad);
+      ajaxProxy.on(['statistics'], onLoad);
+      //Nuance.AjaxRequest('GET', 'ajax.php?action=getstatistics', null, onLoad);
     },
     PotentialPaymentsStatisticsWidget: function (o)
     {
@@ -5166,31 +5308,19 @@ var Nuance =
 
         var allRoutersCount=0;
         var onlineRoutersCount=0;
-        var URIs=[];
         var ns=Nuance.stores.router.ns;
-        for (var i in window.routerStateCheckers)
+        for (var i in routerStateChecker.data)
         {
-          allRoutersCount++;
-          if (routerStateCheckers[i].getState()==='online')
+          var data= routerStateChecker.data[i];
+          if (data)
           {
-            var row=routerStateCheckers[i].getActualRow();
-            var uri=row[ns.ip]+':'+row[ns.port];
-            if (URIs.indexOf(uri)===-1)
-            {
-              for (var j=0; j<routerStateCheckers[i].data.online.length; j++)
-              {
-                if ( allIP.indexOf( routerStateCheckers[i].data.online[j] ) !== -1 )
-                {
-                  onlineUsersCount++;
-                }
-              }
-              URIs.push(uri);
-            }
+            onlineUsersCount += data.online.length;
             onlineRoutersCount++;
           }
         }
         onlineUsersCountValue.classList.remove('loading');
         onlineUsersCountValue.innerHTML= onlineUsersCount;
+        /*
         if (allRoutersCount !== onlineRoutersCount)
         {
           onlineUsersCountRoutersCount.innerHTML="&nbsp;"+sprintf(gt.ngettext("(information are displayed for %d router)", "(information are displayed for %d routers)", onlineRoutersCount), onlineRoutersCount);
@@ -5198,7 +5328,7 @@ var Nuance =
         else
         {
           onlineUsersCountRoutersCount.innerHTML='';
-        }
+        }*/
 
       }
 
@@ -5211,11 +5341,7 @@ var Nuance =
       }
       function onRouterStoreLoad()
       {
-        for (var i in window.routerStateCheckers)
-        {
-          routerStateCheckers[i].on('afterload', onRouterStatesLoad);
-        }
-        onRouterStatesLoad();
+        routerStateChecker.on('afterload', onRouterStatesLoad, true);
       }
 
 
@@ -5251,7 +5377,7 @@ var Nuance =
   },
   Grid : function(opts)
   {
-    this.el = ce(  'div',  {id: opts.name+'-tab', className: 'grid'}); //grid body
+    this.el = ce(  'div',  {id: opts.name+'-tab', className: 'grid'}, opts.target); //grid body
     var self=this,
         coverWrap=ce(  'div',  {id: opts.name+'-cover-wrap', className: 'cover-wrap'}, this.el),
         cover=ce(  'div',  {id: opts.name+'-cover', className: 'cover'}, coverWrap),
@@ -5277,7 +5403,7 @@ var Nuance =
 
     if (opts.store)
     {
-      if (opts.store.constructor===Nuance.Store)
+      if (opts.store.constructor===Nuance.Store || opts.store.constructor===Nuance.MemoryStore)
       {
         this.store=opts.store;
       }
@@ -5292,43 +5418,79 @@ var Nuance =
     }
 
     if (opts.store) this.store.owner=this;
+    this.onAdd=function()
+    {
+      var maxEntries=licenseManager.checkPermission(name) || Infinity;
+      if (dataOrder.length < maxEntries)
+      {
+        function onAdd()
+        {
+          var values = form.getValues();
+          self.trigger( 'beforeadd', values );
+          form.close();
+          self.store.add(values, function( data ) {
+            self.trigger( 'afteradd', data );
+          });
+          self.trigger('save');
+        };
+        var form=new Nuance.AddPopup(
+          {
+            store: self.store,
+            customFields: opts.customFields, 
+            onlyIncludedFields: opts.onlyIncludedFields,
+            excludedFields: self.excludedFields, 
+            includedFields: opts.includedFields, 
+            recordId: 0,
+            onAdd: onAdd
+          }
+        );
+        self.trigger( 'addform', form );
+      }
+      else
+      {
+        new Nuance.MessageBox(
+          {
+            title: _("License restriction"), 
+            text: '&nbsp;'+_('You have been reached maximum table entries permitted by your license.<br>Please <a target="_blank" href="http://nuance-bs.com/">upgrade your license</a>.')
+          }
+        );
+      }
+    }
     this.onEdit=function()
     {
       if (selectedItems.length===1 && !opts.readOnly)
       {
-        var form=new Nuance.EditPopup(
-            {
-              store: self.store,
-              customFields: opts.customFields,
-              onlyIncludedFields: opts.onlyIncludedFields,
-              excludedFields: self.excludedFields,
-              includedFields: opts.includedFields,
-              recordId: self.recordId || selectedItems[0]
-            }
-        );
-      }
-    }
-    this.onAdd=function()
-    {
-      var form=new Nuance.AddPopup(
+        function onEdit()
         {
-          store: self.store,
-          customFields: opts.customFields, 
-          onlyIncludedFields: opts.onlyIncludedFields,
-          excludedFields: self.excludedFields, 
-          includedFields: opts.includedFields, 
-          recordId: 0
-        }
-      );
+          var values = form.getValues();
+          self.trigger( 'beforeedit', values );
+          form.close();
+          self.store.edit(form.recordId, values);
+          self.trigger( 'afteredit', values );
+          self.trigger('save');
+        };
+        var form=new Nuance.EditPopup(
+          {
+            store: self.store,
+            customFields: opts.customFields,
+            onlyIncludedFields: opts.onlyIncludedFields,
+            excludedFields: self.excludedFields,
+            includedFields: opts.includedFields,
+            recordId: self.recordId || selectedItems[0],
+            onEdit: onEdit
+          }
+        );
+        self.trigger( 'editform', form );
+      }
     }
     this.onDel=function()
     {
-      if (selectedItems.length)
+      if (selectedItems.length===1)
       {
          new Nuance.DeletePopup(
            {
              store: self.store, 
-             recordId: selectedItems 
+             recordId: selectedItems[0] 
            }
          );
       }
@@ -5339,35 +5501,7 @@ var Nuance =
       if (dependentStores.indexOf(name)===-1) dependentStores.push(name);
     }
 
-    if (opts.readOnly)
-    {
-      var toolbarButtons= [];
-    }
-    else if (opts.deleteOnly)
-    {
-      var toolbarButtons= 
-      [
-        [
-          {
-            onclick: self.onDel,
-            iconClass: 'remove',
-            scope: self,
-            onselectionchange: function(selectionId, grid)
-            {
-              if (checkPermission ( ['table', grid.getName(), 'remove'] ) && selectionId.length===1)
-              {
-                this.setDisabled(false);
-              }
-              else
-              {
-                this.setDisabled(true);
-              }
-            }
-          }
-        ]
-      ];
-    }
-    else
+    if (!opts.readOnly)
     {
       var toolbarButtons= 
       [
@@ -5416,8 +5550,11 @@ var Nuance =
         ]
       ];
     }
+    else
+    {
+      var toolbarButtons= [];
+    }
     toolbarButtons.push( {onclick: self.store.load, iconClass: 'reload', scope: self} );
-    this.toolbarButtons = toolbarButtons;
 
     var toolbarEl = ce(  'div',  {className: 'toolbar'}, this.el), //grid toolbar
         filtersWrapEl=ce('div', {className: "filter-wrap"}, this.el),
@@ -5486,20 +5623,7 @@ var Nuance =
         {
           if (selectedItems.indexOf(rowId)===-1)
           {
-            if (e.ctrlKey ) 
-            {
-              var selectionMode = 'ctrl';
-            }
-            else if ( e.shiftKey)
-            {
-              var selectionMode = 'shift';
-            }
-            else
-            {
-              var selectionMode = 'normal';
-            }
-
-            selectRow(rowId, selectionMode);
+            selectRow(rowId, e.ctrlKey);
           }
           var contextMenuOptions=
           {
@@ -5512,19 +5636,7 @@ var Nuance =
         }
         else
         {
-          if (e.ctrlKey ) 
-          {
-            var selectionMode = 'ctrl';
-          }
-          else if ( e.shiftKey)
-          {
-            var selectionMode = 'shift';
-          }
-          else
-          {
-            var selectionMode = 'normal';
-          }
-          selectRow(rowId, selectionMode);
+          selectRow(rowId, e.ctrlKey);
         }
       }
       return false;
@@ -5540,7 +5652,7 @@ var Nuance =
     {
       return gridTable;
     }
-    this.addButton=function(btn, prepend)
+    this.addButton=function(btn)
     {
       if (Array.isArray(btn)) // if it is button group
       {
@@ -5550,20 +5662,12 @@ var Nuance =
       {
         if (btn.constructor==Nuance.input.Button) //if it is created button
         {
-          if (btn.body.parentNode)
+          if (btn.el.parentNode)
           {
-            btn.body.parentNode.removeChild(btn.el);
+            btn.el.parentNode.removeChild(btn.el);
+            toolbarEl.appendChild(btn.el);
+            btn.scope=self;
           }
-          if (prepend)
-          {
-            toolbarEl.insertBefore(btn.body, toolbarEl.firstChild);
-          }
-          else
-          {
-            toolbarEl.appendChild(btn.body);
-          }
-          btn.scope=self;
-          buttons.push(btn);
         }
         else //if it is object with properties
         {
@@ -5592,26 +5696,21 @@ var Nuance =
         buttons[i].onselectionchange && buttons[i].onselectionchange(self.getSelectedItems(), self);
       };
     }
-    function clearSelection() 
+    function selectRow(id, multiSelect)
     {
-      for (var i=0; i<selectedItems.length; i++)
+      if (!multiSelect)
       {
-        var selectedRow=ge(name+'-'+selectedItems[i]);
-        if (selectedRow)
+        for (var i=0; i<selectedItems.length; i++)
         {
-          selectedRow.classList.remove('selected');
+          var selectedRow=ge(name+'-'+selectedItems[i]);
+          if (selectedRow)
+          {
+            selectedRow.classList.remove('selected');
+          }
         }
-      } 
-    }
-    function selectRow(id, selectionMode)
-    {
-      if ( selectionMode === 'normal')
-      {
-        clearSelection();
         selectedItems=[id];
-        lastSelectedItem=id;
       }
-      else if ( selectionMode === 'ctrl')
+      else
       {
         if (selectedItems.indexOf(id)===-1)
         {
@@ -5626,39 +5725,8 @@ var Nuance =
           }
           selectedItems.splice(selectedItems.indexOf(id), 1);
         }
-        lastSelectedItem=id;
       }
-      else if ( selectionMode === 'shift')
-      {
-        if (lastSelectedItem)
-        {
-          clearSelection();
-          var startItemIndex = dataOrder.indexOf( lastSelectedItem );
-          var stopItemIndex = dataOrder.indexOf( id );
-          if (startItemIndex < stopItemIndex  )
-          {
-            for (var i=startItemIndex; i<stopItemIndex; i++)
-            {
-              selectedItems.push( dataOrder[i] );
-            }
-          }
-          else if (startItemIndex > stopItemIndex  )
-          {
-            for (var i=stopItemIndex; i<startItemIndex; i++)
-            {
-              selectedItems.push( dataOrder[i] );
-            }
-          }
-          else 
-          {
-          }
-        }
-        else 
-        {
-          selectedItems=[id];
-          lastSelectedItem=id;
-        }
-      }
+      lastSelectedItem=id;
       fireOnSelectionChange();
       for (var i=0; i<selectedItems.length; i++)
       {
@@ -6226,7 +6294,10 @@ var Nuance =
         showFilters();
         for (var i in newFilters)
         {
-          filtersComboboxes[i].setValue(newFilters[i]);
+          if (filtersComboboxes[i])
+          {
+            filtersComboboxes[i].setValue(newFilters[i]);
+          }
         }
       }
       else
@@ -6570,7 +6641,7 @@ var Nuance =
       stretchEl.style.height=(rowHeight*dataOrder.length) + 'px';
 
 
-      if (store.getState()==='loading')
+      if (self.store.getState()==='loading')
       {
         self.setState('loading');
       }
@@ -6651,14 +6722,13 @@ var Nuance =
 
 
 
-
     // Check if all helper stores are loaded
 
     waitForStores.push(self.store.name);
 
-    function onDataChange()
+    self.onDataChange = function () 
     {
-      if (TabPanel.getSelectedTab().name===name && self.store.getState()==='loaded')
+      if (self.el.clientHeight && self.store.getState()==='loaded')
       {
         if (needToRender)
         {
@@ -6674,7 +6744,7 @@ var Nuance =
     function forceRender()
     {
       needToRender=true;
-      onDataChange();
+      self.onDataChange();
     }
     function onKeyPress(e)
     {
@@ -6687,73 +6757,36 @@ var Nuance =
         }
       }
     }
+    window.addEventListener('keydown', onKeyPress);
+
     function setHooks()
     {
-        /*
-      self.store.on( 'afterremove', function (e, removedItems)
-      {
-        
-        for (var i=0; i<removedItems.length; i++)
-        {
-          var id= removedItems[i];
-          c ( dataOrder.indexOf(id) )
-          if ( dataOrder.indexOf(id) !== -1 )
-          {
-            dataOrder.splice( dataOrder.indexOf(id), 1 );
-          }
-        }
-      })
-      */
       for (var i=0; i<waitForStores.length; i++)
       {
         var store=Nuance.stores[waitForStores[i]];
         store.on('afterload', forceRender);
-        store.on('afteradd', forceRender);
+        //store.on('afteradd', forceRender);
         store.on('afteredit', forceRender);
         store.on('afterremove', forceRender);
       }
-      TabPanel.on('tabchange', onDataChange);
-
+      self.onDataChange();
     }
-    window.addEventListener('keydown', onKeyPress);
-    var waitForStoresCount=waitForStores.length;
-    function afterLoad()
+
+    this.store.on('afterload', setHooks);
+
+  },
+  LicenseManager: function()
+  {
+    var self=this;
+
+    var licenseData=configProxy.getValue('var', 'main', 'licenseData');
+
+    this.checkPermission=function(name)
     {
-      if (waitForStoresCount)
+      if (typeof licenseData=='object')
       {
-        waitForStoresCount--;
-      }
-      if (!waitForStoresCount)
-      {
-        setHooks();
-        for (var i=0; i<waitForStoresCount; i++)
-        {
-          var store=Nuance.stores[waitForStores[i]];
-          store.off('afterload', afterLoad);
-        }
+        return licenseData.restrictions[name];
       }
     }
-
-    for (var i=0; i<waitForStoresCount; i++)
-    {
-      var store=Nuance.stores[waitForStores[i]];
-      if (store.getState()==='loading')
-      {
-        store.on('afterload', afterLoad);
-      }
-      else
-      {
-        waitForStoresCount--;
-      }
-    }
-
-
-
-    if (self.store.getState()==='loading')
-    {
-      self.setState('loading');
-    }
-
-
   }
 }

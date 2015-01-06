@@ -5,8 +5,6 @@ function state()
   /* Routers online */
 
     var supportedTypes=['mikrotik', 'mikrotikppp'];
-    var routerStateCheckers={};
-    window.routerStateCheckers=routerStateCheckers;
     var routerData={};
     userData={};
 
@@ -29,9 +27,9 @@ function state()
                 // State
                 if (supportedTypes.indexOf(row[ns.routertype])!==-1)
                 {
-                  if (routerStateCheckers[row[ns.id]])
+                  if (routerStateChecker)
                   {
-                    displayData[id][displayNs.state]=formatRouterState(routerStateCheckers[row[ns.id]].getState());
+                    displayData[id][displayNs.state]=formatRouterState(routerStateChecker.getState());
                   }
                   else
                   {
@@ -117,7 +115,7 @@ function state()
     {
       order: 0
     };
-    function RouterStateChecker(id)
+    function RouterStateChecker()
     {
       var store=Nuance.stores.router;
       var ns=store.ns;
@@ -129,115 +127,113 @@ function state()
           timeoutId;
 
       Nuance.EventMixin.call(this);
-      var row=store.getById(id);
 
       function onResponse(resp)
       {
         if (typeof resp==='number') return;
-        var data=JSON.parse(resp).data[id];
-        self.data=data;
-        /* router state section */
-        if (typeof data==='object' && data)
+        self.data=resp.state;
+        for( var id in store.data)
         {
-          state='online';
-          var loadPercentage=parseInt( data['cpu-load']);
-          if (loadPercentage>50)
+          var row=store.getById(id);
+          var data=resp.state[id];
+          /* router state section */
+          if (typeof data==='object' && data)
           {
-            if (loadPercentage>75)
+            state='online';
+            var loadPercentage=parseInt( data['cpu-load']);
+            if (loadPercentage>50)
             {
-              cpuload='<div class="cpu-high-load">'+loadPercentage+'%</div>';
+              if (loadPercentage>75)
+              {
+                cpuload='<div class="cpu-high-load">'+loadPercentage+'%</div>';
+              }
+              else
+              {
+                cpuload='<div class="cpu-mainly-load">'+loadPercentage+'%</div>';
+              }
             }
             else
             {
-              cpuload='<div class="cpu-mainly-load">'+loadPercentage+'%</div>';
+              cpuload=loadPercentage+'%';
+            }
+            freeram=data['free-memory']+'kb';
+            version=data.version;
+
+            if (Nuance.grids.router)
+            {
+              Nuance.grids.router.setDisplayValue(id, 'cpuload', cpuload);
+              Nuance.grids.router.setDisplayValue(id, 'freeram', freeram);
+              Nuance.grids.router.setDisplayValue(id, 'version', version);
             }
           }
           else
           {
-            cpuload=loadPercentage+'%';
-          }
-          freeram=data['free-memory']+'kb';
-          version=data.version;
+            state='offline';
 
-          if (Nuance.grids.router)
-					{
-            Nuance.grids.router.setDisplayValue(id, 'cpuload', cpuload);
-            Nuance.grids.router.setDisplayValue(id, 'freeram', freeram);
-            Nuance.grids.router.setDisplayValue(id, 'version', version);
-          }
-        }
-        else
-        {
-          state='offline';
-
-          if (Nuance.grids.router)
-					{
-            Nuance.grids.router.setDisplayValue(id, 'cpuload', '');
-            Nuance.grids.router.setDisplayValue(id, 'freeram', '');
-            Nuance.grids.router.setDisplayValue(id, 'version', '');
-          }
-        }
-        routerData[id]=data;
-        if (Nuance.grids.router)
-        {
-          Nuance.grids.router.setDisplayValue(id, 'state', formatRouterState(state));
-        }
-
-
-        /* user state section */
-
-        var userStore=Nuance.stores.user;
-        function loadUserStates()
-        {
-          var userNs=userStore.ns;
-          if (data && data.online)
-          {
-            for (var i in userStore.data)
+            if (Nuance.grids.router)
             {
-              var user=userStore.data[i];
-              if (user[userNs.router]==id)
+              Nuance.grids.router.setDisplayValue(id, 'cpuload', '');
+              Nuance.grids.router.setDisplayValue(id, 'freeram', '');
+              Nuance.grids.router.setDisplayValue(id, 'version', '');
+            }
+          }
+          routerData[id]=data;
+          if (Nuance.grids.router)
+          {
+            Nuance.grids.router.setDisplayValue(id, 'state', formatRouterState(state));
+          }
+
+
+          /* user state section */
+
+          var userStore=Nuance.stores.user;
+          function loadUserStates()
+          {
+            var userNs=userStore.ns;
+            if (data && data.online)
+            {
+              for (var j in userStore.data)
               {
-                var userId=user[userNs.id];
-                var ips=JSON.parse(user[userNs.iplist]);
-                var userState='offline';
-                for (var ip in ips)
+                var user=userStore.data[j];
+                if (user[userNs.router]==id)
                 {
-                  if (data.online.indexOf(ip)!==-1)
+                  var userId=user[userNs.id];
+                  var ips=JSON.parse(user[userNs.iplist]);
+                  var userState='offline';
+                  for (var ip in ips)
                   {
-                    userState='online';
-                    break;
+                    if (data.online.indexOf(ip)!==-1)
+                    {
+                      userState='online';
+                      break;
+                    }
                   }
+                  Nuance.grids.user.setDisplayValue(userId, 'online', formatRouterState(userState));
+                  userData[userId]=userState;
                 }
-                Nuance.grids.user.setDisplayValue(userId, 'online', formatRouterState(userState));
-                userData[userId]=userState;
-              }
 
+              }
             }
-          }
-          else
-          {
-            var userState='unknown';
-            for (var i in userStore.data)
+            else
             {
-              var user=userStore.data[i];
-              if (user[userNs.router]==id)
+              var userState='unknown';
+              for (var j in userStore.data)
               {
-                var userId=user[userNs.id];
-                Nuance.grids.user.setDisplayValue(userId, 'online', formatRouterState(userState));
-                userData[userId]=userState;
+                var user=userStore.data[j];
+                if (user[userNs.router]==id)
+                {
+                  var userId=user[userNs.id];
+                  Nuance.grids.user.setDisplayValue(userId, 'online', formatRouterState(userState));
+                  userData[userId]=userState;
+                }
               }
             }
           }
         }
-        if (userStore.getState()==='loading')
-        {
-          userStore.on('afterload', loadUserStates);
-        }
-        else
+        if (userStore.getState()==='loaded')
         {
           loadUserStates();
         }
-        timeoutId = setTimeout(self.load, parseFloat( (configProxy.getValue('system', 'grid', 'stateUpdateInterval')) + self.count) * 60000 );
         self.trigger('afterload');
       }
       this.getState=function()
@@ -249,6 +245,7 @@ function state()
         return row;
       }
       var xhr;
+      ajaxProxy.on(['state'], onResponse);
       this.load=function(force)
       {
         state='loading';
@@ -256,11 +253,12 @@ function state()
         {
           Nuance.grids.router.setDisplayValue(id, 'state', formatRouterState('loading'));
         }
-        xhr=Nuance.AjaxRequest( "GET", "ajax.php?action=routercheckconnection&id="+id+"&force="+(force ? 'true' : 'false'), null, onResponse, onResponse, true);
+        ajaxProxy.get('/state/get');
+        //xhr=Nuance.AjaxRequest( "GET", "ajax.php?action=routercheckconnection&id="+id+"&force="+(force ? 'true' : 'false'), null, onResponse, onResponse, true);
       }
       this.destroy=function()
       {
-        xhr.abort();
+        //xhr.abort();
         if (timeoutId)
         {
           clearTimeout ( timeoutId);
@@ -277,39 +275,18 @@ function state()
     }
 
 
+    var routerStateChecker=new RouterStateChecker;
+    window.routerStateChecker = routerStateChecker;
+    var userStore=Nuance.stores.user;
+    var routerStore=Nuance.stores.router;
+
     function loadRouterState()
     {
       var store=Nuance.stores.router;
       var ns=store.ns;
-      var count=0;
-      for (var id in store.data)
-      {
-        var row=store.data[id];
-        if (
-              supportedTypes.indexOf(row[ns.routertype])!==-1
-              && 
-              (
-                !routerStateCheckers[id] ||
-                !routerStateCheckers[id].getActualRow().compare(row)
-              )
-           )
-        {
-          routerStateCheckers[id]=new RouterStateChecker(row[ns.id]);
-          routerStateCheckers[id].count=count++;
-        }
-        else
-        {
-          if (supportedTypes.indexOf(row[ns.routertype])===-1 && routerStateCheckers[id])
-          {
-            routerStateCheckers[id].destroy();
-            delete routerStateCheckers[id];
-          }
-
-        }
-      }
+      routerStateChecker.load();
     }
-    var userStore=Nuance.stores.user;
-    var routerStore=Nuance.stores.router;
+    timeoutId = setInterval(self.load, parseFloat( (configProxy.getValue('system', 'grid', 'stateUpdateInterval')) + self.count) * 60000 );
     routerStore.on('afterload', loadRouterState);
     routerStore.on('afteradd', loadRouterState);
     routerStore.on('afteredit', loadRouterState);
@@ -323,15 +300,7 @@ function state()
         title: _("Update state"),
         onclick: function()
         {
-          var grid=Nuance.grids.router;
-          var id=grid.getSelectedItems();
-          for (var i=0; i<id.length; i++)
-          {
-            if (routerStateCheckers[id[i]])
-            {
-              routerStateCheckers[id[i]].load(true);
-            }
-          }
+          routerStateChecker.load(true);
         }
       }
     );

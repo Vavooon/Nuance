@@ -44,8 +44,10 @@ else if (intval($notificationsEndDate->format('j'))===$currentDay)
   echo "Hide notifications...";
   payment(2);
 }
-
-echo "Withdrawal...";
-payment(0);
+else
+{
+  echo "Withdrawal...";
+  payment(0);
+}
 
 ?>

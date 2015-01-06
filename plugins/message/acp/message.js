@@ -156,7 +156,6 @@ message = function()
         });
       }
     });
-
     if ( checkPermission ( ['table', 'message', 'add'] ) )
     {
       tables.tabs.user.grid.contextMenuItems.push(
@@ -191,32 +190,6 @@ message = function()
         }
       );
     };
-
-
-    window.on('afterinterfaceload', function () {
-      if (Nuance.grids.message) {
-        Nuance.grids.message.addButton(
-          new Nuance.input.Button(
-            {
-              onclick: Nuance.grids.message.onDel,
-              iconClass: 'remove',
-              disabled: true,
-              onselectionchange: function(selectionId, grid)
-              {
-                if (checkPermission ( ['table', grid.getName(), 'remove'] ) && selectionId.length )
-                {
-                  this.setDisabled(false);
-                }
-                else
-                {
-                  this.setDisabled(true);
-                }
-              }
-            }
-          )
-        , true );
-      }
-    });
 
   }
 	pluginsLoaders.push(init);

@@ -6,7 +6,6 @@ session_write_close();
 if ($sessionId)
 {
   if (!isset($_GET["action"])) return;
-  $response=new response;
 	$action=$_GET["action"];
 	switch ($action)
 	{
@@ -103,14 +102,7 @@ if ($sessionId)
 
         if ($id)
         {
-          if (strpos($id, ',')===false)
-          {
-            $table->load4AJAX(" WHERE id=$id");
-          }
-          else
-          {
-            $table->load4AJAX(" WHERE id in ($id)");
-          }
+          $table->load4AJAX(" WHERE id=$id");
         }
         $res=$db->query("SELECT COUNT(*) FROM `".DB_TABLE_PREFIX.$target."`");
         $row=$res->fetch();
@@ -164,7 +156,6 @@ if ($sessionId)
           $master=$masterTable->loadById($sessionId);
           $permittedCities = $master['city'];
           $permittedStreets = $master['street'];
-          $permittedGroups = $master['usergroup'];
 
           if ($filter!=='*')
           {
@@ -176,76 +167,39 @@ if ($sessionId)
 
           if ($target==='user')
           {
-            if (pluginExists('locationrestrict'))
+            if (count($permittedCities))
             {
-              if (count($permittedCities))
+              if (strlen($filterQuery))
               {
-                if (strlen($filterQuery))
-                {
-                  $filterQuery .= " AND ";
-                }
-                $filterQuery .= " (";
-                for ($i=0; $i<count($permittedCities); $i++)
-                {
-                  $filterQuery .= "`city`=".$permittedCities[$i];
-                  if ($i!==count($permittedCities)-1)
-                  {
-                    $filterQuery .= " OR ";
-                  }
-                }
-                $filterQuery .= ")";
+                $filterQuery .= " AND ";
               }
-              if (count($permittedStreets))
+              $filterQuery .= " (";
+              for ($i=0; $i<count($permittedCities); $i++)
               {
-                if (strlen($filterQuery))
+                $filterQuery .= "`city`=".$permittedCities[$i];
+                if ($i!==count($permittedCities)-1)
                 {
-                  $filterQuery .= " AND ";
+                  $filterQuery .= " OR ";
                 }
-                $filterQuery .= " (";
-                for ($i=0; $i<count($permittedStreets); $i++)
-                {
-                  $filterQuery .= "`street`=".$permittedStreets[$i];
-                  if ($i!==count($permittedStreets)-1)
-                  {
-                    $filterQuery .= " OR ";
-                  }
-                }
-                $filterQuery .= ")";
               }
+              $filterQuery .= ")";
             }
-            if (pluginExists('grouprestrict'))
+            if (count($permittedStreets))
             {
-              if (count($permittedGroups))
+              if (strlen($filterQuery))
               {
-                if (strlen($filterQuery))
-                {
-                  $filterQuery .= " AND ";
-                }
-                $filterQuery .= " (";
-                for ($i=0; $i<count($permittedGroups); $i++)
-                {
-                  $filterQuery .= "`usergroup`=".$permittedGroups[$i];
-                  if ($i!==count($permittedGroups)-1)
-                  {
-                    $filterQuery .= " OR ";
-                  }
-                }
-                $filterQuery .= ")";
+                $filterQuery .= " AND ";
               }
-            }
-          }
-          else if ($target === 'order')
-          {
-            if (pluginExists('grouprestrict'))
-            {
-              if (count($permittedGroups))
+              $filterQuery .= " (";
+              for ($i=0; $i<count($permittedStreets); $i++)
               {
-                if (strlen($filterQuery))
+                $filterQuery .= "`street`=".$permittedStreets[$i];
+                if ($i!==count($permittedStreets)-1)
                 {
-                  $filterQuery .= " AND ";
+                  $filterQuery .= " OR ";
                 }
-                $filterQuery .= " `user` IN ( SELECT `id` FROM `".DB_TABLE_PREFIX."user` WHERE `usergroup` IN (".join($permittedGroups, ",")."))";
               }
+              $filterQuery .= ")";
             }
           }
 
@@ -446,26 +400,6 @@ if ($sessionId)
     case 'routercheckconnection':
       
 
-      if (isset($_GET['id']))
-      {
-        $cacheFileName='routerstate-'.$_GET['id'].'.txt';
-      }
-      else
-      {
-        $cacheFileName='routersstate.txt';
-      }
-
-      $cache=new RouterStateCache($cacheFileName);
-      $result=$cache->get((isset($_GET['force']) && $_GET['force']==='true'));
-      if (gettype($result)==='string')
-      {
-        $response->data=json_decode($result);
-      }
-      else
-      {
-        $response->data=$result;
-      }
-      $response->success=true;
     break;
     case 'routerexport':
       if (!isset($_GET['router'])) return;
@@ -488,22 +422,12 @@ if ($sessionId)
 		break;
     case 'configlist':
 
-      $response->default=$default;
-      $response->data=configlist();
-      $response->success=true;
 
     break;
     case 'getacl':
     {
 
-      $masterTable= new table('master');
-      $master=$masterTable->loadById( $sessionId );
-      $userGroupId=$master['group'];
-
-      $groupTable= new table('group');
-      $group=$groupTable->loadById( $userGroupId );
-      $userAcl=json_decode($group['acl'], true);
-      $response =$userAcl;
+      
     }
     break;
     case 'getstatimage':
@@ -529,46 +453,15 @@ if ($sessionId)
     };
     break;
     case 'configedit':
-      //function configedit($response, $type, $path, $ownerid, $name, $value)
-      $type=$_GET['type'];
-      if ( checkPermission($sessionId,  array('preference', $type) ) ||
-           $type==='user')
-      {
-        switch ($type)
-        {
-          case 'system':
-          $ownerid=0;
-          break;
-
-          case 'user':
-          $ownerid=$sessionId;
-          break;
-
-          case 'router':
-          case 'subscriber':
-          $ownerid=$_GET['ownerid'];
-          break;
-        }
-        $vartype=isset($_POST['vartype']) ? $_POST['vartype'] : 'string';
-        configsetvalue($type,  $_POST['path'], $ownerid,  $vartype, $_POST['name'], $_POST['value']);
-        $response->data=
-        array(
-          $type => 
-          array(
-            $ownerid =>
-              array(
-                $_POST['path'] =>
-                array(
-                  $_POST['name'] => $_POST['value']
-                )
-              )
-          )
-        );
-        $response->success=true;
-      }
+     
     break;
     case 'addtranslationline':
       appendtranslation($_GET['line']);
+      $response->success=true;
+    break;
+    case 'updatelicenseinfo':
+      $licenseManager=new LicenseManager;
+      $licenseManager->loadLicenseInfo(true);
       $response->success=true;
     break;
     case 'gettimezone':

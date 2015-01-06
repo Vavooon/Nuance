@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nuance Billing System\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-08 23:22+0200\n"
-"PO-Revision-Date: 2014-04-08 23:23+0200\n"
+"POT-Creation-Date: 2014-06-21 23:33+0200\n"
+"PO-Revision-Date: 2014-06-22 00:27+0200\n"
 "Last-Translator: Vavooon <vavooon@gmail.com>\n"
 "Language-Team: Nuance <vavooon@gmail.com>\n"
 "Language: uk_UA\n"
@@ -2479,41 +2479,46 @@ msgstr "Відкрити Telnet"
 #: .locale-src\acp/strings.js:574
 #, fuzzy
 msgid "header_permittedstreet"
-msgstr "ИНН"
+msgstr "Виберіть вулицю"
 
 #: .locale-src\acp/strings.js:575
 #, fuzzy
 msgid "header_permittedcity"
-msgstr "ИНН"
+msgstr "Виберіть місто"
 
 #: .locale-src\acp/strings.js:576
+#, fuzzy
 msgid "permittedcity"
-msgstr ""
+msgstr "Виберіть місто"
 
 #: .locale-src\acp/strings.js:577
+#, fuzzy
 msgid "Select permittedstreet"
 msgstr "Виберіть вулицю"
 
 #: .locale-src\acp/strings.js:578
+#, fuzzy
 msgid "Select permittedcity"
 msgstr "Виберіть місто"
 
 #: .locale-src\acp/strings.js:579
+#, fuzzy
 msgid "permittedstreet"
-msgstr ""
+msgstr "Виберіть вулицю"
 
 #: .locale-src\acp/strings.js:580
 #, fuzzy
 msgid "Select only one permittedcity"
-msgstr "Выберите только один город"
+msgstr "Виберіть одне місто"
 
 #: .locale-src\acp/strings.js:581
 msgid "Select only one city"
 msgstr "Виберіть одне місто"
 
 #: .locale-src\acp/strings.js:582
+#, fuzzy
 msgid "plugin-export"
-msgstr "Експорт"
+msgstr "Экспорт"
 
 #: .locale-src\acp/strings.js:583
 msgid "plugin-tableexport"
@@ -2544,6 +2549,7 @@ msgid "Unregistered version"
 msgstr "Незареєстрована версія"
 
 #: .locale-src\acp/strings.js:590
+#, fuzzy
 msgid "header_usergroup"
 msgstr "Група"
 
@@ -2553,16 +2559,124 @@ msgid "usergroup"
 msgstr "Група"
 
 #: .locale-src\acp/strings.js:592
+#, fuzzy
 msgid "plugin-usergroup"
 msgstr "Групи користувачів"
 
 #: .locale-src\acp/strings.js:593
+#, fuzzy
 msgid "User groups"
 msgstr "Групи користувачів"
 
 #: .locale-src\acp/strings.js:594
+#, fuzzy
 msgid "Select usergroup"
 msgstr "Виберіть групу"
+
+#: .locale-src\acp/strings.js:595
+#, fuzzy
+msgid "plugin-grouprestrict"
+msgstr "ПОвідомлення"
+
+#: .locale-src\acp/strings.js:596
+#, fuzzy
+msgid "plugin-locationrestrict"
+msgstr "ПОвідомлення"
+
+#: .locale-src\acp/strings.js:597
+#, fuzzy
+msgid "table-usergroup"
+msgstr "Група"
+
+#: .locale-src\acp/strings.js:598
+#, fuzzy, python-format
+msgid "Are you sure you want to delete moneyflow %s?"
+msgstr "Вы действительно хотите удалить пользователя %s?"
+
+#: .locale-src\acp/strings.js:599
+#, fuzzy, python-format
+msgid "Are you sure you want to delete message %s?"
+msgstr "Вы действительно хотите удалить пользователя %s?"
+
+#: .locale-src\acp/strings.js:600
+#, fuzzy
+msgid "user-widget-enabledWidgets"
+msgstr "Пользователь"
+
+#: .locale-src\acp/strings.js:601
+#, fuzzy
+msgid "user-grid-user-hiddenCols"
+msgstr "Способ отображения ID пользовотелей"
+
+#: .locale-src\acp/strings.js:602
+#, fuzzy
+msgid "optSection-widget"
+msgstr "Главные"
+
+#: .locale-src\acp/strings.js:603
+msgid "Credentials"
+msgstr ""
+
+#: .locale-src\acp/strings.js:604
+msgid "mac"
+msgstr "MAC адреса"
+
+#: .locale-src\acp/strings.js:605
+msgid "ip4"
+msgstr "IP адреса"
+
+#: .locale-src\acp/strings.js:606
+msgid "header_mac"
+msgstr "MAC адреса"
+
+#: .locale-src\acp/strings.js:607
+msgid "header_remoteip"
+msgstr "Віддалений IP"
+
+#: .locale-src\acp/strings.js:608
+msgid "header_localip"
+msgstr "Лькальний IPИНН"
+
+#: .locale-src\acp/strings.js:609
+msgid "localip"
+msgstr "Лькальний IP"
+
+#: .locale-src\acp/strings.js:610
+msgid "remoteip"
+msgstr "Віддалений IP"
+
+#: .locale-src\acp/strings.js:611
+msgid "service"
+msgstr ""
+
+#: .locale-src\acp/strings.js:612
+msgid "IP Data"
+msgstr "Дані ІР"
+
+#: .locale-src\acp/strings.js:613
+msgid "PPP data"
+msgstr "Дані PPP"
+
+#: .locale-src\acp/strings.js:614
+#, fuzzy, python-format
+msgid "Are you sure you want to delete ip %s?"
+msgstr "Вы действительно хотите удалить пользователя %s?"
+
+#: .locale-src\acp/strings.js:615
+msgid "pppservice"
+msgstr ""
+
+#: .locale-src\acp/strings.js:616
+msgid "header_pppservice"
+msgstr "PPP сервіс"
+
+#: .locale-src\acp/strings.js:617
+msgid "Select pppservice"
+msgstr "Виберіть сервіс PPP"
+
+#: .locale-src\acp/strings.js:618
+msgid "Main data"
+msgstr "Головні дані"
 
 #~ msgid "subscriber-main-canChangeTariff"
 #~ msgstr "Дозволити зміну тарифу"

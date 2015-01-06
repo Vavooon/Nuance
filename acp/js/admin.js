@@ -1,6 +1,7 @@
 var date=new Date;
 var currDate=""+date.getFullYear()+sprintf('%02d', date.getMonth()+1);
 var htmlEl=document.getElementsByTagName('html')[0];
+var ajaxProxy = new Nuance.AjaxProxy;
 function ActiveOrder()
 {
   var state;
@@ -28,7 +29,6 @@ function ActiveOrder()
 Nuance.EventMixin.call(window);
 
 var activeOrder=new ActiveOrder();
-var allIP = [];
 
 var dbDateFormat='yyyy-MM-dd';
 var dbDateTimeFormat='yyyy-MM-dd HH:mm:ss';
@@ -100,6 +100,7 @@ window.onConfigLoad=function()
     return round(parseFloat(cash), fractionalPart);
   };
 
+  licenseManager=new Nuance.LicenseManager;
   function showAbout()
   {
     var wrap=TabPanel.tabs.about;
@@ -120,6 +121,72 @@ window.onConfigLoad=function()
     ce('a', {innerHTML: _('Official site'), href: 'http://nuance-bs.com/', target: '_blank'}, body);
     ce('p', {innerHTML: _('All rights reserved')+' &reg; '+date.getFullYear()}, body);
 
+
+    // License info
+
+    ce('br', null, body);
+
+    function onsuccess()
+    {
+      configProxy.on('afterload', showLicenseInfo);
+      configProxy.load();
+    }
+    function updateLicenseInfo()
+    {
+
+      licenseInfoWrap.removeChilds();
+      ce('span', {innerHTML: _("Please wait...")}, licenseInfoWrap);
+      Nuance.AjaxRequest("GET", "./ajax.php?action=updatelicenseinfo", null, onsuccess);
+    }
+    var licenseInfoHeader=ce('div', {id: 'license-info-header'}, body);
+    ce('div', {innerHTML: _("License info"), className: 'sub-title'}, licenseInfoHeader);
+    ce('div', {innerHTML: _("Update"), id: 'license-update-button', className: "icon reload", onclick: updateLicenseInfo}, licenseInfoHeader);
+
+    var licenseInfoWrap=ce('div', {id: 'license-info-wrap'}, body);
+    function showLicenseInfo()
+    {
+
+      licenseInfoWrap.removeChilds();
+      var licenseData=configProxy.getValue('var', 'main', 'licenseData');
+      if (typeof licenseData==='object')
+      {
+        if (licenseData.registered)
+        {
+          var levels=['Unregistered', 'Standart', 'Pro'];
+          var expireDate=(Date.parse(licenseData.info.expires)).toString(dateFormat);
+          ce('p', {innerHTML: _('Owner')+": "+licenseData.info.owner}, licenseInfoWrap);
+          ce('p', {innerHTML: _('Level')+": "+_(levels[licenseData.info.level])}, licenseInfoWrap);
+          ce('p', {innerHTML: _('Update permission expires')+": "+expireDate}, licenseInfoWrap);
+          ce('br', null, licenseInfoWrap);
+          ce('p', {innerHTML: _('Allowed plugins')+":"}, licenseInfoWrap);
+          var list=ce('ul', null, licenseInfoWrap);
+          for (var i=0; i<licenseData.restrictions.allowedPlugins.length; i++)
+          {
+            ce('li', {innerHTML: _('plugin-'+licenseData.restrictions.allowedPlugins[i])}, list);
+          }
+        }
+        else
+        {
+          ce('span', {className: 'red', innerHTML: _('Unregistered version')+'&nbsp;&nbsp;'}, licenseInfoWrap);
+          ce('a', {innerHTML: _("Register"), target: '_blank', href: 'http://nuance-bs.com/buy', id: 'register-link'}, licenseInfoWrap);
+          ce('br', null, licenseInfoWrap);
+          ce('br', null, licenseInfoWrap);
+          ce('p', {innerHTML: _('Restrictions')+":"}, licenseInfoWrap);
+          var restrictedTables=['user', 'router', 'master'];
+          var list=ce('ul', null, licenseInfoWrap);
+          for (var i=0; i<restrictedTables.length; i++)
+          {
+            var tableName=restrictedTables[i];
+            ce('li', {innerHTML: _('table-'+restrictedTables[i])+": "+licenseData.restrictions[restrictedTables[i]]}, list);
+          }
+        }
+      }
+      else
+      {
+        ce('p', {innerHTML: _('Cannot obtain license data')}, licenseInfoWrap);
+      }
+    }
+    showLicenseInfo();
   }
   var topContainer=ce('div', {id: 'top-container'}, document.body);
   var userForm=ce( 'form',  {id: 'user-form', method: 'POST', action: 'auth.php'}, topContainer);
@@ -132,6 +199,26 @@ window.onConfigLoad=function()
  
   pluginsTabs={};
   Nuance.stores['user-idrenderer']={};
+var pppServiceStore=new Nuance.MemoryStore(
+    {
+      target: 'pppservice',
+      header:
+      [
+        ["id","id"],
+        ["name","varchar"]
+      ], 
+      data: 
+      {
+        any: ["any", "Any"],
+        async: ["async", "Async"],
+        l2tp: ["l2tp", "L2TP"],
+        ovpn: ["ovpn", "OpenVPN"],
+        pppoe: ["pppoe", "PPPoE"],
+        pptp: ["pptp", "PPTP"],
+        sstp: ["sstp", "SSTP"]
+      }
+    }
+  );
   var routerTypeStore=new Nuance.MemoryStore(
     {
       target: 'routertype',
@@ -147,13 +234,16 @@ window.onConfigLoad=function()
       }
     }
   );
-  var acpLocaleStore=new Nuance.Store({owner: this, target: 'acpLocale', path: 'ajax.php?action=dirlist&target=acplocale', readOnly: true}); 
-  var ucpLocaleStore=new Nuance.Store({owner: this, target: 'ucpLocale', path: 'ajax.php?action=dirlist&target=ucplocale', readOnly: true}); 
-  var acpThemeStore=new Nuance.Store({owner: this, target: 'acpTheme', path: 'ajax.php?action=dirlist&target=acptheme', readOnly: true}); 
-  var ucpThemeStore=new Nuance.Store({owner: this, target: 'ucpTheme', path: 'ajax.php?action=dirlist&target=ucptheme', readOnly: true}); 
+  var acpLocaleStore=new Nuance.Store({subscribePath: ['runtime', 'acplocale'], owner: this, target: 'acpLocale', readOnly: true, autoLoad: false}); 
+  var ucpLocaleStore=new Nuance.Store({subscribePath: ['runtime', 'ucplocale'], owner: this, target: 'ucpLocale', readOnly: true, autoLoad: false}); 
+  var acpThemeStore=new Nuance.Store({subscribePath: ['runtime', 'acptheme'], owner: this, target: 'acpTheme', readOnly: true, autoLoad: false}); 
+  var ucpThemeStore=new Nuance.Store({subscribePath: ['runtime', 'ucptheme'], owner: this, target: 'ucpTheme', readOnly: true, autoLoad: false}); 
+  var timezoneStore=new Nuance.Store({subscribePath: ['runtime', 'timezone'], target: 'timezone'});
 
-  var activeOrderStore=new Nuance.Store({target: 'order', name: 'activeorder', filter: "enddate>"+date.toString(dbDateTimeFormat), autoLoad: true});
-  var orderStore=new Nuance.Store({target: 'order', autoLoad: true});
+  var activeOrderStore=new Nuance.Store({target: 'activeorder', name: 'activeorder', filter: "enddate>"+date.toString(dbDateTimeFormat)});
+  var orderStore=new Nuance.Store({target: 'order'});
+  var pppStore=new Nuance.Store({target: 'ppp'});
+  var ipStore=new Nuance.Store({target: 'ip'});
   function loadActiveOrders()
   {
     activeOrder.clear();
@@ -361,8 +451,8 @@ window.onConfigLoad=function()
         name: 'user',
         grid:
         {
-          hiddenCols:['contractid', 'sname', 'fname', 'pname', 'street', 'house', 'flat' ,'disabled', 'paymentdate', 'login', 'password', 'usergroup'],
-          userHiddenCols:['regdate', 'editdate', 'usergroup'],
+          hiddenCols:['contractid', 'sname', 'fname', 'pname', 'street', 'house', 'flat' ,'disabled', 'paymentdate', 'login', 'password'],
+          userHiddenCols:['regdate', 'editdate'],
           excludedFields: userExcludedFields,  
           configProxy: configProxy,
           virtualFields:
@@ -434,7 +524,6 @@ window.onConfigLoad=function()
           store: new Nuance.Store(
           {
             target: 'user',
-            autoLoad: true,
             getNameByIdFn:function(id)
             {
               var row=this.getById(id);
@@ -670,7 +759,7 @@ window.onConfigLoad=function()
               {
                 var grid=Nuance.grids.router;
                 var routerId=grid.getSelectedItems()[0];
-                var ifacesStore=Nuance.stores['routerinterfaces'+routerId] || new Nuance.Store({target: 'routerinterfaces'+routerId, path: 'ajax.php?action=routergetinterfaces&router='+routerId, autoload: true});
+                var ifacesStore=Nuance.stores['routerinterfaces'+routerId] || new Nuance.Store({target: 'routerinterfaces'+routerId, path: '/interface/'+routerId+'/get', forceLoad: true});
                 new Nuance.PreferencesPopup(
                   {
                     configProxy: configProxy,
@@ -741,8 +830,8 @@ window.onConfigLoad=function()
           [
           ],
           configProxy: configProxy, 
-          hiddenCols:['theme', 'config' ,'type', 'password', 'group', 'city', 'street', 'usergroup'],
-          excludedFields: ['group', 'city', 'street', 'usergroup']
+          hiddenCols:['theme', 'config' ,'type', 'password', 'group'],
+          excludedFields: ['group']
         }
       },
       group: false,
@@ -757,6 +846,7 @@ window.onConfigLoad=function()
           store: new Nuance.Store(
           {
             autoLoad: true,
+            filter: location.hash.indexOf('scratchcard')!==1 ? 'id=0' : false,
             target: 'log'
           }),
           virtualFields:
@@ -819,20 +909,6 @@ window.onConfigLoad=function()
     pluginsLoaders[i]();
   }
 
-  Nuance.stores.user.on( 'afterload', function() 
-  {
-    var data = this.data;
-    var ns = this.ns;
-    for (var id in data)
-    {
-      var ipList=data[id][ns.iplist].match(/"([0-9\.]+)":/g) || [];
-      for (var i=0; i<ipList.length; i++)
-      {
-        ipList[i]=ipList[i].substr(1, ipList[i].length-3);
-        allIP.push( ipList[i] );
-      }
-    }
-  } );
 
   // Init widgets
 
@@ -841,12 +917,15 @@ window.onConfigLoad=function()
 
   // Add documents tab
 
-  pluginsTabs.documents=
+  if (licenseManager.checkPermission('ucp'))
   {
-    title: _("Documents"),
-    name: 'documents',
-    content: (new Nuance.input.Documents).body
-  };
+    pluginsTabs.documents=
+    {
+      title: _("Documents"),
+      name: 'documents',
+      content: (new Nuance.input.Documents).body
+    };
+  }
   if ( checkPermission ( ['table', 'user', 'edit', 'disabled'] ) )
   {
     tables.tabs.user.grid.contextMenuItems.push(
@@ -979,7 +1058,7 @@ window.onConfigLoad=function()
       title: _("Refund"),
       beforeshow: function(selectionId, grid)
       {
-        var grid=Nuance.grids.moneyflow;
+        var grid=Nuance.grids.user;
         this.disabled= grid.getSelectedItems().length!==1;
       },
       onclick: function()
@@ -1119,38 +1198,40 @@ window.onConfigLoad=function()
       delete tables.tabs[i];
     }
   }
-  loadOnDemandTables=['moneyflow', 'scratchcard'];
+  loadOnDemandTables=['moneyflow', 'scratchcard', 'log'];
 
   TabPanel = new Nuance.TabPanel(tables);
 
-  // Add remove button to moneyflow
 
-  window.trigger('afterinterfaceload');
-
-  if ( checkPermission ( ['table', 'moneyflow', 'remove'] ) )
+  /*
+  if ( checkPermission ( ['table', 'user', 'edit'] ) )
   {
-    Nuance.grids.moneyflow.addButton(
-      new Nuance.input.Button(
-        {
-          onclick: Nuance.grids.moneyflow.onDel,
-          iconClass: 'remove',
-          disabled: true,
-          onselectionchange: function(selectionId, grid)
-          {
-            if (checkPermission ( ['table', grid.getName(), 'remove'] ) && selectionId.length )
+    Nuance.grids.user.onEdit = function (o )
+    {
+      var self=this
+        , opts = tables.tabs.user.grid
+        , selectedItems = this.getSelectedItems();
+      if (selectedItems.length===1 && !opts.readOnly)
+      {
+        var form=new Nuance.EditPopup(
             {
-              this.setDisabled(false);
+              winLayout: 'triple',
+              //bodyLayout: 'triple',
+              store: self.store,
+              customFields: opts.customFields,
+              onlyIncludedFields: opts.onlyIncludedFields,
+              excludedFields: self.excludedFields,
+              includedFields: opts.includedFields,
+              recordId: self.recordId || selectedItems[0]
             }
-            else
-            {
-              this.setDisabled(true);
-            }
-          }
-        }
-      )
-    , true );
-  }
+        );
 
+
+
+      }
+    }
+  }
+*/
   var switchEl=TabPanel.body.firstChild;
   var stretchEl=ce('li', {className: 'spoiler-stretch'}, TabPanel.body.firstChild);
   var spoilerEl=ce('li', {className: 'spoiler icon menu'}, TabPanel.body.firstChild);
@@ -1245,21 +1326,277 @@ window.onConfigLoad=function()
     }
   );
 
+
   if (Nuance.grids.user)
   {
-    Nuance.grids.user.onAdd=function()
+
+    function extendUserForm (form) 
     {
-      var form=new Nuance.AddPopup(
+      var isAdding = form.constructor == Nuance.AddPopup;
+      form._popupWin.classList.remove('double');
+      form._popupWin.classList.add('triple');
+      form.body.classList.add('flex');
+
+      var dataEl = ce( 'div', {className: 'popup-body double'});
+      var ipDataEl  = ce( 'div', {className: 'popup-body flex flex-column'});
+      var pppDataEl  = ce( 'div', {className: 'popup-body flex flex-column'});
+      var preferencesEl = ce( 'div', {className: 'popup-body'});
+
+      while (form.body.children.length)
+      {
+        var children = form.body.children[0];
+        form.body.removeChild( children );
+        dataEl.appendChild( children );
+      }
+
+      if (isAdding) 
+      {
+        var ipStore =new Nuance.MemoryStore({header: cloneArray(Nuance.stores.ip.header), data: { }});
+        var pppStore =new Nuance.MemoryStore({header: cloneArray(Nuance.stores.ppp.header), data: { }});
+        Nuance.stores.ip_memory = ipStore;
+        Nuance.stores.ppp_memory = pppStore;
+      }
+      else
+      {
+        var ipStore = Nuance.stores.ip;
+        var pppStore = Nuance.stores.ppp;
+      }
+      var ipTable = new Nuance.Grid(
         {
-          store: self.store,
-          customFields: opts.customFields, 
-          onlyIncludedFields: opts.onlyIncludedFields,
-          excludedFields: self.excludedFields, 
-          includedFields: opts.includedFields, 
-          recordId: 0
+            store: ipStore
+          , target: ipDataEl
+          , hiddenCols: ['id', 'user']
+          , name: 'ip'
+          , onlyIncludedFields: true
+          , includedFields: ['ip', 'mac', 'router', 'port' ]
         }
       );
+      ipTable.render();
+      ipTable.on('beforeadd', function(values)
+      {
+        var ns = Nuance.stores.ip.ns;
+        values[ns.user] = form.recordId;
+      });
+
+
+      var pppTable = new Nuance.Grid(
+        {
+            store: pppStore
+          , target: pppDataEl
+          , hiddenCols: ['id', 'user']
+          , name: 'ppp'
+          , onlyIncludedFields: true
+          , includedFields: ['login', 'password', 'router', 'localip', 'remoteip', 'pppservice' ]
+        }
+      );
+      if (!isAdding) {
+        ipTable.setFilters( {user: form.recordId });
+        pppTable.setFilters( {user: form.recordId });
+      }
+      pppTable.render();
+      pppTable.on('beforeadd', function(values)
+      {
+        var ns = Nuance.stores.ppp.ns;
+        values[ns.id] = 1;
+        values[ns.user] = form.recordId;
+        c(42)
+      });
+
+
+      var filterTypeStore=new Nuance.MemoryStore({target: 'router-filtertype', header: [['id', 'id'], ['name', 'varchar']],
+      data: 
+      {
+        0: [0, _('Do not filter')],
+        1: [1, _('Filter by ARP')],
+        2: [2, _('Filter by filter rule')],
+        3: [3, _('Filter by mangle')]
+      }});
+
+
+      var preferencesPopup = new Nuance.RouterUserPreferencesActivity(
+        {
+          configProxy: configProxy,
+          owner: form.recordId,
+          type: 'subscriber'
+      });
+      var fields=preferencesPopup.fields;
+      for (var i=0; i<fields.length; i++)
+      {
+        preferencesEl.appendChild(fields[i].body);
+      }
+      var popupTabs = {
+        data: 
+        {
+          title: _("Main data"),
+          name: 'data',
+          content: dataEl
+        },
+        ipdata:
+        {
+          title: _("IP Data"),
+          name: 'ipdata',
+          content: ipDataEl 
+        },
+        pppdata:
+        {
+          title: _("PPP data"),
+          name: 'pppdata',
+          content: pppDataEl 
+        },
+        preferences: 
+        {
+          title: _("Preferences"),
+          name: 'preferences',
+          content: preferencesEl
+        }
+      }
+      var tabPanel = new Nuance.TabPanel( 
+        {
+          target: form.body, 
+          prefix: 'prefpopup',
+          tabs: popupTabs
+        }
+      );
+
+      tabPanel.on('tabchange', ipTable.onDataChange);
+      tabPanel.on('tabchange', pppTable.onDataChange);
+      form.on('save', function(){
+        preferencesPopup.save();
+        console.log( form );
+      });
     }
+    Nuance.grids.user.on('addform', extendUserForm);
+    Nuance.grids.user.on('editform', extendUserForm);
+
+    Nuance.grids.user.on('afteradd', function( response ){
+      // Just get an id 
+      for (var id in response.db.user.data ) {
+        c( id, Nuance.stores.ppp_memory )
+      }
+    });
+  }
+
+  if (Nuance.grids.router)
+  {
+
+    function extendRouterForm (form) 
+    {
+      form.body.classList.add('flex');
+
+      var dataEl = ce( 'div', {className: 'popup-body double'});
+      var preferencesEl = ce( 'div', {className: 'popup-body'});
+
+      while (form.body.children.length)
+      {
+        var children = form.body.children[0];
+        form.body.removeChild( children );
+        dataEl.appendChild( children );
+      }
+
+      var filterTypeStore=new Nuance.MemoryStore({target: 'router-filtertype', header: [['id', 'id'], ['name', 'varchar']],
+      data: 
+      {
+        0: [0, _('Do not filter')],
+        1: [1, _('Filter by ARP')],
+        2: [2, _('Filter by filter rule')],
+        3: [3, _('Filter by mangle')]
+      }});
+
+
+      var ifacesStore=Nuance.stores['routerinterfaces'+form.recordId] || new Nuance.Store({target: 'routerinterfaces'+form.recordId, subscribePath: ['interface', form.recordId], path: 'interface/'+form.recordId+'/get', forceLoad: true});
+      var preferencesPopup = new Nuance.RouterUserPreferencesActivity(
+        {
+          configProxy: configProxy,
+          owner: form.recordId,
+          type: 'router',
+          customOptions:
+          {
+            router:
+            {
+              main:
+              {
+                inInterface: 
+                {
+                  type: 'link',
+                  store: ifacesStore
+                },
+                outInterface: 
+                {
+                  type: 'link',
+                  store: ifacesStore
+                },
+                filterType:
+                {
+                  type: 'link',
+                  store: filterTypeStore
+                }
+              }
+            }
+          }
+      });
+      var fields=preferencesPopup.fields;
+      for (var i=0; i<fields.length; i++)
+      {
+        preferencesEl.appendChild(fields[i].body);
+      }
+      var popupTabs = {
+        data: 
+        {
+          title: _("Main data"),
+          name: 'data',
+          content: dataEl
+        },
+        preferences: 
+        {
+          title: _("Preferences"),
+          name: 'preferences',
+          content: preferencesEl
+        }
+      }
+      var tabPanel = new Nuance.TabPanel( 
+        {
+          target: form.body, 
+          prefix: 'prefpopup',
+          tabs: popupTabs
+        }
+      );
+
+    }
+
+    Nuance.grids.router.on('addform', extendRouterForm);
+    Nuance.grids.router.on('editform', extendRouterForm);
+
+
+
+    /*
+
+    Nuance.grids.user.onAdd=function()
+    {
+      var maxEntries=licenseManager.checkPermission(name) || Infinity;
+      if (dataOrder.length<maxEntries)
+      {
+        var form=new Nuance.AddPopup(
+          {
+            store: self.store,
+            customFields: opts.customFields, 
+            onlyIncludedFields: opts.onlyIncludedFields,
+            excludedFields: self.excludedFields, 
+            includedFields: opts.includedFields, 
+            recordId: 0
+          }
+        );
+      }
+      else
+      {
+        new Nuance.MessageBox(
+          {
+            title: _("License restriction"), 
+            text: '&nbsp;'+_('You have been reached maximum table entries permitted by your license.<br>Please <a target="_blank" href="http://nuance-bs.com/">upgrade your license</a>.')
+          }
+        );
+      }
+    }
+    */
   }
 
   Nuance.grids.user && Nuance.grids.user.on('beforerender', function(formattingRows, data, ns, displayData, displayNs)
@@ -1358,16 +1695,8 @@ window.onConfigLoad=function()
       }
       
       // IP list
-      var routerType =  (Nuance.stores.router.getById( data[id][ns.router] ) || [])[ Nuance.stores.router.ns.routertype] ;
-      if ( routerType === 'mikrotikppp' ) {
-        var ipList=data[id][ns.iplist].match(/,"([0-9\.]+)":/g) || [];
-        for (var i=0; i<ipList.length; i++)
-        {
-          ipList[i]=ipList[i].substr(2, ipList[i].length-4);
-        }
-        displayData[id][ipListIndex]= ipList[0];
-      } 
-      else {
+      if (data[id][ns.iplist])
+      {
         var ipList=data[id][ns.iplist].match(/"([0-9\.]+)":/g) || [];
         for (var i=0; i<ipList.length; i++)
         {
@@ -1715,7 +2044,7 @@ window.onConfigLoad=function()
     }
   });
 
-
+/*
   function onCashChange(event,userId, o)
   {
     if (typeof o.cash!=='undefined' ||
@@ -1745,9 +2074,7 @@ window.onConfigLoad=function()
       Nuance.stores.user.load();
     }
   );
-
-
-
+  */
   var preferencesWasLoaded=false;
   var aboutWasLoaded=false;
   function loadPreferences()
@@ -1767,7 +2094,7 @@ window.onConfigLoad=function()
             timezone: 
             {
               type: 'charlink',
-              store: Nuance.stores.timezone || new Nuance.Store({target: 'timezone', path: 'ajax.php?action=gettimezone', autoload: true})
+              store: Nuance.stores.timezone
             }
           },
           ucp:
@@ -1798,25 +2125,33 @@ window.onConfigLoad=function()
     {
       loadPreferences();
     }
+    else 
+    {
+      Nuance.grids[tabName] && Nuance.grids[tabName].onDataChange();
+
+    }
   }
   TabPanel.on('tabchange', onTabSwitch);
-  if (TabPanel.getSelectedTab().name==='preferences')
+  if (TabPanel.getSelectedTab())
   {
-    loadPreferences();
-  }
-  else if (TabPanel.getSelectedTab().name==='about')
-  {
-    showAbout();
-    aboutWasLoaded=true;
+    if (TabPanel.getSelectedTab().name==='preferences')
+    {
+      loadPreferences();
+    }
+    else if (TabPanel.getSelectedTab().name==='about')
+    {
+      showAbout();
+      aboutWasLoaded=true;
+    }
   }
 }
 
 
 var acl;
 
-function loadAcl(r)
+function loadAcl(response)
 {
-  acl=r;
+  acl=response.acl;
   configProxy=new Nuance.ConfigProxy(
   {
     onload: onConfigLoad,
@@ -1862,9 +2197,9 @@ function loadAcl(r)
   }
 );
 }
-Nuance.AjaxRequest ('GET', 'ajax.php?action=getacl', null, loadAcl); 
+//Nuance.AjaxRequest ('GET', 'ajax.php?action=getacl', null, loadAcl); 
 
-
+ajaxProxy.on(['acl'], loadAcl);
 
 function checkPermission( path )
 {
@@ -1898,3 +2233,6 @@ function checkPermission( path )
   }
   return allow;
 }
+
+
+ajaxProxy.get('/all/get', {activetab: location.hash.replace('#', '')});

@@ -49,30 +49,18 @@ class PaymentStatistics
   public function getStatistics()
   {
     
-    global $sessionId;
     $data=array(
       "total" => 0,
       "bymonth" => array()
     );
-    $masterTable=new table('master');
-    $master=$masterTable->loadById($sessionId);
-    $permittedCities = $master['city'];
-    $permittedStreets = $master['street'];
-    $permittedGroups = $master['usergroup'];
     
     foreach ($this->getCoveredMonths() as $month)
     {
       $monthAsText=$month->format('Y-m');
       
-      $cacheFilename = 'paymentstats-'.$monthAsText;
-      if (pluginExists('grouprestrict') && $permittedGroups) 
-      {
-        $cacheFilename .= '-group('.join($permittedGroups, '_').')';
-      }
-      $cacheFilename .= '.txt';
-      $cache=new StatisticsCache($cacheFilename);
+      $cache=new StatisticsCache('paymentstats-'.$monthAsText.'.txt');
       $cache->month=$month;
-      $monthData= json_decode($cache->get(), true);
+      $monthData= json_decode($cache->get(),true);
       $data['total'] += $monthData['total'];
       $data['bymonth'][$monthAsText]=$monthData;
 
