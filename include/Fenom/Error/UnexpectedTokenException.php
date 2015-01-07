@@ -30,5 +30,3 @@ class UnexpectedTokenException extends \RuntimeException
         }
     }
 }
-
-;

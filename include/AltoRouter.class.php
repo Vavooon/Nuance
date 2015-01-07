@@ -92,7 +92,6 @@ class AltoRouter
      */
     public function generate($routeName, array $params = array())
     {
-
         // Check if named route exists
         if (!isset($this->namedRoutes[$routeName]))
         {
@@ -107,7 +106,6 @@ class AltoRouter
 
         if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER))
         {
-
             foreach ($matches as $match)
             {
                 list($block, $pre, $type, $param, $optional) = $match;

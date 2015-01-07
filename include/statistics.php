@@ -2,14 +2,7 @@
 
 class PaymentStatistics
 {
-
-    //$data=array()
-
-    private function calculateStatistics()
-    {
-        
-    }
-
+    
     private function getCoveredMonths()
     {
         $moneyflowTable = new table('moneyflow');
@@ -45,7 +38,6 @@ class PaymentStatistics
 
     public function getStatistics()
     {
-
         $data = array(
                 "total" => 0,
                 "bymonth" => array()

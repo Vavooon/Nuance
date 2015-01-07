@@ -1,6 +1,6 @@
 <?php
 
-require_once('core.php');
+require_once 'core.php';
 
 use Fenom\Provider;
 
@@ -26,13 +26,12 @@ else
     $currentLanguage = configgetvalue('system', 'main', NULL, 'ucpLocale');
 }
 loadLocale('ucp', $currentLanguage);
-if (!$licenseManager->checkPermission('ucp'))
-{
-    $errorText = __("You do not have permission to use UCP");
-    require_once $usertheme . "/error.php";
-    die();
-}
-
+//if (!$licenseManager->checkPermission('ucp'))
+//{
+//    $errorText = __("You do not have permission to use UCP");
+//    require_once $usertheme . "/error.php";
+//    die();
+//}
 
 $ipRequest = " WHERE iplist LIKE '%\"" . $_SERVER['REMOTE_ADDR'] . "\"%'";
 
@@ -81,7 +80,6 @@ class User
 
     function getName()
     {
-
         $fullName = $this->data['sname'];
         if ($this->data['fname'])
         {
@@ -246,14 +244,7 @@ if ($user->isValid())
 
 session_write_close();
 
-
-
-
-
 /* languages */
-
-
-
 $checkFn = function($el)
 {
     $target = 'locale';
@@ -274,11 +265,7 @@ for ($i = 0; $i < count($languages); $i++)
     $icon = "themes/default/flags/" . strtolower(substr($language, 3)) . ".png";
     $languages[$i] = array($language, $href, $icon);
 }
-
-
-
 /* Generate menu */
-
 
 $menu = array();
 
@@ -325,8 +312,8 @@ if ($user->isValid() && pluginExists('message'))
         $menu['message.php'] = array($messageText, 0);
     }
 }
-$menu['contacts.php'] = array(__('Contacts'), 0);
 
+$menu['contacts.php'] = array(__('Contacts'), 0);
 
 $scriptName = substr($_SERVER['SCRIPT_NAME'], 1);
 if (isset($menu[$scriptName]))
@@ -350,7 +337,6 @@ else
     $displayName = false;
 }
 
-
 $headerData = array(
         "htmlTitle" => sprintf(__("%s - Nuance - User panel"), configgetvalue('system', 'main', NULL, 'companyName')),
         "languages" => $languages,
@@ -362,4 +348,5 @@ $headerData = array(
         "displayName" => $displayName,
         "currentLanguage" => $currentLanguage,
 );
+
 ?>
