@@ -151,7 +151,7 @@ foreach ($tariffs as $tariffId => $tariff)
   }
  */
 
-$orderTable = new table('order');
+$orderTable = new Table('order');
 
 foreach ($users as $id => $user)
 {

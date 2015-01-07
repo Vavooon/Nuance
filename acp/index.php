@@ -2,9 +2,6 @@
 
 require_once "../include/core.php";
 
-// Update check
-//
-//checkUpdate();
 session_start();
 $sessionId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : false;
 $sessionName = isset($_SESSION['user_login']) ? $_SESSION['user_login'] : false;
@@ -12,7 +9,6 @@ session_write_close();
 
 $router->map('GET', '/', function () use ($usertheme, $sessionId, $sessionName)
 {
-
     $browser = getBrowser();
     $supportedBrowsers = array(
             'Firefox' => 11,
@@ -40,16 +36,13 @@ $router->map('GET', '/', function () use ($usertheme, $sessionId, $sessionName)
     }
     else
     {
-        redirect('auth');
+        redirect('auth.php');
     }
 });
-
-
 
 $response = array_merge(array(), $responseTemplate);
 
 /*    Database    */
-
 $router->map('GET', '/db/[a:name]/get', function ($params)
 {
     $db = new DB();
@@ -88,8 +81,8 @@ $router->map('POST', '/db/[a:name]/del', function ($params)
     $db->del($params);
 }
 );
-/*    Config    */
 
+/*    Config    */
 $router->map('GET', '/config/get', function ($params)
 {
     $db = new Config($params);
@@ -118,15 +111,15 @@ $router->map('POST', '/config/del', function ($params)
 }
 );
 
-
 /*    Router interfacec    */
-
 $router->map('GET', '/interface/[i:id]/get', function ($params)
 {
     global $response;
     $routerId = $params['id'];
     if (!$routerId)
+    {
         return;
+    }
     $response['interface'] = array(
             $routerId => array(
                     "header" => array(array('id', 'varchar'), array('name', 'varchar'))
@@ -136,10 +129,7 @@ $router->map('GET', '/interface/[i:id]/get', function ($params)
 }
 );
 
-
-
 /*    Statistics    */
-
 $router->map('GET', '/statistics/[a:name]/get', function ($params)
 {
     $db = new Statistics($params);
@@ -147,9 +137,7 @@ $router->map('GET', '/statistics/[a:name]/get', function ($params)
 }
 );
 
-
 /*    Cash to pay    */
-
 $router->map('GET', '/cashtopay/get', function ($params)
 {
     global $response;
@@ -161,8 +149,7 @@ $router->map('GET', '/cashtopay/get', function ($params)
 }
 );
 
-/*    Get all data */
-
+/*  Get all data */
 $router->map('GET', '/all/get', function ($params)
 {
     global $response, $mysqlTimeDateFormat;
@@ -197,15 +184,7 @@ $router->map('GET', '/all/get', function ($params)
     $db = new ACL();
     $db->get();
 
-
-
-
-
-
-
-
     // Load runtime: available locales, themes and timezone list
-
     global $newTarget, $domain;
     $response['runtime'] = array();
     $targets = array('acplocale', 'ucplocale', 'acptheme', 'ucptheme');
@@ -225,18 +204,21 @@ $router->map('GET', '/all/get', function ($params)
         {
             case 'acptheme':
             case 'ucptheme':
-                $response['runtime'][$target]['data'] = getDirsAsStore("../$domain/" . $newTarget . "s", $checkFn);
+                {
+                    $response['runtime'][$target]['data'] = getDirsAsStore("../$domain/" . $newTarget . "s", $checkFn);
+                }
                 break;
-
             case 'acplocale':
             case 'ucplocale':
-                $checkFn = function($el)
                 {
-                    global $newTarget, $domain;
-                    if (file_exists("../$newTarget/$el/LC_MESSAGES/$domain.mo") || file_exists("../$newTarget/$el/LC_MESSAGES/$domain.po"))
-                        return true;
-                };
-                $response['runtime'][$target]['data'] = getDirsAsStore("../$newTarget", $checkFn);
+                    $checkFn = function($el)
+                    {
+                        global $newTarget, $domain;
+                        if (file_exists("../$newTarget/$el/LC_MESSAGES/$domain.mo") || file_exists("../$newTarget/$el/LC_MESSAGES/$domain.po"))
+                            return true;
+                    };
+                    $response['runtime'][$target]['data'] = getDirsAsStore("../$newTarget", $checkFn);
+                }
                 break;
         }
     }
@@ -258,7 +240,8 @@ $router->map('GET', '/all/get', function ($params)
     foreach ($regions as $name => $mask)
     {
         $tzlist = array_merge($tzlist, DateTimeZone::listIdentifiers($mask));
-    };
+    }
+
     sort($tzlist);
     foreach ($tzlist as $name => $value)
     {
@@ -277,10 +260,7 @@ if ($match['target'])
 {
     $match['target']($match['params']);
 
-
-
     /*    Show response   */
-
     //`if (count($response)>3)
     {
         if (function_exists('getallheaders'))
@@ -289,7 +269,9 @@ if ($match['target'])
             if (count($headers) && isset($headers['X-Requested-With']) && $headers['X-Requested-With'] === 'XMLHttpRequest')
             {
                 if (!headers_sent())
+                {
                     header('Content-type: application/json');
+                }
                 echo "\n" . json_encode($response);
             }
             else
@@ -316,5 +298,5 @@ else
         echo "404 Not Found.";
     }
 }
-//echo json_encode($response);
+
 ?>

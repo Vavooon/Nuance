@@ -18,7 +18,7 @@ else
         
     }
 
-    $messageTable = new table('message');
+    $messageTable = new Table('message');
     $action = isset($_GET['action']) ? $_GET['action'] : 'notset';
     switch ($action)
     {
@@ -108,7 +108,7 @@ else
                 }
                 else
                 {
-                    $usersTable = new table('user');
+                    $usersTable = new Table('user');
                     $row = $usersTable->loadById($user->getId());
                     controllerRouterQueue($row['router'], "hidemessage", $user->getId());
                     redirect('message.php?action=finish');

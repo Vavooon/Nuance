@@ -8,7 +8,7 @@ class ScratchCard
   {
     $response=$resp ? $resp : new response();
     //if (!tableExists('scratchcards')) $this->install();
-    $this->table=new table('scratchcard');
+    $this->table=new Table('scratchcard');
     $this->codeLength=$this->table->header[1][2];
   }
   public function pay($code, $userId)
@@ -20,7 +20,7 @@ class ScratchCard
       {
         $card=$cardmatch[0];
         $this->table->edit( array( 'id' => $card['id'], 'activated'=> 1, 'activationdate' => date("Y-m-d H:i:s") , 'user' => $userId) );
-        $moneyflowTable=new table('moneyflow');
+        $moneyflowTable=new Table('moneyflow');
         $paySum=floatval($card['value']);
         $moneyflowTable->add ( array 
           (

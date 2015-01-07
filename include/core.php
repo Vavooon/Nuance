@@ -26,8 +26,6 @@ set_time_limit(0);
 
 // Include config
 include $path . "/default.php";
-include $path . "/Altorouter.class.php";
-include_once $path . "/cache.php";
 include $path . "/../config.php";
 
 $loggedTables = array(
@@ -124,7 +122,7 @@ if (!count($tables))
 
 $timezone = configgetvalue('system', 'main', NULL, 'timezone');
 date_default_timezone_set($timezone);
-$logTable = new table('log');
+$logTable = new Table('log');
 $logTable->setLogging(false);
 $columnCache = array();
 $columnCacheAssoc = array();
@@ -397,7 +395,7 @@ function redirect($file = '/', $otherDomain = false)
     {
         $_SESSION['redirected_from'] = $_SERVER['REQUEST_URI'];
     }
-
+    
     header("Location: $href");
 }
 
@@ -413,7 +411,7 @@ function controllerRouter($routerId, $mode, $userId = false)
 
     if (!$routerId)
         return;
-    $routerTable = new table('router');
+    $routerTable = new Table('router');
     $devres = $routerTable->load($routerId ? "WHERE id=$routerId" : "");
     $returnValue = true;
     if (count($devres))
@@ -516,7 +514,7 @@ function controllerRouterQueue($routerId, $mode, $userId = false)
     if (!$routerId)
         return;
     //Add entry to updqueue table
-    $updqueueTable = new table('routerupdatequeue');
+    $updqueueTable = new Table('routerupdatequeue');
     $updqueueTable->setLogging(false);
     // Check for the same action records
     $req = "WHERE router=$routerId AND mode='$mode'";
@@ -529,10 +527,6 @@ function controllerRouterQueue($routerId, $mode, $userId = false)
     {
         $updqueueTable->add(array('router' => $routerId, 'mode' => $mode, 'user' => $userId));
     }
-
-
-    //fork('/updaterouter.php', false);
-
 
     $unavailableRouters = array();
     $queRes = $updqueueTable->load("WHERE `router`=$routerId");
@@ -646,7 +640,7 @@ $addRenderers = array(
             {
                 $recipients = $newFields['user'];
                 $recipients = explode(',', $recipients);
-                $messageTable = new table('message');
+                $messageTable = new Table('message');
                 foreach ($recipients as $recipient)
                 {
                     $separateMessage = array(
@@ -718,7 +712,7 @@ $addRenderers = array(
                     global $sessionId;
                     if (configgetvalue('system', 'cash', NULL, 'newUsersAutoFund'))
                     {
-                        $moneyflowTable = new table('moneyflow');
+                        $moneyflowTable = new Table('moneyflow');
                         $moneyflowTable->add(
                                 array(
                                         "user" => $id,
@@ -732,13 +726,13 @@ $addRenderers = array(
                 },
                         'order' => function ($id, $fields)
                 {
-                    $usersTable = new table('user');
+                    $usersTable = new Table('user');
                     $row = $usersTable->loadById($fields['user']);
                     controllerRouterQueue($row['router'], "update", $fields['user']);
                 },
                         'message' => function($id, $fields)
                 {
-                    $usersTable = new table('user');
+                    $usersTable = new Table('user');
                     $row = $usersTable->loadById($fields['recipient']);
                     controllerRouterQueue($row['router'], "showmessage", $fields['recipient']);
                 },
@@ -746,10 +740,9 @@ $addRenderers = array(
                 {
                     $sum = money($newFields['sum']);
                     $userId = $newFields['user'];
-                    $userTable = new table('user');
+                    $userTable = new Table('user');
                     $user = $userTable->loadById($userId);
                     $newCash = money($user['cash']) + $sum;
-
 
                     $userTable->edit(
                             array(
@@ -768,7 +761,7 @@ $addRenderers = array(
                         // Add money to referrer
                         if ($refsRow)
                         {
-                            $moneyflowTable = new table('moneyflow');
+                            $moneyflowTable = new Table('moneyflow');
                             $moneyflowTable->add(
                                     array(
                                             "user" => $refsRow['id'],
@@ -780,11 +773,9 @@ $addRenderers = array(
                         }
                     }
 
-
                     // Check if notification is shown and disabled it if user has enought cash
                     // Calculate amounts
                     $cash = $newCash;
-
 
                     $sum = -getCashToPay($user['id']);
                     $newCash = $cash + $sum;
@@ -820,7 +811,7 @@ $addRenderers = array(
                             {
                                 if ($oldFields['detailsname'] == 'order')
                                 {
-                                    $ordersTable = new table('order');
+                                    $ordersTable = new Table('order');
                                     $order = $ordersTable->loadById($oldFields['detailsid']);
                                     $ordersTable->edit(array('id' => $oldFields['detailsid'], 'canceled' => 1));
                                     $remainsPercentage = 1;
@@ -830,8 +821,8 @@ $addRenderers = array(
                                         case 1:
                                             {
                                                 payment(0, $oldFields['user']);
-                                                break;
                                             }
+                                            break;
                                         case 2:
                                             {
                                                 $startDate = new DateTime($order['startdate']);
@@ -842,9 +833,10 @@ $addRenderers = array(
                                                 $b = $endDate->format("U") - $currentDate->format("U");
                                                 $remainsPercentage = $b / $a;
                                             }
+                                            break;
                                         case 3:
                                             {
-                                                $moneyflowTable = new table('moneyflow');
+                                                $moneyflowTable = new Table('moneyflow');
                                                 $refundSum = -money($oldFields['sum'] * $remainsPercentage);
                                                 if ($refundSum > 0)
                                                 {
@@ -857,13 +849,13 @@ $addRenderers = array(
                                                             )
                                                     );
                                                 }
-                                                break;
                                             }
+                                            break;
                                     }
                                 }
                                 else if ($oldFields['detailsname'] == 'adminpay')
                                 {
-                                    $moneyflowTable = new table('moneyflow');
+                                    $moneyflowTable = new Table('moneyflow');
                                     $moneyflowTable->add(
                                             array(
                                                     "user" => $oldFields['user'],
@@ -921,7 +913,7 @@ $addRenderers = array(
                                             isset($newFields['upbursttime'])
                                     )
                                     {
-                                        $usersTable = new table('user');
+                                        $usersTable = new Table('user');
                                         $users = $usersTable->load("WHERE tariff=$id");
                                         foreach ($users as $row)
                                         {
@@ -931,7 +923,7 @@ $addRenderers = array(
                                 },
                                 'order' => function ($id, $newFields, $oldFields)
                                 {
-                                    $usersTable = new table('user');
+                                    $usersTable = new Table('user');
                                     $row = $usersTable->loadById($oldFields['user']);
                                     controllerRouterQueue($row['router'], "update", $oldFields['user']);
                                     return $newFields;
@@ -948,377 +940,6 @@ $addRenderers = array(
                                     $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "moneyflow` WHERE `user`=" . $id);
                                 }
                         );
-
-                        class table
-                        {
-
-                            public $header = array();
-                            protected $name;
-                            private $logging;
-                            private $db;
-                            public $response;
-
-                            public function __construct($name)
-                            {
-                                global $db;
-                                global $loggedTables;
-                                global $response;
-                                $this->name = $name;
-                                $this->response = & $response;
-
-                                //if (!count($this->response['db'][$this->name]['header'])) $this->response['db'][$this->name]['header']=getFields($this->name);
-                                $this->header = getFields($this->name);
-                                if (array_key_exists($this->name, $loggedTables))
-                                {
-                                    $this->logging = true;
-                                }
-                                $this->db = $db;
-                                $this->fields = getFieldsAssoc($this->name);
-                            }
-
-                            private function addSchemaToResponse()
-                            {
-                                if (!isset($this->response['db'][$this->name]))
-                                {
-                                    $this->response['db'][$this->name] = array(
-                                            'header' => $this->header,
-                                            'data' => array(),
-                                            'sortOrder' => array(),
-                                            'deleted' => array()
-                                    );
-                                    $this->tableResponse = & $this->response['db'][$this->name];
-                                }
-                                //$this->tableResponse['data']=array();
-                            }
-
-                            public function setLogging($b)
-                            {
-                                $this->logging = !!$b;
-                            }
-
-                            public function load($filter = "")
-                            {
-                                global $timeDateFormat;
-                                global $dateFormat;
-                                if (substr($filter, -1) === '=')  //Check wrong ID condition like 'WHERE id='
-                                {
-                                    throw new Exception("MYSQL: wrong request");
-                                }
-                                //$this->tableResponse['success']=true;
-                                $query = "SELECT * FROM `" . DB_TABLE_PREFIX . $this->name . "` $filter";
-                                $res = $this->db->query($query)->fetchAll();
-
-                                foreach ($res as $id => $row)
-                                {
-                                    $datarow = array();
-                                    $i = 0;
-                                    foreach ($row as $key => $value)
-                                    {
-                                        switch ($this->header[$i][1])
-                                        {
-                                            case 'id':
-                                            case 'int':
-                                            case 'link':
-                                            case 'tarifflink':
-                                            case 'tinyint':
-                                            case 'bit':
-                                                $preparedValue = (int) $value;
-                                                break;
-                                            case 'multilink':
-                                                if (strlen($value))
-                                                {
-                                                    $preparedValue = explode(',', $value);
-                                                }
-                                                else
-                                                {
-                                                    $preparedValue = array();
-                                                }
-                                                break;
-
-                                            case 'float':
-                                            case 'money':
-                                                $preparedValue = (float) $value;
-                                                break;
-
-                                            default:
-                                                $preparedValue = $value;
-                                                break;
-                                        }
-                                        $row[$key] = $preparedValue;
-                                        $i++;
-                                    }
-                                    $res[$id] = $row;
-                                }
-                                return $res;
-                            }
-
-                            public function loadById($id)
-                            {
-                                $id = intval($id);
-                                $row = false;
-                                if ($id)
-                                {
-                                    $res = $this->load("WHERE id=$id");
-                                    if (count($res))
-                                    {
-                                        $row = $res[0];
-                                    }
-                                }
-                                return $row;
-                            }
-
-                            public function load4AJAX($filter = "")
-                            {
-                                global $sessionId, $timeDateFormat, $dateFormat;
-                                $res = $this->load($filter);
-                                $this->addSchemaToResponse();
-                                foreach ($res as $row)
-                                {
-                                    $datarow = array();
-                                    $i = 0;
-                                    foreach ($row as $key => $value)
-                                    {
-                                        switch ($this->header[$i][1])
-                                        {
-                                            case 'timestamp':
-                                                if ($timestamp = strtotime($value))
-                                                {
-                                                    $value = date($timeDateFormat, $timestamp);
-                                                }
-                                                else
-                                                {
-                                                    $value = '';
-                                                }
-                                                break;
-                                            case 'date':
-                                                if ($timestamp = strtotime($value))
-                                                {
-                                                    $value = date($dateFormat, $timestamp);
-                                                }
-                                                else
-                                                {
-                                                    $value = '';
-                                                }
-                                                break;
-                                        }
-
-                                        if (checkPermission($sessionId, array('table', $this->name, 'read', $key)) || $key === 'id')
-                                        {
-                                            $datarow[] = $value;
-                                        }
-                                        else
-                                        {
-                                            $datarow[] = '';
-                                        }
-                                        $i++;
-                                    }
-                                    $this->tableResponse['data'][$row['id']] = $datarow;
-                                }
-                            }
-
-                            private function convert($data)
-                            {
-                                foreach ($data as $key => $value)
-                                {
-                                    $type = $this->fields[$key][3] OR $this->fields[$key][1];
-                                    switch ($type)
-                                    {
-                                        case 'tinyint':
-                                            {
-                                                if (filter_var($value, FILTER_VALIDATE_BOOLEAN))
-                                                {
-                                                    $data[$key] = 1;
-                                                }
-                                                else
-                                                {
-                                                    $data[$key] = 0;
-                                                }
-                                                break;
-                                            }
-                                    }
-                                }
-                                return $data;
-                            }
-
-                            private function toString($values)
-                            {
-                                foreach ($values as $key => $value)
-                                {
-                                    $type = $this->fields[$key][3] OR $this->fields[$key][1];
-                                    switch ($type)
-                                    {
-                                        case 'multilink':
-                                            {
-                                                $values[$key] = implode(',', $value);
-                                            }
-                                            break;
-                                    }
-                                }
-                                return $values;
-                            }
-
-                            public function add($data)
-                            {
-                                global $addRenderers, $afterAddRenderers, $loggedTables;
-                                $namesarray = array();
-                                $valuesarray = array();
-                                unset($data['id']);
-                                foreach ($this->header as $key => $value)
-                                {
-                                    $name = $value[0];
-                                    if (isset($data[$name]) && !strlen($data[$name]))
-                                        unset($data[$name]);
-                                }
-                                if (array_key_exists($this->name, $addRenderers))
-                                {
-                                    $data = $addRenderers[$this->name]($data);
-                                    if ($data === false)
-                                        return false;
-                                }
-                                $data = $this->convert($data);
-                                foreach ($data as $name => $value)
-                                {
-                                    $namesarray[] = $name;
-                                    $valuesarray[] = ":$name";
-                                }
-                                $names = implode('`, `', $namesarray);
-                                $values = implode(', ', $valuesarray);
-                                $request = "INSERT INTO `" . DB_TABLE_PREFIX . $this->name . "` (`$names`) VALUES ($values)";
-                                $res = $this->db->prepare($request);
-                                $res->execute($data);
-                                $newId = $this->db->lastInsertId();
-                                $this->response['debug'][] = $request;
-
-                                if ($newId)
-                                {
-                                    if ($this->logging)
-                                    {
-                                        if (is_array($loggedTables[$this->name]) && $newId)
-                                        {
-                                            foreach ($loggedTables[$this->name] as $excludedField)
-                                            {
-                                                if (isset($data[$excludedField]))
-                                                {
-                                                    unset($data[$excludedField]);
-                                                }
-                                            }
-                                        }
-                                        if (count($data))
-                                        {
-                                            l('db', 'add', $this->name, $newId, NULL, $data);
-                                        }
-                                    }
-
-                                    if (array_key_exists($this->name, $afterAddRenderers))
-                                        $afterAddRenderers[$this->name]($newId, $data);
-                                    //$this->response->success=true;
-                                }
-                                $this->addSchemaToResponse();
-                                $this->load4Ajax("WHERE `id`=" . $newId);
-                                return $newId;
-                            }
-
-                            public function edit($data)
-                            {
-                                global $editRenderers, $afterEditRenderers, $loggedTables;
-                                $id = $data['id'];
-                                unset($data['id']);
-                                $query = '';
-                                $row = $this->loadById($id);
-                                if (!$row)
-                                    return;
-                                $newFields = array();
-                                $oldFields = array();
-                                $changedOldFields = array();
-
-                                $currentDataAsString = $this->toString($row);
-                                //$newDataAsString=$this->toString($data);
-                                $newDataAsString = $data;
-                                foreach ($currentDataAsString as $key => $currentValue)
-                                {
-                                    if (isset($newDataAsString[$key]) && $newDataAsString[$key] !== $currentValue)
-                                    {
-                                        $newFields[$key] = $data[$key];
-                                        $changedOldFields[$key] = $currentValue;
-                                    }
-                                    $oldFields[$key] = $currentValue;
-                                }
-                                if (array_key_exists($this->name, $editRenderers))
-                                    $newFields = $editRenderers[$this->name]($id, $newFields, $oldFields);
-                                foreach ($newFields as $key => $value)
-                                {
-                                    if (!array_key_exists($key, $row))
-                                        unset($newFields[$key]);
-                                }
-                                $newFields = $this->convert($newFields);
-                                foreach ($newFields as $key => $value)
-                                {
-                                    $query .= "`$key` = :$key, ";
-                                }
-                                $query = substr($query, 0, -2);
-                                $request = "UPDATE `" . DB_TABLE_PREFIX . $this->name . "` SET {$query} WHERE id={$id}";
-                                $res = $this->db->prepare($request);
-                                $res->execute($newFields);
-
-                                //$this->response->success=true;
-
-                                if ($this->logging)
-                                {
-                                    if (is_array($loggedTables[$this->name]))
-                                    {
-                                        foreach ($loggedTables[$this->name] as $excludedField)
-                                        {
-                                            if (isset($newFields[$excludedField]))
-                                            {
-                                                unset($changedOldFields[$excludedField]);
-                                                unset($newFields[$excludedField]);
-                                            }
-                                        }
-                                    }
-                                    if (count($newFields))
-                                    {
-                                        l('db', 'edit', $this->name, $id, $changedOldFields, $newFields);
-                                    }
-                                }
-                                $this->addSchemaToResponse();
-                                $this->load4Ajax("WHERE `id`=" . $id);
-
-                                if (array_key_exists($this->name, $afterEditRenderers))
-                                    $afterEditRenderers[$this->name]($id, $newFields, $oldFields);
-                                foreach ($oldFields as $key => $value)
-                                {
-                                    if (!isset($newFields[$key]))
-                                        unset($oldFields[$key]);
-                                }
-                                return $id;
-                            }
-
-                            public function delete($data)
-                            {
-                                global $deleteRenderers;
-                                $id = $data['id'];
-                                $row = $this->loadById($id);
-                                $fields = array();
-                                if ($row)
-                                {
-                                    foreach ($row as $key => $value)
-                                        $fields[$key] = $value;
-                                }
-                                if (array_key_exists($this->name, $deleteRenderers))
-                                    $deleteRenderers[$this->name]($id, $fields);
-                                $request = "DELETE FROM `" . DB_TABLE_PREFIX . $this->name . "` WHERE id=$id";
-                                $this->db->exec($request);
-                                //$this->response->debug[]=$request;
-                                if ($this->logging)
-                                {
-                                    l('db', 'delete', $this->name, $id, $fields);
-                                }
-                                $this->addSchemaToResponse();
-                                $this->response['db'][$this->name]['deleted'][] = $id;
-                                return $id;
-                            }
-
-                        }
 
                         function getFields($table)
                         {
@@ -1439,7 +1060,7 @@ $addRenderers = array(
                             }
                             if ($configPath === '0/0/tariff/nightHourEnd')
                             {
-                                $routersTable = new table('router');
+                                $routersTable = new Table('router');
                                 $rows = $routersTable->load();
                                 foreach ($rows as $row)
                                 {
@@ -1521,7 +1142,7 @@ $addRenderers = array(
                             return $data;
                         }
 
-;
+                        ;
 
                         function configgetdefaultvalue($typeAsStr, $path, $ownerid, $name)
                         {
@@ -1546,7 +1167,7 @@ $addRenderers = array(
                                     $ownerid = 0;
                                     break;
                             }
-                            $configTable = new table('config');
+                            $configTable = new Table('config');
                             $res = $configTable->load("WHERE type=$type AND ownerid=$ownerid AND path='$path' AND name='$name'");
                             foreach ($res as $row)
                             {
@@ -1615,16 +1236,16 @@ $addRenderers = array(
                                 $success = true;
                             }
                             $configTree = array(
-                                            $type =>
+                                    $type =>
+                                    array(
+                                            $ownerId =>
                                             array(
-                                                    $ownerId =>
+                                                    $path =>
                                                     array(
-                                                            $path =>
-                                                            array(
-                                                                    $name => $value
-                                                            )
+                                                            $name => $value
                                                     )
                                             )
+                                    )
                             );
                             if ($oldValue === NULL)
                             {
@@ -1634,8 +1255,6 @@ $addRenderers = array(
                             onConfigEdit($configPath, $value, $oldValue);
                             return $success;
                         }
-
-;
 
                         function checkUpdate()
                         {
@@ -1682,12 +1301,12 @@ $addRenderers = array(
 
                             if ($userRow === false)
                             {
-                                $usersTable = new table('user');
+                                $usersTable = new Table('user');
                                 $userRow = $usersTable->loadById($userId);
                             }
                             if ($tariffPrice === false)
                             {
-                                $tariffTable = new table('tariff');
+                                $tariffTable = new Table('tariff');
                                 $tariff = $tariffTable->loadById($userRow['tariff']);
 
                                 $tariffPrice = money($tariff['price']);
@@ -1712,8 +1331,7 @@ $addRenderers = array(
                                 $sum = money($tariffPrice);
                             }
 
-
-                            $orderTable = new table('order');
+                            $orderTable = new Table('order');
                             $currentDate = new DateTime('midnight');
                             $startDate = new DateTime('first day of this month midnight');
                             $endDate = new DateTime('first day of next month midnight');
@@ -1790,7 +1408,7 @@ $addRenderers = array(
                                 $creditMonths = configgetvalue('system', 'cash', NULL, 'creditMonths');
 
                                 $routerAction = $mode ? "shownotification" : "update";
-                                $usersTable = new table('user');
+                                $usersTable = new Table('user');
                                 $usersRes = $usersTable->load($id ? "WHERE id=$id" : "");
                                 foreach ($usersRes as $row)
                                 {
@@ -1819,8 +1437,8 @@ $addRenderers = array(
                                         {
 
                                             //Add info to payments table
-                                            $orderTable = new table('order');
-                                            $moneyFlowTable = new table('moneyflow');
+                                            $orderTable = new Table('order');
+                                            $moneyFlowTable = new Table('moneyflow');
                                             $currentDate = new DateTime('midnight');
                                             $startDate = new DateTime('first day of this month midnight');
                                             $endDate = new DateTime('first day of next month midnight');
@@ -1864,7 +1482,7 @@ $addRenderers = array(
                             }
                             else
                             {
-                                $routerTable = new table('router');
+                                $routerTable = new Table('router');
                                 $routerRes = $routerTable->load($id ? "WHERE id=$id" : "");
                                 foreach ($routerRes as $row)
                                     controllerRouterQueue($row['id'], 'clearnotification', $id);
@@ -1876,7 +1494,7 @@ $addRenderers = array(
                             if (!$id)
                                 return false;
                             global $mysqlTimeDateFormat;
-                            $orderTable = new table('order');
+                            $orderTable = new Table('order');
                             $td = new DateTime();
                             $textTd = $td->format($mysqlTimeDateFormat);
                             $orderRes = $orderTable->load("WHERE user=$id AND (`canceled`=0 OR `canceled` IS NULL) AND startdate<='$textTd' AND enddate>='$textTd'");
@@ -1889,7 +1507,7 @@ $addRenderers = array(
                             if (!$id)
                                 return false;
                             global $mysqlTimeDateFormat;
-                            $orderTable = new table('order');
+                            $orderTable = new Table('order');
                             $td = new DateTime();
                             $textTd = $td->format($mysqlTimeDateFormat);
                             $query = "WHERE user=$id AND (`canceled`=0 OR `canceled` IS NULL) AND detailsname='tariff' AND startdate<='$textTd' AND enddate>='$textTd' LIMIT 1";
@@ -1902,7 +1520,7 @@ $addRenderers = array(
                         {
                             global $mysqlTimeDateFormat;
                             if (!$usersTable)
-                                $usersTable = new table('user');
+                                $usersTable = new Table('user');
                             $row = $usersTable->loadById($id);
                             if ($row)
                             {
@@ -1993,11 +1611,11 @@ $addRenderers = array(
                             $allow = false;
                             if (!$aclCache)
                             {
-                                $masterTable = new table('master');
+                                $masterTable = new Table('master');
                                 $master = $masterTable->loadById($userId);
                                 $userGroupId = $master['group'];
 
-                                $groupTable = new table('group');
+                                $groupTable = new Table('group');
                                 $group = $groupTable->loadById($userGroupId);
                                 $subAcl = json_decode($group['acl'], true);
                                 $aclCache = $subAcl;
@@ -2138,7 +1756,7 @@ $addRenderers = array(
                                 }
                                 else
                                 {
-                                    $routerTable = new table('router');
+                                    $routerTable = new Table('router');
                                     $routers = $routerTable->load();
                                     $statusArray = array();
                                     foreach ($routers as $key => $value)
@@ -2160,7 +1778,7 @@ $addRenderers = array(
                             public function expireCheck()
                             {
                                 global $mysqlTimeDateFormat;
-                                $moneyflowTable = new table('moneyflow');
+                                $moneyflowTable = new Table('moneyflow');
                                 $endDate = clone $this->month;
                                 $endDate->modify('1 month');
                                 $endDate->modify('-1 second');
@@ -2191,7 +1809,7 @@ $addRenderers = array(
                                         )
                                 );
 
-                                $masterTable = new table('master');
+                                $masterTable = new Table('master');
                                 $admins = $masterTable->load();
                                 for ($i = 0; $i < count($admins); $i++)
                                 {
@@ -2199,7 +1817,7 @@ $addRenderers = array(
                                 }
 
                                 $currentTime = new DateTime;
-                                $moneyflowTable = new table('moneyflow');
+                                $moneyflowTable = new Table('moneyflow');
                                 $startDate = clone $this->month;
                                 $endDate = clone $this->month;
                                 $endDate->modify('1 month');

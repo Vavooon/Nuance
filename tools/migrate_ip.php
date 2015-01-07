@@ -2,10 +2,10 @@
 
 require_once "../include/core.php";
 
-$routerTable = new table('router');
-$userTable = new table('user');
-$pppTable = new table('ppp');
-$ipTable = new table('ip');
+$routerTable = new Table('router');
+$userTable = new Table('user');
+$pppTable = new Table('ppp');
+$ipTable = new Table('ip');
 
 
 $routers = $routerTable->load();

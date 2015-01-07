@@ -16,9 +16,9 @@ else if ($user->isRestricted())
 }
 else
 {
-    $moneyflowTable = new table('moneyflow');
+    $moneyflowTable = new Table('moneyflow');
 
-    $orderTable = new table('order');
+    $orderTable = new Table('order');
     $ordersRows = $orderTable->load("WHERE user=" . $user->getId());
 
     $orders = array();
@@ -27,7 +27,7 @@ else
         $orders[$ordersRows[$i]['id']] = $ordersRows[$i];
     }
 
-    $tariffTable = new table('tariff');
+    $tariffTable = new Table('tariff');
     $tariffsRows = $tariffTable->load();
 
     $tariffs = array();

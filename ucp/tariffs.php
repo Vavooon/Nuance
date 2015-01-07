@@ -27,10 +27,10 @@ else
     $selectedCity = 0;
 }
 
-$tariffsTable = new table('tariff');
+$tariffsTable = new Table('tariff');
 $tariffs = $tariffsTable->load();
 
-$citiesTable = new table('city');
+$citiesTable = new Table('city');
 $cities = $citiesTable->load(" ORDER BY `name` ASC");
 
 
