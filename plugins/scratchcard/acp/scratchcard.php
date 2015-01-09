@@ -23,13 +23,13 @@ class ScratchCard
     $this->db=$db;
     $this->response=$resp ? $resp : new response();
     if (!tableExists('scratchcard')) $this->install();
-    $this->table=new table('scratchcard');
+    $this->table=new Table('scratchcard');
   }
   public function pay($code, $userId)
   {
     if (preg_match("/^\d{".$this->codeLength."}$/", $code)) 
     {
-      $usersTable=new table('user');
+      $usersTable=new Table('user');
       $cardmatch=$this->table->load("WHERE activated=0 AND code='$code'");
       $usermatch=$usersTable->load("WHERE id=$userId");
       c(" WHERE activated=1 AND code='$code'");

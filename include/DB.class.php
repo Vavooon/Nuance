@@ -54,11 +54,11 @@ class DB
                 }
                 else
                 {
-                    $table = new table($target);
+                    $table = new Table($target);
                     $filterQuery = '';
 
                     // Apply filters for users
-                    $masterTable = new table('master');
+                    $masterTable = new Table('master');
                     $master = $masterTable->loadById($sessionId);
 
                     if ($filter !== '*')
@@ -129,7 +129,7 @@ class DB
             {
                 $id = intval($_POST['id']);
             }
-            $table = new table($target);
+            $table = new Table($target);
 
 
             $data = array();
@@ -183,7 +183,7 @@ class DB
 
                 if ($sum)
                 {
-                    $moneyflowTable = new table('moneyflow');
+                    $moneyflowTable = new Table('moneyflow');
                     $moneyflowTable->add(
                             array(
                                     "user" => $id,

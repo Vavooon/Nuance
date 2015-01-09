@@ -217,7 +217,7 @@
 			{
         $resource=$this->checkConnection();
         $majorVersion=intval($resource['version'][0]);
-        $usersTable=new table('user');
+        $usersTable=new Table('user');
         $usersRes=$usersTable->load(" WHERE id=$userid");
 				if (!$usersRes) return;
 
@@ -341,7 +341,7 @@
           //	
           if ($currentTariff)
           {
-            $tariffTable=new table('tariff');
+            $tariffTable=new Table('tariff');
             $utariffres=$tariffTable->load("WHERE id=$currentTariff");
             $utariffrow = $utariffres[0];
             if ($utariffrow)
@@ -552,7 +552,7 @@
 		{
       if ($this->connected)
       {
-        $usersTable=new table('user');
+        $usersTable=new Table('user');
         $res=$usersTable->load(" WHERE router=".$this->id);
         if ($res)
         {

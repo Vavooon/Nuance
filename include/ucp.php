@@ -26,12 +26,12 @@ else
     $currentLanguage = configgetvalue('system', 'main', NULL, 'ucpLocale');
 }
 loadLocale('ucp', $currentLanguage);
-//if (!$licenseManager->checkPermission('ucp'))
-//{
-//    $errorText = __("You do not have permission to use UCP");
-//    require_once $usertheme . "/error.php";
-//    die();
-//}
+if (!$licenseManager->checkPermission('ucp'))
+{
+    $errorText = __("You do not have permission to use UCP");
+    require_once $usertheme . "/error.php";
+    die();
+}
 
 $ipRequest = " WHERE iplist LIKE '%\"" . $_SERVER['REMOTE_ADDR'] . "\"%'";
 
@@ -53,7 +53,7 @@ class User
     {
         if ($cond !== false)
         {
-            $this->table = new table('user');
+            $this->table = new Table('user');
             $req = $this->table->load($cond . " LIMIT 1");
             if (count($req))
             {
@@ -134,7 +134,7 @@ class User
         $tariff = getCurrentTariff($this->getId());
         if ($tariff)
         {
-            $tariffTable = new table('tariff');
+            $tariffTable = new Table('tariff');
             $row = $tariffTable->loadById($tariff['detailsid']);
             return $row;
         }
@@ -145,7 +145,7 @@ class User
         $tariffId = $this->data['tariff'];
         if ($tariffId)
         {
-            $tariffTable = new table('tariff');
+            $tariffTable = new Table('tariff');
             $row = $tariffTable->loadById($tariffId);
             return $row;
         }
@@ -187,7 +187,7 @@ class User
 
     function getAvailableTariffs()
     {
-        $tariffTable = new table('tariff');
+        $tariffTable = new Table('tariff');
         $allTariffs = $tariffTable->load();
         $availableTariffs = array();
         $userCity = $this->data['city'];
@@ -300,7 +300,7 @@ if ($user->isValid() && pluginExists('message'))
     {
         $messageText = __('Messages');
 
-        $messageTable = new table('message');
+        $messageTable = new Table('message');
         $request = "WHERE `recipient`=" . $user->getId() . " AND `recipient_is_admin`=0 AND `is_new`=1";
         $newMessages = $messageTable->load($request);
         $newMessagesCount = count($newMessages);

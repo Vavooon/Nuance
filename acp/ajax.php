@@ -1,6 +1,7 @@
 <?php
 
 require_once "../include/core.php";
+
 session_start();
 $sessionId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : false;
 session_write_close();
@@ -35,7 +36,7 @@ if ($sessionId)
                     {
                         $id = intval($_POST['id']);
                     }
-                    $table = new table($target, $response);
+                    $table = new Table($target, $response);
 
 
                     $data = array();
@@ -89,7 +90,7 @@ if ($sessionId)
 
                         if ($sum)
                         {
-                            $moneyflowTable = new table('moneyflow');
+                            $moneyflowTable = new Table('moneyflow');
                             $moneyflowTable->add(
                                     array(
                                             "user" => $id,
@@ -149,11 +150,11 @@ if ($sessionId)
                     }
                     else
                     {
-                        $table = new table($target, $response);
+                        $table = new Table($target, $response);
                         $filterQuery = '';
 
                         // Apply filters for users
-                        $masterTable = new table('master');
+                        $masterTable = new Table('master');
                         $master = $masterTable->loadById($sessionId);
                         $permittedCities = $master['city'];
                         $permittedStreets = $master['street'];
@@ -204,7 +205,6 @@ if ($sessionId)
                             }
                         }
 
-
                         if (strlen($filterQuery))
                         {
                             $filterQuery = "WHERE " . $filterQuery;
@@ -237,7 +237,6 @@ if ($sessionId)
                                 }
                             }
                         }
-
 
                         $response->errors = array_merge($response->errors, $requestErrors);
                     }
@@ -285,50 +284,50 @@ if ($sessionId)
             }
             break;
         case 'routergetmac':
-
-            $response->header = array(array('ip', 'ip'), array('mac', 'mac'));
-            $mac = controllerRouter($_POST['router'], "getmac", $_POST['ip']);
-            if ($mac)
             {
-                $response->data[] = array($_POST['ip'], $mac);
-            };
-            $response->success = true;
-            break;
-
-        case 'getstatistics':
-            require_once '../include/statistics.php';
-            $statistics = new PaymentStatistics;
-            $response = $statistics->getStatistics();
-            break;
-
-        case 'getcashtopay':
-            $userId = $_GET['id'];
-            $cashToPay = getCashToPay($userId);
-            $fullCashToPay = getCashToPay($userId, false, false, true);
-            $response->data = array("partial" => $cashToPay, "full" => $fullCashToPay);
-            break;
-
-        case 'routeronline':
-            $response->header = array(array('ip', 'ip'), array('router', 'id'));
-            $response->data = array();
-
-
-            $routerTable = new table('router');
-            $routers = $routerTable->load();
-            foreach ($routers as $key => $value)
-            {
-                $id = $value['id'];
-                $onlineUsers = controllerRouter($id, 'getonline');
-                if (is_array($onlineUsers))
+                $response->header = array(array('ip', 'ip'), array('mac', 'mac'));
+                $mac = controllerRouter($_POST['router'], "getmac", $_POST['ip']);
+                if ($mac)
                 {
-                    foreach ($onlineUsers as $ip)
-                        $response->data[$ip] = array($ip, $id);
-                }
+                    $response->data[] = array($_POST['ip'], $mac);
+                };
+                $response->success = true;
             }
-
-            $response->success = true;
             break;
+        case 'getstatistics':
+            {
+                $statistics = new PaymentStatistics;
+                $response = $statistics->getStatistics();
+            }
+            break;
+        case 'getcashtopay':
+            {
+                $userId = $_GET['id'];
+                $cashToPay = getCashToPay($userId);
+                $fullCashToPay = getCashToPay($userId, false, false, true);
+                $response->data = array("partial" => $cashToPay, "full" => $fullCashToPay);
+            }
+            break;
+        case 'routeronline':
+            {
+                $response->header = array(array('ip', 'ip'), array('router', 'id'));
+                $response->data = array();
+                $routerTable = new Table('router');
+                $routers = $routerTable->load();
+                foreach ($routers as $key => $value)
+                {
+                    $id = $value['id'];
+                    $onlineUsers = controllerRouter($id, 'getonline');
+                    if (is_array($onlineUsers))
+                    {
+                        foreach ($onlineUsers as $ip)
+                            $response->data[$ip] = array($ip, $id);
+                    }
+                }
 
+                $response->success = true;
+            }
+            break;
         case 'documentupload':
             {
                 if (isset($_POST['index']))
@@ -383,48 +382,46 @@ if ($sessionId)
                     }
                 }
 
-
                 configsetvalue('system', 'ucp', NULL, 'json', 'documents', json_encode($documents));
-
 
                 die();
             }
             break;
         case 'routergetinterfaces':
-            $routerId = $_GET['router'];
-            if (!$routerId)
-                return;
-            $response->data = controllerRouter($routerId, 'getinterfaces');
-            $response->header = array(array('id', 'varchar'), array('name', 'varchar'));
-            $response->success = true;
-            break;
-        case 'routercheckconnection':
-
-
-            break;
-        case 'routerexport':
-            if (!isset($_GET['router']))
-                return;
-            $routerId = $_GET['router'];
-            if ($routerId != '*')
             {
-                $response->success = controllerRouter($routerId, "export");
-            }
-            else
-            {
-                // Sync all routers
-                $routersTable = new table('router');
-                $rows = $routersTable->load();
-                foreach ($rows as $row)
-                {
-                    controllerRouter($row['id'], 'export', false);
-                }
+                $routerId = $_GET['router'];
+                if (!$routerId)
+                    return;
+                $response->data = controllerRouter($routerId, 'getinterfaces');
+                $response->header = array(array('id', 'varchar'), array('name', 'varchar'));
                 $response->success = true;
             }
             break;
+        case 'routercheckconnection':
+            break;
+        case 'routerexport':
+            {
+                if (!isset($_GET['router']))
+                    return;
+                $routerId = $_GET['router'];
+                if ($routerId != '*')
+                {
+                    $response->success = controllerRouter($routerId, "export");
+                }
+                else
+                {
+                    // Sync all routers
+                    $routersTable = new Table('router');
+                    $rows = $routersTable->load();
+                    foreach ($rows as $row)
+                    {
+                        controllerRouter($row['id'], 'export', false);
+                    }
+                    $response->success = true;
+                }
+            }
+            break;
         case 'configlist':
-
-
             break;
         case 'getacl':
             {
@@ -437,7 +434,7 @@ if ($sessionId)
                 {
                     $routerId = $_GET['router'];
                     $path = str_replace(' ', '%20', $_GET['path']);
-                    $routerTable = new table('router');
+                    $routerTable = new Table('router');
                     $res = $routerTable->load("WHERE id=$routerId");
                     if ($row = $res[0])
                     {
@@ -451,82 +448,100 @@ if ($sessionId)
                     }
                 }
                 return;
-            };
+            }
             break;
         case 'configedit':
 
             break;
         case 'addtranslationline':
-            appendtranslation($_GET['line']);
-            $response->success = true;
+            {
+                appendtranslation($_GET['line']);
+                $response->success = true;
+            }
             break;
         case 'updatelicenseinfo':
-            $licenseManager = new LicenseManager;
-            $licenseManager->loadLicenseInfo(true);
-            $response->success = true;
+            {
+                $licenseManager = new LicenseManager;
+                $licenseManager->loadLicenseInfo(true);
+                $response->success = true;
+            }
             break;
         case 'gettimezone':
-            $tzlist = array();
-            $assocTzlist = array();
-            $regions = array(
-                    'Africa' => DateTimeZone::AFRICA,
-                    'America' => DateTimeZone::AMERICA,
-                    'Antarctica' => DateTimeZone::ANTARCTICA,
-                    'Asia' => DateTimeZone::ASIA,
-                    'Atlantic' => DateTimeZone::ATLANTIC,
-                    'Australia' => DateTimeZone::AUSTRALIA,
-                    'Europe' => DateTimeZone::EUROPE,
-                    'Indian' => DateTimeZone::INDIAN,
-                    'Pacific' => DateTimeZone::PACIFIC
-            );
+            {
+                $tzlist = array();
+                $assocTzlist = array();
+                $regions = array(
+                        'Africa' => DateTimeZone::AFRICA,
+                        'America' => DateTimeZone::AMERICA,
+                        'Antarctica' => DateTimeZone::ANTARCTICA,
+                        'Asia' => DateTimeZone::ASIA,
+                        'Atlantic' => DateTimeZone::ATLANTIC,
+                        'Australia' => DateTimeZone::AUSTRALIA,
+                        'Europe' => DateTimeZone::EUROPE,
+                        'Indian' => DateTimeZone::INDIAN,
+                        'Pacific' => DateTimeZone::PACIFIC
+                );
 
-            foreach ($regions as $name => $mask)
-            {
-                $tzlist = array_merge($tzlist, DateTimeZone::listIdentifiers($mask));
-            };
-            sort($tzlist);
-            foreach ($tzlist as $name => $value)
-            {
-                $assocTzlist[$value] = array($value, $value);
+                foreach ($regions as $name => $mask)
+                {
+                    $tzlist = array_merge($tzlist, DateTimeZone::listIdentifiers($mask));
+                }
+                sort($tzlist);
+                foreach ($tzlist as $name => $value)
+                {
+                    $assocTzlist[$value] = array($value, $value);
+                }
+
+                $response->header = array(array('id', 'varchar'), array('name', 'varchar'));
+                $response->data = $assocTzlist;
+                $response->success = true;
             }
-
-            $response->header = array(array('id', 'varchar'), array('name', 'varchar'));
-            $response->data = $assocTzlist;
-            $response->success = true;
             break;
         case 'generatescratch':
-            //$response=new response;
-            if (!isset($_GET['count']) && !isset($_GET['value']) && !intval($_GET['count']) && !intval($_GET['value']))
-                $response->success = false;
-            loadPlugin('acp', 'scratchcard');
-            $sc = new ScratchCard($response);
-            $sc->generate(intval($_GET['count']), intval($_GET['value']));
-            $response = $sc->response;
+            {
+                //$response=new response;
+                if (!isset($_GET['count']) && !isset($_GET['value']) && !intval($_GET['count']) && !intval($_GET['value']))
+                    $response->success = false;
+                loadPlugin('acp', 'scratchcard');
+                $sc = new ScratchCard($response);
+                $sc->generate(intval($_GET['count']), intval($_GET['value']));
+                $response = $sc->response;
+            }
             break;
         case 'getschema':
-            loadPlugin('acp', 'schemacompare');
-            $sc = new schemacompare;
-            $response->header = array
-                            (
-                            "databasePrefix" => DB_TABLE_PREFIX
-            );
-            $response->data = $sc->getSchema();
+            {
+                loadPlugin('acp', 'schemacompare');
+                $sc = new schemacompare;
+                $response->header = array
+                        (
+                        "databasePrefix" => DB_TABLE_PREFIX
+                );
+                $response->data = $sc->getSchema();
+            }
             break;
         case 'shownotifications':
-            payment(1);
-            return;
+            {
+                payment(1);
+                return;
+            }
             break;
         case 'clearnotifications':
-            payment(2);
-            return;
+            {
+                payment(2);
+                return;
+            }
             break;
         case 'payment':
-            payment(0);
-            return;
+            {
+                payment(0);
+                return;
+            }
             break;
         case 'logout':
-            session_destroy();
-            return;
+            {
+                session_destroy();
+                return;
+            }
             break;
     }
     if (function_exists('getallheaders'))
@@ -552,6 +567,6 @@ if ($sessionId)
 }
 else
 {
-    header('HTTP/1.0 401 Unauthorized', true, 401);
+    //header('HTTP/1.0 401 Unauthorized', true, 401);
 }
 ?>

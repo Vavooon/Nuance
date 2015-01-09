@@ -1,6 +1,6 @@
 <?php
 require_once "../include/core.php";
-$routersTable = new table('router');
+$routersTable = new Table('router');
 
 $rows=$routersTable->load();
 foreach ($rows as $row)

@@ -5,7 +5,7 @@ class PaymentStatistics
     
     private function getCoveredMonths()
     {
-        $moneyflowTable = new table('moneyflow');
+        $moneyflowTable = new Table('moneyflow');
 
         $rows = $moneyflowTable->load('LIMIT 1');
 

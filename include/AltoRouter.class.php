@@ -63,7 +63,6 @@ class AltoRouter
      */
     public function map($method, $route, $target, $name = null)
     {
-
         $this->routes[] = array($method, $route, $target, $name);
 
         if ($name)
@@ -137,7 +136,6 @@ class AltoRouter
      */
     public function match($requestUrl = null, $requestMethod = null)
     {
-
         $params = array();
         $match = false;
 
@@ -235,7 +233,6 @@ class AltoRouter
 
             if (($match == true || $match > 0))
             {
-
                 if ($params)
                 {
                     foreach ($params as $key => $value)

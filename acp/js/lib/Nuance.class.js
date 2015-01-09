@@ -120,12 +120,11 @@ Object.defineProperty( Array.prototype, 'remove', {
     enumerable: false
 });
 
-
-
 URLParams=function(o)
 {
   for (var attrname in o) { this[attrname] = o[attrname]; }
 }
+
 paramsToString=function()
 {
   var paramsArr=[];
@@ -142,6 +141,7 @@ Object.defineProperty(URLParams.prototype, 'toString',
     enumerable: false
   }
 );
+
 Object.defineProperty(URLParams.prototype, 'length',
   {
     get: function(){
@@ -152,7 +152,6 @@ Object.defineProperty(URLParams.prototype, 'length',
     enumerable: false
   }
 );
-
 
 function sprintf( ) {	// Return a formatted string
   // 
@@ -311,6 +310,7 @@ function ip2long(ip)
     return ip[3]+ip[2]*256+ip[1]*65536+ip[0]*16777216;
   }
 }
+
 function getUrlParams(params)
 {
   var pa=[];
@@ -320,7 +320,9 @@ function getUrlParams(params)
   }
   return pa.join('&');
 }
+
 var gt=new Gettext();
+
 function _ (msgid) {
   var str=gt.gettext(msgid);
   if (str==msgid && debug)
@@ -354,6 +356,7 @@ function ce(tagName, props, pNode, isFirst)
   }
   return el;
 }
+
 function ge(id)
 {
   return document.getElementById(id);
@@ -376,7 +379,6 @@ function mergeProps(obj1, obj2, allowRewrite)
       else 
       {
         obj3[p] = obj1[p];
-
       }
     }
     catch(e)
@@ -393,12 +395,10 @@ function mergeProps(obj1, obj2, allowRewrite)
         if ( obj2[p].constructor==Object ) 
         {
           obj3[p] = mergeProps(obj3[p], obj2[p], allowRewrite);
-
         } 
         else 
         {
           obj3[p] = obj2[p];
-
         }
       } 
       catch(e) 
@@ -420,13 +420,11 @@ function mergeProps(obj1, obj2, allowRewrite)
           if ( obj2[p].constructor==Object )
           {
             obj3[p] = MergeRecursive(obj3[p], obj2[p]);
-
           } 
           else
           {
             obj3[p] = obj2[p];
           }
-
         }
         catch(e) 
         {
@@ -467,7 +465,6 @@ function mergeProps_old(obj1,obj2, allowRewrite){
   return obj3;
 }
 
-
 var Nuance = 
   {
     Event: function(o)
@@ -481,7 +478,6 @@ var Nuance =
     },
     EventMixin: function()
     {
-   
       this._eventHandlers={};
       this.on = function(eventName, handler, immediately) 
       {
@@ -2840,7 +2836,6 @@ var Nuance =
 
       function loadAcl (aclMap, aclChapter, child, chapter, level, parentValue, checkboxTree)
       {
-
         for (var i in aclMap)
         {
           if (typeof aclMap[i]==='object')
@@ -2862,8 +2857,7 @@ var Nuance =
             {
               var nextChapter=aclChapter;
             }
-
-
+            
             if (chapter==='table')
             {
               var title=_('table-'+i);
@@ -2937,7 +2931,6 @@ var Nuance =
         }
       }
 
-
       function getValues(aclMap, checkboxTree)
       {
         for (var i in aclMap)
@@ -2955,18 +2948,15 @@ var Nuance =
             delete aclMap[i];
           }
         }
-        
       }
 
       this.getValue=function()
       {
-
         var aclMap=generateAclMap();
         getValues(aclMap, checkboxTree);
         return JSON.stringify(aclMap);
       }
-
-
+      
       var checkboxTree={};
 
       this.setValue=function(value)
@@ -2977,10 +2967,12 @@ var Nuance =
         checkboxTree={};
         loadAcl(aclMap, acl, el, false, 0, acl, checkboxTree);
       };
+      
       this.isDisabled=function()
       {
         return disabled;
       }
+      
       function setCheckboxDisabled(checkboxTree)
       {
         for (var i in checkboxTree)
@@ -4882,8 +4874,6 @@ var Nuance =
         type: Nuance.widget.PotentialPaymentsStatisticsWidget
       }
     ];
-    
-    
 
     this.initWidgets=function(o)
     {
@@ -4894,8 +4884,6 @@ var Nuance =
         new widgetOptions.type(widgetOptions);
       }
     }
-
-
   },
   widget:
   {
@@ -4944,7 +4932,6 @@ var Nuance =
       o=mergeProps(o, options, true);
       Nuance.widget.__Widget.call(this, o);
 
-
       var adminPaymentsRow = new Nuance.widget.WidgetRow(
         {
           title: _("Sum of cashier payments"),
@@ -4984,9 +4971,9 @@ var Nuance =
           }
         }
       }
+      
       function onLoad(r)
       {
-
         var months={};
         response=r.statistics;
         var currentDate=new Date;
@@ -5017,7 +5004,6 @@ var Nuance =
           }
         );
         self.el.insertBefore(monthSelector.body, self.content);
-
 
         displayStatistics();
         monthSelector.on('change', displayStatistics);
@@ -5136,7 +5122,6 @@ var Nuance =
               {
                 return 0;
               }
-
             }
           );
           for (var i=0; i<order.length; i++)
@@ -5205,10 +5190,8 @@ var Nuance =
               {
                 return 0;
               }
-
             }
           );
-
 
           for (var i=0; i<order.length; i++)
           {
@@ -5398,8 +5381,8 @@ var Nuance =
       owner: this, 
       target: name
     };
+    
     var proxyParams=mergeProps(storeDefaultProps, opts.proxyParams, true);
-
 
     if (opts.store)
     {
@@ -5841,7 +5824,6 @@ var Nuance =
       dependentStores=dependentStores.concat(opts.dependentStores);
     }
 
-
     var formatData = function(formattingRows)
     {
       var ns=self.store.ns,
@@ -5859,7 +5841,6 @@ var Nuance =
       }
       for (var d=0; d<header.length; d++)
       {
-
         for (var j in virtualFields)
         {
           if (virtualFields[j].order===d)
@@ -6072,8 +6053,6 @@ var Nuance =
       configProxy.setValue('user', 'sorter', name, this.classList[0], userId);
     };
 
-    
-
     function setSearch(value)
     {
       searchStr=value ? new RegExp('('+RegExp.escape(value)+')(?!([^<]+)?>)', 'i') : value;
@@ -6088,13 +6067,11 @@ var Nuance =
       }
       scrollOffset=0;
     };
-    
 
     function search()
     {
       if (searchStr)
       {
-
         var data=self.displayData,
             foundRow;
         for (var i in data)
@@ -6164,7 +6141,6 @@ var Nuance =
 
     function loadFilters()
     {
-
       for (var i=0; i<self.store.header.length; i++)
       {
         var column=self.store.header[i];
@@ -6775,6 +6751,7 @@ var Nuance =
     this.store.on('afterload', setHooks);
 
   },
+  
   LicenseManager: function()
   {
     var self=this;
