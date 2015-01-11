@@ -1,10 +1,10 @@
 <?php
-require_once "../include/core.php";
+
+require_once "../app/core.php";
 $routersTable = new Table('router');
 
-$rows=$routersTable->load();
+$rows = $routersTable->load();
 foreach ($rows as $row)
 {
-  controllerRouter($row['id'], 'export', false);
+    controllerRouter($row['id'], 'export', false);
 }
-?>
