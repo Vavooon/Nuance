@@ -1,6 +1,9 @@
 <?php
 
-require_once "../../app/core.php";
+define("ROOT", __DIR__ . DIRECTORY_SEPARATOR);
+define("NUANCE", ROOT . "/../../app/" . DIRECTORY_SEPARATOR);
+
+require_once NUANCE . "core.php";
 
 session_start();
 $sessionId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : false;

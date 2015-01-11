@@ -76,6 +76,7 @@ $timeDateFormat = 'H:i d.m.Y';
 $mysqlTimeDateFormat = 'Y-m-d H:i:s';
 if (!isset($cash_fractional_part))
     $cash_fractional_part = 2;
+
 // Enable debug during development
 if (defined('DEBUG') && DEBUG === true)
 {
@@ -97,8 +98,8 @@ catch (PDOException $e)
     require_once $usertheme . "/error.php";
     die();
 }
-// Check if tables exists
 
+// Check if tables exists
 $query = "SHOW TABLES LIKE '" . DB_TABLE_PREFIX . "%'";
 $res = $db->query($query);
 $tables = array();
@@ -173,6 +174,7 @@ else
     $selectedTheme = configgetvalue('system', 'main', NULL, $domain . 'Theme');
     $theme = new Theme($selectedTheme);
 }
+
 $pluginsPath = __DIR__ . '/../plugins/';
 $plugins = scandir($pluginsPath);
 
@@ -193,7 +195,7 @@ for ($i = 2; $i < count($plugins); $i++)
 function loadLocale($domain, $locale = null)
 {
     define('PROJECT_DIR', realpath('./'));
-    define('LOCALE_DIR', PROJECT_DIR . '/../locale');
+    define('LOCALE_DIR', PROJECT_DIR . '/locale');
     require_once('gettext/gettext.inc');
 
     $encoding = 'UTF-8';
@@ -463,11 +465,9 @@ function fork($scriptName, $arguments, $sync = true)
 {
     $scriptPath = realpath(__DIR__ . $scriptName);
 
-
     if (exec('php -v'))
     {
         // PHP_BINARY
-
         if ($sync)
         {
             $path = "php $scriptPath $arguments";

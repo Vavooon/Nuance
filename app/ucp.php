@@ -2,16 +2,6 @@
 
 require_once 'core.php';
 
-use Fenom\Provider;
-
-$fenom = new Fenom(new Provider('../ucp/themes'));
-$fenom->setCompileDir('../../cache');
-
-if (defined('DEBUG'))
-{
-    $fenom->setOptions(Fenom::AUTO_RELOAD);
-}
-
 if (isset($_GET['lang']))
 {
     $currentLanguage = $_GET['lang'];
