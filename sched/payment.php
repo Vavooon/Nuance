@@ -1,4 +1,4 @@
 <?php
-require_once "../include/core.php";
+
+require_once "../app/core.php";
 payment(0);
-?>

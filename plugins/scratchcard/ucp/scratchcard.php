@@ -34,7 +34,7 @@ class ScratchCard
       }
       else
       {
-        l('payment', 'badscratchcard', NULL, $userId, NULL, array());
+        logInfo('payment', 'badscratchcard', NULL, $userId, NULL, array());
         return false;
       }
     }

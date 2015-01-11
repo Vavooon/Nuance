@@ -1,0 +1,595 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nuance Billing System\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-06 20:14+0200\n"
+"PO-Revision-Date: 2015-01-06 20:14+0200\n"
+"Last-Translator: Vavooon <vavooon@gmail.com>\n"
+"Language-Team: Nuance <vavooon@gmail.com>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;ngettext;_ngettext\n"
+"X-Poedit-Basepath: ..\\..\\..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.7.1\n"
+"X-Poedit-SearchPath-0: .locale-src\\ucp\n"
+"X-Poedit-SearchPath-1: ucp\n"
+
+#: ucp/documents.php:19
+msgid "Download"
+msgstr ""
+
+#: ucp/documents.php:23
+msgid "View"
+msgstr ""
+
+#: ucp/editprofile.php:25
+msgid "Your password was successfully changed."
+msgstr ""
+
+#: ucp/editprofile.php:47
+msgid "Your tariff will be changed from the next month."
+msgstr ""
+
+#: ucp/editprofile.php:55
+msgid "Your tariff has been changed."
+msgstr ""
+
+#: ucp/info.php:29
+msgid "Is on loan"
+msgstr ""
+
+#: ucp/info.php:33
+msgid "Enabled"
+msgstr ""
+
+#: ucp/info.php:38
+msgid "Disabled"
+msgstr ""
+
+#: ucp/login.php:23
+msgid "Wrong login or password. Please try again…"
+msgstr ""
+
+#: ucp/login.php:27
+msgid ""
+"You are logged in in automatic mode. Please enter your login and password to "
+"unlock all opportunities."
+msgstr ""
+
+#: ucp/moneyflow.php:58
+msgid "Fund with scratchcard"
+msgstr ""
+
+#: ucp/moneyflow.php:63
+msgid "Refund operation"
+msgstr ""
+
+#: ucp/moneyflow.php:73
+#, php-format
+msgid "Referral charge from %s"
+msgstr ""
+
+#: ucp/moneyflow.php:86
+#, php-format
+msgid "Order %s from %s to %s"
+msgstr ""
+
+#: ucp/moneyflow.php:97
+msgid "Unknown order"
+msgstr ""
+
+#: ucp/moneyflow.php:103
+msgid "Fund by cashier"
+msgstr ""
+
+#: ucp/paywithcard.php:64
+#, php-format
+msgid ""
+"After updating service \"%s\" from %s to %s will be automatically paid for "
+"%s."
+msgstr ""
+
+#: ucp/tariffs.php:119
+msgid "Name"
+msgstr ""
+
+#: ucp/tariffs.php:120
+msgid "Download speed"
+msgstr ""
+
+#: ucp/tariffs.php:121
+msgid "Upload speed"
+msgstr ""
+
+#: ucp/tariffs.php:122
+msgid "Night download speed"
+msgstr ""
+
+#: ucp/tariffs.php:123
+msgid "Night upload speed"
+msgstr ""
+
+#: ucp/tariffs.php:124
+msgid "Price"
+msgstr ""
+
+#: ucp/tariffs.php:134
+#, php-format
+msgid "Night rates are valid from %s to %s"
+msgstr ""
+
+#~ msgid "Wrong code"
+#~ msgstr "Wrong code"
+
+#~ msgid "%s UAH"
+#~ msgid_plural "%s UAH"
+#~ msgstr[0] "%s UAH"
+#~ msgstr[1] "%s UAH"
+
+#~ msgid "%s RUB"
+#~ msgid_plural "%s RUB"
+#~ msgstr[0] "%s RUB"
+#~ msgstr[1] "%s RUB"
+
+#~ msgid "UAH"
+#~ msgid_plural "UAH"
+#~ msgstr[0] "UAH"
+#~ msgstr[1] "UAH"
+#~ msgstr[2] "UAH"
+
+#~ msgid "Are you sure you want to delete?"
+#~ msgstr "Ви справді хочете видалити?"
+
+#~ msgid "header_routertype"
+#~ msgstr "Тип роутера"
+
+#~ msgid "routertype"
+#~ msgstr "Тип роутера"
+
+#~ msgid "Allow block users"
+#~ msgstr "Дозволити блокування користувачів"
+
+#~ msgid "Payments"
+#~ msgstr "Платежі"
+
+#~ msgid "Users"
+#~ msgstr "Користувачі"
+
+#~ msgid "Add"
+#~ msgstr "Додати"
+
+#~ msgid "Edit"
+#~ msgstr "Редагувати"
+
+#~ msgid "Delete"
+#~ msgstr "Видалити"
+
+#~ msgid "Cities"
+#~ msgstr "Міста"
+
+#~ msgid "Streets"
+#~ msgstr "Вулиці"
+
+#~ msgid "Routers"
+#~ msgstr "Маршрутизатори"
+
+#~ msgid "Select city"
+#~ msgstr "Виберіть місто"
+
+#~ msgid "Select street"
+#~ msgstr "Виберіть вулицю"
+
+#~ msgid "Select router"
+#~ msgstr "Виберіть маршрутизатор"
+
+#~ msgid "Select city at first"
+#~ msgstr "Спочатку виберіть місто"
+
+#~ msgid "Administrators"
+#~ msgstr "Адміністратори"
+
+#~ msgid "Tools"
+#~ msgstr "Інструменти"
+
+#~ msgid "id"
+#~ msgstr "ID"
+
+#~ msgid "city"
+#~ msgstr "Місто"
+
+#~ msgid "street"
+#~ msgstr "Вулиця"
+
+#~ msgid "phone"
+#~ msgstr "Телефон"
+
+#~ msgid "router"
+#~ msgstr "Маршрутизатори"
+
+#~ msgid "cash"
+#~ msgstr "Сума"
+
+#~ msgid "iplist"
+#~ msgstr "IP адреси"
+
+#~ msgid "comment"
+#~ msgstr "Коментар"
+
+#~ msgid "type"
+#~ msgstr "Тип"
+
+#~ msgid "login"
+#~ msgstr "Логін"
+
+#~ msgid "regdate"
+#~ msgstr "Дата додавання"
+
+#~ msgid "pass"
+#~ msgstr "Пароль"
+
+#~ msgid "ip"
+#~ msgstr "IP адреса"
+
+#~ msgid "port"
+#~ msgstr "Порт"
+
+#~ msgid "theme"
+#~ msgstr "Тема"
+
+#~ msgid "config"
+#~ msgstr "Конфігурація"
+
+#~ msgid "No options"
+#~ msgstr "Нема варіантів"
+
+#~ msgid "Select option"
+#~ msgstr "Виберіть варіант"
+
+#~ msgid "credit"
+#~ msgstr "Кредит"
+
+#~ msgid "house"
+#~ msgstr "Будинок"
+
+#~ msgid "flat"
+#~ msgstr "Квартира"
+
+#~ msgid "pname"
+#~ msgstr "По-батькові"
+
+#~ msgid "fname"
+#~ msgstr "Ім’я"
+
+#~ msgid "header_id"
+#~ msgstr "ID"
+
+#~ msgid "header_sname"
+#~ msgstr "Ім’я"
+
+#~ msgid "header_city"
+#~ msgstr "Місто"
+
+#~ msgid "header_discount"
+#~ msgstr "Знижка"
+
+#~ msgid "header_street"
+#~ msgstr "Адреса"
+
+#~ msgid "header_regdate"
+#~ msgstr "Дата додавання"
+
+#~ msgid "header_phone"
+#~ msgstr "Телефон"
+
+#~ msgid "header_router"
+#~ msgstr "Маршрутизатор"
+
+#~ msgid "header_cash"
+#~ msgstr "Баланс"
+
+#~ msgid "header_iplist"
+#~ msgstr "IP адреси"
+
+#~ msgid "header_comment"
+#~ msgstr "Коментар"
+
+#~ msgid "header_name"
+#~ msgstr "Назва"
+
+#~ msgid "header_type"
+#~ msgstr "Тип"
+
+#~ msgid "header_login"
+#~ msgstr "Логін"
+
+#~ msgid "header_pass"
+#~ msgstr "Пароль"
+
+#~ msgid "header_ip"
+#~ msgstr "IP адреса"
+
+#~ msgid "header_port"
+#~ msgstr "Порт"
+
+#~ msgid "header_password"
+#~ msgstr "Пароль"
+
+#~ msgid "header_theme"
+#~ msgstr "Тема"
+
+#~ msgid "header_config"
+#~ msgstr "Налаштування"
+
+#~ msgid "header_price"
+#~ msgstr "Вартість"
+
+#~ msgid "header_upspeed"
+#~ msgstr "Вихідна швидкість"
+
+#~ msgid "header_downspeed"
+#~ msgstr "Вхідна швидкість"
+
+#~ msgid "Save"
+#~ msgstr "Зберегти"
+
+#~ msgid "Cancel"
+#~ msgstr "Скасувати"
+
+#~ msgid "Login"
+#~ msgstr "Логін"
+
+#~ msgid "Logout"
+#~ msgstr "Вихід"
+
+#~ msgid "Enter IP address"
+#~ msgstr "Введіть IP-адрес"
+
+#~ msgid "Enter MAC address"
+#~ msgstr "Введіть MAC-адрес"
+
+#~ msgid "Enter"
+#~ msgstr "Вхід"
+
+#~ msgid "Authorize"
+#~ msgstr "Увійти"
+
+#~ msgid "Error"
+#~ msgstr "Помилка"
+
+#~ msgid "Wrong username or password"
+#~ msgstr "Неправильний логін чи пароль"
+
+#~ msgid "userstats-daily"
+#~ msgstr "Статистика за день"
+
+#~ msgid "userstats-weekly"
+#~ msgstr "Статистика за тиждень"
+
+#~ msgid "userstats-monthly"
+#~ msgstr "Статистика за місяць"
+
+#~ msgid "userstats-yearly"
+#~ msgstr "Статистика за рік"
+
+#~ msgid "User statistics"
+#~ msgstr "Статистика користувача"
+
+#~ msgid "Stats"
+#~ msgstr "Статистика"
+
+#~ msgid "User dont have the router"
+#~ msgstr "Для користувача не вибраний маршрутизатор"
+
+#~ msgid "Type to change password"
+#~ msgstr "Введіть новий пароль"
+
+#~ msgid "Loading..."
+#~ msgstr "Завантаження…"
+
+#~ msgid "Server unavailable..."
+#~ msgstr "Сервер недоступний"
+
+#~ msgid "OFF"
+#~ msgstr "OFF"
+
+#~ msgid "ON"
+#~ msgstr "ON"
+
+#~ msgid "off"
+#~ msgstr "OFF"
+
+#~ msgid "on"
+#~ msgstr "ON"
+
+#~ msgid "Incorrect value"
+#~ msgstr "Неправильне значення"
+
+#~ msgid "Deleting"
+#~ msgstr "Видалення"
+
+#~ msgid "header_realid"
+#~ msgstr "ID"
+
+#~ msgid "header_contractid"
+#~ msgstr "ID угоди"
+
+#~ msgid "contractid"
+#~ msgstr "ID угоди"
+
+#~ msgid "Nothing was found..."
+#~ msgstr "Нічого не знайдено…"
+
+#~ msgid "Router statistics"
+#~ msgstr "Статистика маршрутизатора"
+
+#~ msgid "routerstats-daily"
+#~ msgstr "Статистика за день"
+
+#~ msgid "routerstats-weekly"
+#~ msgstr "Статистика за тиждень"
+
+#~ msgid "routerstats-monthly"
+#~ msgstr "Статистика за місяць"
+
+#~ msgid "routerstats-yearly"
+#~ msgstr "Статистика за рік"
+
+#~ msgid "CPU Stats"
+#~ msgstr "Статистика процесора"
+
+#~ msgid "Router CPU statistics"
+#~ msgstr "Статистика загрузки процесора"
+
+#~ msgid "Interface Stats"
+#~ msgstr "Статистика інтерфейсу"
+
+#~ msgid "Router interface statistics"
+#~ msgstr "Статистика інтерфейсу"
+
+#~ msgid "Outer interface not selected"
+#~ msgstr "Зовнішній інтерфейс не вибрано"
+
+#~ msgid "In traffic"
+#~ msgstr "Вхідний трафік"
+
+#~ msgid "Out traffic"
+#~ msgstr "Вихідний трафік"
+
+#~ msgid "Error:"
+#~ msgstr "Помилка"
+
+#~ msgid "header_editdate"
+#~ msgstr "Дата редагування"
+
+#~ msgid "editdate"
+#~ msgstr "Дата редагування"
+
+#~ msgid "header_paymentdate"
+#~ msgstr "Дата оплати"
+
+#~ msgid "paymentdate"
+#~ msgstr "Дата оплати"
+
+#~ msgid "Select routertype"
+#~ msgstr "Виберіть тип маршрутизатора"
+
+#~ msgid "Scratchcard"
+#~ msgstr "Картки поповнення"
+
+#~ msgid "header_code"
+#~ msgstr "Код"
+
+#~ msgid "header_userid"
+#~ msgstr "Користувач, який активував"
+
+#~ msgid "header_activated"
+#~ msgstr "Активовано"
+
+#~ msgid "header_activationdate"
+#~ msgstr "Дата активації"
+
+#~ msgid "Generate"
+#~ msgstr "Генерувати"
+
+#~ msgid "Number of codes"
+#~ msgstr "Кількість карток"
+
+#~ msgid "Values of codes"
+#~ msgstr "Номінал карток"
+
+#~ msgid "Export"
+#~ msgstr "Експорт"
+
+#~ msgid "Generate codes"
+#~ msgstr "Генерувати картки"
+
+#~ msgid "Please fill out all fields"
+#~ msgstr "Будь ласка, заповніть всі поля"
+
+#~ msgid "Codes"
+#~ msgstr "Коди"
+
+#~ msgid "Empty response"
+#~ msgstr "Неможливо згенерувати коди"
+
+#~ msgid "header_value"
+#~ msgstr "Вартість"
+
+#~ msgid "code"
+#~ msgstr "Код"
+
+#~ msgid "activated"
+#~ msgstr "Активовано"
+
+#~ msgid "value"
+#~ msgstr "Вартість"
+
+#~ msgid "activationdate"
+#~ msgstr "Дата активації"
+
+#~ msgid "userid"
+#~ msgstr "Користувач, який активував"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Copy to clipboard"
+#~ msgstr "Копіювати в буфер"
+
+#~ msgid "Select all"
+#~ msgstr "Виділити все"
+
+#~ msgid "Close"
+#~ msgstr "Закрити"
+
+#~ msgid "Get cash"
+#~ msgstr "Зняти гроші"
+
+#~ msgid "Loading"
+#~ msgstr "Завантаження…"
+
+#~ msgid "Please wait…"
+#~ msgstr "Будь ласка, зачекайте…"
+
+#~ msgid "Show notifications"
+#~ msgstr "Показати сповіщення"
+
+#~ msgid "Notifications are displaying"
+#~ msgstr "Сповіщення відображаються"
+
+#~ msgid "Clear notifications"
+#~ msgstr "Прибрати сповіщення"
+
+#~ msgid "header_user"
+#~ msgstr "Користувач"
+
+#~ msgid "user"
+#~ msgstr "Користувач"
+
+#~ msgid "Export to file"
+#~ msgstr "Експортувати у файл"
+
+#, fuzzy
+#~ msgid "Notifications aren`t displaying"
+#~ msgstr "Сповіщення відображаються"
+
+#, fuzzy
+#~ msgid "Payment log"
+#~ msgstr "Платежі"
+
+#~ msgid "Select parent list"
+#~ msgstr "Виберіть батьківську опцію"
+
+#~ msgid "Path must be specified"
+#~ msgstr "Path must be specified"
+
+#~ msgid "No opts in this "
+#~ msgstr "No opts in this "
+
+#, fuzzy
+#~ msgid "header_"
+#~ msgstr "ID"
