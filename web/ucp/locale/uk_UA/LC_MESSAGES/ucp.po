@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nuance Billing System\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-06 20:14+0200\n"
-"PO-Revision-Date: 2015-01-06 20:14+0200\n"
+"POT-Creation-Date: 2015-01-11 22:29+0200\n"
+"PO-Revision-Date: 2015-01-11 22:29+0200\n"
 "Last-Translator: Vavooon <vavooon@gmail.com>\n"
 "Language-Team: Nuance <vavooon@gmail.com>\n"
 "Language: uk_UA\n"
@@ -11,89 +11,93 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_ngettext;ngettext\n"
-"X-Poedit-Basepath: ..\\..\\..\n"
+"X-Poedit-Basepath: ..\\..\\..\\..\\..\\\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 1.7.1\n"
 "X-Poedit-SearchPath-0: .locale-src\\ucp\n"
-"X-Poedit-SearchPath-1: ucp\n"
-"X-Poedit-SearchPath-2: include\n"
+"X-Poedit-SearchPath-1: web/ucp\n"
+"X-Poedit-SearchPath-2: app\n"
 
-#: include/ucp.php:272
+#: app/ucp.php:21
+msgid "You do not have permission to use UCP"
+msgstr "У вас немає можливості використовувати особистий кабінет"
+
+#: app/ucp.php:99
 msgid "Home"
 msgstr "Головна"
 
-#: include/ucp.php:276
+#: app/ucp.php:103
 msgid "My info"
 msgstr "Мої дані"
 
-#: include/ucp.php:281
+#: app/ucp.php:108
 msgid "Moneyflow"
 msgstr "Історія платежів"
 
-#: include/ucp.php:285
+#: app/ucp.php:112
 msgid "Fund by card"
 msgstr "Поповнити карткою"
 
-#: include/ucp.php:291
+#: app/ucp.php:118
 msgid "Tariffs"
 msgstr "Тарифи"
 
-#: include/ucp.php:295
+#: app/ucp.php:122
 msgid "Documents"
 msgstr "Документи"
 
-#: include/ucp.php:301
+#: app/ucp.php:128
 msgid "Messages"
 msgstr "Повідомлення"
 
-#: include/ucp.php:316
+#: app/ucp.php:143
 msgid "Contacts"
 msgstr "Контакти"
 
-#: include/ucp.php:341
+#: app/ucp.php:168
 #, php-format
 msgid "%s - Nuance - User panel"
 msgstr "%s - Nuance - Особистий кабінет"
 
-#: ucp/documents.php:19
+#: web/ucp/documents.php:30
 msgid "Download"
 msgstr "Завантажити"
 
-#: ucp/documents.php:23
+#: web/ucp/documents.php:34
 msgid "View"
 msgstr "Переглянути"
 
-#: ucp/editprofile.php:25
+#: web/ucp/editprofile.php:32
 msgid "Your password was successfully changed."
 msgstr "Ваш пароль було успішно змінено."
 
-#: ucp/editprofile.php:47
+#: web/ucp/editprofile.php:54
 msgid "Your tariff will be changed from the next month."
 msgstr "Ваш тариф буде змінено з наступного місяця."
 
-#: ucp/editprofile.php:55
+#: web/ucp/editprofile.php:62
 msgid "Your tariff has been changed."
 msgstr "Ваш тариф було успішно змінено."
 
-#: ucp/info.php:29
+#: web/ucp/info.php:40
 msgid "Is on loan"
 msgstr "Увімкнено в кредит"
 
-#: ucp/info.php:33
+#: web/ucp/info.php:44
 msgid "Enabled"
 msgstr "Увімкнено"
 
-#: ucp/info.php:38
+#: web/ucp/info.php:49
 msgid "Disabled"
 msgstr "Вимкнено"
 
-#: ucp/login.php:23
+#: web/ucp/login.php:35
 msgid "Wrong login or password. Please try again…"
 msgstr "Неправильний логін чи пароль. Будь ласка, спробуйте ще раз…"
 
-#: ucp/login.php:27
+#: web/ucp/login.php:39
 msgid ""
 "You are logged in in automatic mode. Please enter your login and password to "
 "unlock all opportunities."
@@ -101,33 +105,33 @@ msgstr ""
 "Ви увійшли в автоматичному режимі. Для розблокування всіх можливостей "
 "увійдіть, використовуючи ваші логін та пароль."
 
-#: ucp/moneyflow.php:58
+#: web/ucp/moneyflow.php:69
 msgid "Fund with scratchcard"
 msgstr "Оплата карткою"
 
-#: ucp/moneyflow.php:63
+#: web/ucp/moneyflow.php:74
 msgid "Refund operation"
 msgstr "Повернення коштів"
 
-#: ucp/moneyflow.php:73
+#: web/ucp/moneyflow.php:84
 #, php-format
 msgid "Referral charge from %s"
 msgstr "Реферальне нарахування від %s"
 
-#: ucp/moneyflow.php:86
+#: web/ucp/moneyflow.php:97
 #, php-format
 msgid "Order %s from %s to %s"
 msgstr "Зняття за послугу %s з %s по %s"
 
-#: ucp/moneyflow.php:97
+#: web/ucp/moneyflow.php:108
 msgid "Unknown order"
 msgstr "Оплата послуги"
 
-#: ucp/moneyflow.php:103
+#: web/ucp/moneyflow.php:114
 msgid "Fund by cashier"
 msgstr "Поповнення касиром"
 
-#: ucp/paywithcard.php:64
+#: web/ucp/paywithcard.php:76
 #, php-format
 msgid ""
 "After updating service \"%s\" from %s to %s will be automatically paid for "
@@ -136,31 +140,31 @@ msgstr ""
 "Після поповнення вам автоматично буде підключено послугу<br> \"%s\" з %s по "
 "%s за %s."
 
-#: ucp/tariffs.php:119
+#: web/ucp/tariffs.php:130
 msgid "Name"
 msgstr "Назва"
 
-#: ucp/tariffs.php:120
+#: web/ucp/tariffs.php:131
 msgid "Download speed"
 msgstr "Вхідна швидкість"
 
-#: ucp/tariffs.php:121
+#: web/ucp/tariffs.php:132
 msgid "Upload speed"
 msgstr "Вихідна швидкість"
 
-#: ucp/tariffs.php:122
+#: web/ucp/tariffs.php:133
 msgid "Night download speed"
 msgstr "Нічна вхідна швидкість"
 
-#: ucp/tariffs.php:123
+#: web/ucp/tariffs.php:134
 msgid "Night upload speed"
 msgstr "Нічна вихідна швидкість"
 
-#: ucp/tariffs.php:124
+#: web/ucp/tariffs.php:135
 msgid "Price"
 msgstr "Вартість"
 
-#: ucp/tariffs.php:134
+#: web/ucp/tariffs.php:145
 #, php-format
 msgid "Night rates are valid from %s to %s"
 msgstr "Нічні тарифи діють з %s по %s"
@@ -332,9 +336,6 @@ msgstr "Нічні тарифи діють з %s по %s"
 #~ msgid "Your device is unauthorized. Please call support."
 #~ msgstr ""
 #~ "Ваш пристрій не є авторизованим. Будь ласка, зверніться в техпідтримку. "
-
-#~ msgid "You do not have permission to use UCP"
-#~ msgstr "У вас немає можливості використовувати особистий кабінет"
 
 #~ msgid "%s RUB"
 #~ msgid_plural "%s RUB"

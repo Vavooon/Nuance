@@ -1,6 +1,17 @@
 <?php
 
 include_once '../../app/ucp.php';
+include_once 'Fenom.class.php';
+
+use Fenom\Provider;
+
+$fenom = new Fenom(new Provider('../ucp/themes'));
+$fenom->setCompileDir('../../cache');
+
+if (defined('DEBUG'))
+{
+    $fenom->setOptions(Fenom::AUTO_RELOAD);
+}
 
 session_start();
 if (isset($_POST["action"]))

@@ -16,7 +16,6 @@ class Statistics
     public function get($params)
     {
         global $response;
-        require_once '../../app/statistics.php';
         $statistics = new PaymentStatistics;
         $response['statistics'] = $statistics->getStatistics();
     }

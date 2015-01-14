@@ -1,6 +1,17 @@
 <?php
 
 include_once '../../app/ucp.php';
+include_once 'Fenom.class.php';
+
+use Fenom\Provider;
+
+$fenom = new Fenom(new Provider('../ucp/themes'));
+$fenom->setCompileDir('../../cache');
+
+if (defined('DEBUG'))
+{
+    $fenom->setOptions(Fenom::AUTO_RELOAD);
+}
 
 if (!$user->isValid())
 {
@@ -62,7 +73,7 @@ else
                     {
                         $rows[$key]['details'] = __('Refund operation');
                         break;
-                    };
+                    }
                 case 'referrerpay':
                     {
                         $referrerId = $row['detailsid'];
@@ -72,7 +83,7 @@ else
                         }
                         $rows[$key]['details'] = sprintf(__('Referral charge from %s'), $loadedUsers[$referrerId]->getName());
                         break;
-                    };
+                    }
                 case 'order':
                     {
                         $orderId = $row['detailsid'];
@@ -97,12 +108,12 @@ else
                             $rows[$key]['details'] = __('Unknown order');
                         }
                         break;
-                    };
+                    }
                 case 'adminpay':
                     {
                         $rows[$key]['details'] = __('Fund by cashier');
                         break;
-                    };
+                    }
                 default:
                     $rows[$key]['details'] = '';
                     break;

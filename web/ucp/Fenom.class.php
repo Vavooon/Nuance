@@ -1,5 +1,13 @@
 <?php
 
+include_once 'Fenom/Compiler.class.php';
+include_once 'Fenom/ProviderInterface.class.php';
+include_once 'Fenom/Provider.class.php';
+include_once 'Fenom/Render.class.php';
+include_once 'Fenom/Scope.class.php';
+include_once 'Fenom/Template.class.php';
+include_once 'Fenom/Tokenizer.class.php';
+
 /*
  * This file is part of Fenom.
  *
@@ -58,17 +66,17 @@ class Fenom
      * @see setOptions
      */
     private static $_options_list = array(
-            "disable_accessor" => self::DENY_ACCESSOR,
-            "disable_methods" => self::DENY_METHODS,
-            "disable_native_funcs" => self::DENY_NATIVE_FUNCS,
-            "disable_cache" => self::DISABLE_CACHE,
-            "force_compile" => self::FORCE_COMPILE,
-            "auto_reload" => self::AUTO_RELOAD,
-            "force_include" => self::FORCE_INCLUDE,
-            "auto_escape" => self::AUTO_ESCAPE,
-            "force_verify" => self::FORCE_VERIFY,
-            "auto_trim" => self::AUTO_TRIM,
-            "disable_statics" => self::DENY_STATICS,
+        "disable_accessor" => self::DENY_ACCESSOR,
+        "disable_methods" => self::DENY_METHODS,
+        "disable_native_funcs" => self::DENY_NATIVE_FUNCS,
+        "disable_cache" => self::DISABLE_CACHE,
+        "force_compile" => self::FORCE_COMPILE,
+        "auto_reload" => self::AUTO_RELOAD,
+        "force_include" => self::FORCE_INCLUDE,
+        "auto_escape" => self::AUTO_ESCAPE,
+        "force_verify" => self::FORCE_VERIFY,
+        "auto_trim" => self::AUTO_TRIM,
+        "disable_statics" => self::DENY_STATICS,
     );
 
     /**
@@ -115,141 +123,141 @@ class Fenom
      * @var string[] list of modifiers [modifier_name => callable]
      */
     protected $_modifiers = array(
-            "upper" => 'strtoupper',
-            "up" => 'strtoupper',
-            "lower" => 'strtolower',
-            "low" => 'strtolower',
-            "date_format" => 'Fenom\Modifier::dateFormat',
-            "date" => 'Fenom\Modifier::date',
-            "truncate" => 'Fenom\Modifier::truncate',
-            "escape" => 'Fenom\Modifier::escape',
-            "e" => 'Fenom\Modifier::escape', // alias of escape
-            "unescape" => 'Fenom\Modifier::unescape',
-            "strip" => 'Fenom\Modifier::strip',
-            "length" => 'Fenom\Modifier::length',
-            "iterable" => 'Fenom\Modifier::isIterable'
+        "upper" => 'strtoupper',
+        "up" => 'strtoupper',
+        "lower" => 'strtolower',
+        "low" => 'strtolower',
+        "date_format" => 'Fenom\Modifier::dateFormat',
+        "date" => 'Fenom\Modifier::date',
+        "truncate" => 'Fenom\Modifier::truncate',
+        "escape" => 'Fenom\Modifier::escape',
+        "e" => 'Fenom\Modifier::escape', // alias of escape
+        "unescape" => 'Fenom\Modifier::unescape',
+        "strip" => 'Fenom\Modifier::strip',
+        "length" => 'Fenom\Modifier::length',
+        "iterable" => 'Fenom\Modifier::isIterable'
     );
 
     /**
      * @var array of allowed PHP functions
      */
     protected $_allowed_funcs = array(
-            "count" => 1, "is_string" => 1, "is_array" => 1, "is_numeric" => 1, "is_int" => 1, 'constant' => 1,
-            "is_object" => 1, "strtotime" => 1, "gettype" => 1, "is_double" => 1, "json_encode" => 1, "json_decode" => 1,
-            "ip2long" => 1, "long2ip" => 1, "strip_tags" => 1, "nl2br" => 1, "explode" => 1, "implode" => 1
+        "count" => 1, "is_string" => 1, "is_array" => 1, "is_numeric" => 1, "is_int" => 1, 'constant' => 1,
+        "is_object" => 1, "strtotime" => 1, "gettype" => 1, "is_double" => 1, "json_encode" => 1, "json_decode" => 1,
+        "ip2long" => 1, "long2ip" => 1, "strip_tags" => 1, "nl2br" => 1, "explode" => 1, "implode" => 1
     );
 
     /**
      * @var array[] of compilers and functions
      */
     protected $_actions = array(
-            'foreach' => array(// {foreach ...} {break} {continue} {foreachelse} {/foreach}
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::foreachOpen',
-                    'close' => 'Fenom\Compiler::foreachClose',
-                    'tags' => array(
-                            'foreachelse' => 'Fenom\Compiler::foreachElse',
-                            'break' => 'Fenom\Compiler::tagBreak',
-                            'continue' => 'Fenom\Compiler::tagContinue',
-                    ),
-                    'float_tags' => array('break' => 1, 'continue' => 1)
+        'foreach' => array(// {foreach ...} {break} {continue} {foreachelse} {/foreach}
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::foreachOpen',
+            'close' => 'Fenom\Compiler::foreachClose',
+            'tags' => array(
+                'foreachelse' => 'Fenom\Compiler::foreachElse',
+                'break' => 'Fenom\Compiler::tagBreak',
+                'continue' => 'Fenom\Compiler::tagContinue',
             ),
-            'if' => array(// {if ...} {elseif ...} {else} {/if}
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::ifOpen',
-                    'close' => 'Fenom\Compiler::stdClose',
-                    'tags' => array(
-                            'elseif' => 'Fenom\Compiler::tagElseIf',
-                            'else' => 'Fenom\Compiler::tagElse'
-                    )
-            ),
-            'switch' => array(// {switch ...} {case ..., ...}  {default} {/switch}
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::switchOpen',
-                    'close' => 'Fenom\Compiler::switchClose',
-                    'tags' => array(
-                            'case' => 'Fenom\Compiler::tagCase',
-                            'default' => 'Fenom\Compiler::tagDefault'
-                    ),
-                    'float_tags' => array('break' => 1)
-            ),
-            'for' => array(// {for ...} {break} {continue} {/for}
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::forOpen',
-                    'close' => 'Fenom\Compiler::forClose',
-                    'tags' => array(
-                            'forelse' => 'Fenom\Compiler::forElse',
-                            'break' => 'Fenom\Compiler::tagBreak',
-                            'continue' => 'Fenom\Compiler::tagContinue',
-                    ),
-                    'float_tags' => array('break' => 1, 'continue' => 1)
-            ),
-            'while' => array(// {while ...} {break} {continue} {/while}
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::whileOpen',
-                    'close' => 'Fenom\Compiler::stdClose',
-                    'tags' => array(
-                            'break' => 'Fenom\Compiler::tagBreak',
-                            'continue' => 'Fenom\Compiler::tagContinue',
-                    ),
-                    'float_tags' => array('break' => 1, 'continue' => 1)
-            ),
-            'include' => array(// {include ...}
-                    'type' => self::INLINE_COMPILER,
-                    'parser' => 'Fenom\Compiler::tagInclude'
-            ),
-            'insert' => array(// {include ...}
-                    'type' => self::INLINE_COMPILER,
-                    'parser' => 'Fenom\Compiler::tagInsert'
-            ),
-            'var' => array(// {var ...}
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::varOpen',
-                    'close' => 'Fenom\Compiler::varClose'
-            ),
-            'block' => array(// {block ...} {parent} {/block}
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::tagBlockOpen',
-                    'close' => 'Fenom\Compiler::tagBlockClose',
-                    'tags' => array(//                'parent' => 'Fenom\Compiler::tagParent' // not implemented yet
-                    ),
-                    'float_tags' => array('parent' => 1)
-            ),
-            'extends' => array(// {extends ...}
-                    'type' => self::INLINE_COMPILER,
-                    'parser' => 'Fenom\Compiler::tagExtends'
-            ),
-            'use' => array(// {use}
-                    'type' => self::INLINE_COMPILER,
-                    'parser' => 'Fenom\Compiler::tagUse'
-            ),
-            'filter' => array(// {filter} ... {/filter}
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::filterOpen',
-                    'close' => 'Fenom\Compiler::filterClose'
-            ),
-            'macro' => array(
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::macroOpen',
-                    'close' => 'Fenom\Compiler::macroClose'
-            ),
-            'import' => array(
-                    'type' => self::INLINE_COMPILER,
-                    'parser' => 'Fenom\Compiler::tagImport'
-            ),
-            'cycle' => array(
-                    'type' => self::INLINE_COMPILER,
-                    'parser' => 'Fenom\Compiler::tagCycle'
-            ),
-            'raw' => array(
-                    'type' => self::INLINE_COMPILER,
-                    'parser' => 'Fenom\Compiler::tagRaw'
-            ),
-            'autoescape' => array(
-                    'type' => self::BLOCK_COMPILER,
-                    'open' => 'Fenom\Compiler::autoescapeOpen',
-                    'close' => 'Fenom\Compiler::autoescapeClose'
+            'float_tags' => array('break' => 1, 'continue' => 1)
+        ),
+        'if' => array(// {if ...} {elseif ...} {else} {/if}
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::ifOpen',
+            'close' => 'Fenom\Compiler::stdClose',
+            'tags' => array(
+                'elseif' => 'Fenom\Compiler::tagElseIf',
+                'else' => 'Fenom\Compiler::tagElse'
             )
+        ),
+        'switch' => array(// {switch ...} {case ..., ...}  {default} {/switch}
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::switchOpen',
+            'close' => 'Fenom\Compiler::switchClose',
+            'tags' => array(
+                'case' => 'Fenom\Compiler::tagCase',
+                'default' => 'Fenom\Compiler::tagDefault'
+            ),
+            'float_tags' => array('break' => 1)
+        ),
+        'for' => array(// {for ...} {break} {continue} {/for}
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::forOpen',
+            'close' => 'Fenom\Compiler::forClose',
+            'tags' => array(
+                'forelse' => 'Fenom\Compiler::forElse',
+                'break' => 'Fenom\Compiler::tagBreak',
+                'continue' => 'Fenom\Compiler::tagContinue',
+            ),
+            'float_tags' => array('break' => 1, 'continue' => 1)
+        ),
+        'while' => array(// {while ...} {break} {continue} {/while}
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::whileOpen',
+            'close' => 'Fenom\Compiler::stdClose',
+            'tags' => array(
+                'break' => 'Fenom\Compiler::tagBreak',
+                'continue' => 'Fenom\Compiler::tagContinue',
+            ),
+            'float_tags' => array('break' => 1, 'continue' => 1)
+        ),
+        'include' => array(// {include ...}
+            'type' => self::INLINE_COMPILER,
+            'parser' => 'Fenom\Compiler::tagInclude'
+        ),
+        'insert' => array(// {include ...}
+            'type' => self::INLINE_COMPILER,
+            'parser' => 'Fenom\Compiler::tagInsert'
+        ),
+        'var' => array(// {var ...}
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::varOpen',
+            'close' => 'Fenom\Compiler::varClose'
+        ),
+        'block' => array(// {block ...} {parent} {/block}
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::tagBlockOpen',
+            'close' => 'Fenom\Compiler::tagBlockClose',
+            'tags' => array(//                'parent' => 'Fenom\Compiler::tagParent' // not implemented yet
+            ),
+            'float_tags' => array('parent' => 1)
+        ),
+        'extends' => array(// {extends ...}
+            'type' => self::INLINE_COMPILER,
+            'parser' => 'Fenom\Compiler::tagExtends'
+        ),
+        'use' => array(// {use}
+            'type' => self::INLINE_COMPILER,
+            'parser' => 'Fenom\Compiler::tagUse'
+        ),
+        'filter' => array(// {filter} ... {/filter}
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::filterOpen',
+            'close' => 'Fenom\Compiler::filterClose'
+        ),
+        'macro' => array(
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::macroOpen',
+            'close' => 'Fenom\Compiler::macroClose'
+        ),
+        'import' => array(
+            'type' => self::INLINE_COMPILER,
+            'parser' => 'Fenom\Compiler::tagImport'
+        ),
+        'cycle' => array(
+            'type' => self::INLINE_COMPILER,
+            'parser' => 'Fenom\Compiler::tagCycle'
+        ),
+        'raw' => array(
+            'type' => self::INLINE_COMPILER,
+            'parser' => 'Fenom\Compiler::tagRaw'
+        ),
+        'autoescape' => array(
+            'type' => self::BLOCK_COMPILER,
+            'open' => 'Fenom\Compiler::autoescapeOpen',
+            'close' => 'Fenom\Compiler::autoescapeClose'
+        )
     );
 
     /**
@@ -303,7 +311,7 @@ class Fenom
     public function setCompileDir($dir)
     {
         if (!is_writable($dir))
-        { 
+        {
             throw new LogicException("Cache directory $dir is not writable");
         }
         $this->_compile_dir = $dir;
@@ -380,8 +388,8 @@ class Fenom
     public function addCompiler($compiler, $parser)
     {
         $this->_actions[$compiler] = array(
-                'type' => self::INLINE_COMPILER,
-                'parser' => $parser
+            'type' => self::INLINE_COMPILER,
+            'parser' => $parser
         );
         return $this;
     }
@@ -396,8 +404,8 @@ class Fenom
         if (method_exists($storage, "tag" . $compiler))
         {
             $this->_actions[$compiler] = array(
-                    'type' => self::INLINE_COMPILER,
-                    'parser' => array($storage, "tag" . $compiler)
+                'type' => self::INLINE_COMPILER,
+                'parser' => array($storage, "tag" . $compiler)
             );
         }
         return $this;
@@ -415,10 +423,10 @@ class Fenom
     public function addBlockCompiler($compiler, $open_parser, $close_parser = self::DEFAULT_CLOSE_COMPILER, array $tags = array())
     {
         $this->_actions[$compiler] = array(
-                'type' => self::BLOCK_COMPILER,
-                'open' => $open_parser,
-                'close' => $close_parser ? : self::DEFAULT_CLOSE_COMPILER,
-                'tags' => $tags,
+            'type' => self::BLOCK_COMPILER,
+            'open' => $open_parser,
+            'close' => $close_parser ? : self::DEFAULT_CLOSE_COMPILER,
+            'tags' => $tags,
         );
         return $this;
     }
@@ -434,9 +442,9 @@ class Fenom
     public function addBlockCompilerSmart($compiler, $storage, array $tags, array $floats = array())
     {
         $c = array(
-                'type' => self::BLOCK_COMPILER,
-                "tags" => array(),
-                "float_tags" => array()
+            'type' => self::BLOCK_COMPILER,
+            "tags" => array(),
+            "float_tags" => array()
         );
         if (method_exists($storage, $compiler . "Open"))
         {
@@ -482,9 +490,9 @@ class Fenom
     public function addFunction($function, $callback, $parser = self::DEFAULT_FUNC_PARSER)
     {
         $this->_actions[$function] = array(
-                'type' => self::INLINE_FUNCTION,
-                'parser' => $parser,
-                'function' => $callback,
+            'type' => self::INLINE_FUNCTION,
+            'parser' => $parser,
+            'function' => $callback,
         );
         return $this;
     }
@@ -497,9 +505,9 @@ class Fenom
     public function addFunctionSmart($function, $callback)
     {
         $this->_actions[$function] = array(
-                'type' => self::INLINE_FUNCTION,
-                'parser' => self::SMART_FUNC_PARSER,
-                'function' => $callback,
+            'type' => self::INLINE_FUNCTION,
+            'parser' => self::SMART_FUNC_PARSER,
+            'function' => $callback,
         );
         return $this;
     }
@@ -514,10 +522,10 @@ class Fenom
     public function addBlockFunction($function, $callback, $parser_open = self::DEFAULT_FUNC_OPEN, $parser_close = self::DEFAULT_FUNC_CLOSE)
     {
         $this->_actions[$function] = array(
-                'type' => self::BLOCK_FUNCTION,
-                'open' => $parser_open,
-                'close' => $parser_close,
-                'function' => $callback,
+            'type' => self::BLOCK_FUNCTION,
+            'open' => $parser_open,
+            'close' => $parser_close,
+            'function' => $callback,
         );
         return $this;
     }
