@@ -1,5 +1,7 @@
 <?php
 
+define("PLUGINS", __DIR__ . '/../plugins/');
+
 // Set runtime preferences
 $sessionId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : false;
 
@@ -175,20 +177,29 @@ else
     $theme = new Theme($selectedTheme);
 }
 
-$pluginsPath = __DIR__ . '/../plugins/';
-$plugins = scandir($pluginsPath);
+$plugins = scandir(PLUGINS);
+
+function getPlugins()
+{
+    return getDirs(PLUGINS);
+}
+
+function loadPlugin($part, $name)
+{
+    include_once PLUGINS . "$name/$part/$name.php";
+}
 
 for ($i = 2; $i < count($plugins); $i++)
 {
     $plugin = $plugins[$i];
-    if (file_exists($pluginsPath . $plugin . '/' . $plugin . '.php'))
+    if (file_exists(PLUGINS . $plugin . '/' . $plugin . '.php'))
     {
-        require_once( $pluginsPath . $plugin . '/' . $plugin . '.php' );
+        require_once( PLUGINS . $plugin . '/' . $plugin . '.php' );
     }
 
-    if ($domain && file_exists($pluginsPath . $plugin . '/' . $domain . '/' . $plugin . '.php'))
+    if ($domain && file_exists(PLUGINS . $plugin . '/' . $domain . '/' . $plugin . '.php'))
     {
-        require_once( $pluginsPath . $plugin . '/' . $domain . '/' . $plugin . '.php' );
+        require_once( PLUGINS . $plugin . '/' . $domain . '/' . $plugin . '.php' );
     }
 }
 
@@ -571,16 +582,6 @@ function getDirsAsStore($path, $checkFn)
         }
     }
     return $arr;
-}
-
-function getPlugins()
-{
-    return getDirs('../../plugins');
-}
-
-function loadPlugin($part, $name)
-{
-    include_once "../../plugins/$name/$part/$name.php";
 }
 
 $licenseManager = new LicenseManager;
@@ -1781,3 +1782,4 @@ $addRenderers = array(
                             }
 
                         }
+                        

@@ -1,8 +1,6 @@
 <?php
 
-define("ROOT", __DIR__ . DIRECTORY_SEPARATOR);
-define("NUANCE", ROOT . "/../../app/" . DIRECTORY_SEPARATOR);
-
+include 'include.inc';
 require_once NUANCE . "core.php";
 
 session_start();

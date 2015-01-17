@@ -1137,8 +1137,6 @@ window.onConfigLoad = function()
         store: Nuance.stores.city
     };
 
-
-
     var fractionalPart = configProxy.getValue('system', 'cash', 'fractionalPart');
     if (fractionalPart)
     {

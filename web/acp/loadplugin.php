@@ -1,6 +1,7 @@
 <?php
 
-require_once "../../app/core.php";
+include 'include.inc';
+require_once NUANCE . "core.php";
 
 if (isset($_GET['name']))
 {
