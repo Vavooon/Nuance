@@ -115,11 +115,7 @@ function state()
             var store = Nuance.stores.router;
             var ns = store.ns;
             var self = this;
-            var state,
-                    cpuload,
-                    freeram,
-                    version,
-                    timeoutId;
+            var state, cpuload, freeram, version, timeoutId;
 
             Nuance.EventMixin.call(this);
 
@@ -205,7 +201,6 @@ function state()
                                     Nuance.grids.user.setDisplayValue(userId, 'online', formatRouterState(userState));
                                     userData[userId] = userState;
                                 }
-
                             }
                         }
                         else
@@ -230,16 +225,19 @@ function state()
                 }
                 self.trigger('afterload');
             }
+            
             this.getState = function ()
             {
                 return state;
             };
+            
             this.getActualRow = function ()
             {
                 return row;
             };
-            var xhr;
+            
             ajaxProxy.on(['state'], onResponse);
+            
             this.load = function (force)
             {
                 state = 'loading';
@@ -248,11 +246,9 @@ function state()
                     Nuance.grids.router.setDisplayValue(id, 'state', formatRouterState('loading'));
                 }
                 ajaxProxy.get('/state/get');
-                //xhr=Nuance.AjaxRequest( "GET", "ajax.php?action=routercheckconnection&id="+id+"&force="+(force ? 'true' : 'false'), null, onResponse, onResponse, true);
             };
             this.destroy = function ()
             {
-                //xhr.abort();
                 if (timeoutId)
                 {
                     clearTimeout(timeoutId);
@@ -279,6 +275,7 @@ function state()
             var ns = store.ns;
             routerStateChecker.load();
         }
+        
         timeoutId = setInterval(self.load, parseFloat((configProxy.getValue('system', 'grid', 'stateUpdateInterval')) + self.count) * 60000);
         routerStore.on('afterload', loadRouterState);
         routerStore.on('afteradd', loadRouterState);
@@ -297,7 +294,6 @@ function state()
                     }
                 }
         );
-
     }
 
     pluginsLoaders.push(init);

@@ -13,40 +13,44 @@
             <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/style.css" />
             <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/style-mobile.css" />
             <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/style-desktop.css" />
-        <?php }
+            <?php
+        }
         else
-        { ?>
+        {
+            ?>
             <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/style.css" />
-<?php } ?>
+            <?php
+        }
+        ?>
         <link rel="gettext" type="application/x-po" href="loadplugin.php?target=locale&name=<?php echo configgetvalue('system', 'main', NULL, 'acpLocale') ?>&type=po" />
         <script>
-            var pluginsLoaders = [];
-            var debug =<?php if (defined('DEBUG')) echo 'true';
-else echo 'false'; ?>;
-            var userId =<?php if (isset($sessionId) && $sessionId) echo $sessionId;
-else echo '0'; ?>;
-            var userName = '<?php if (isset($sessionId) && $sessionId) echo $sessionName;
-        else echo ''; ?>';
+            <?php
+            echo 'var pluginsLoaders = [];';
+            echo 'var debug = ' . (defined('DEBUG') ? 'true' : 'false') . ';';
+            echo 'var userId = ' . ((isset($sessionId) && $sessionId) ? $sessionId : '0') . ';';
+            echo 'var userName = \'' . ((isset($sessionId) && $sessionId) ? $sessionName : '') . '\';';
+            ?>
         </script>
-<?php
-$jsPath = realpath(__DIR__ . "/../../js");
-if (file_exists($jsPath . "/lib/Gettext.js"))
-{
-    ?>
-            <script src="js/lib/Gettext.js"></script>
-            <script src="js/lib/Nuance.class.js"></script>
-            <script src="js/lib/date.js"></script>
-        <?php } ?>
-        <?php if (isset($_SESSION['user_id']))
-        { ?>
-            <script src="loadplugin.php?target=plugin&type=js"></script>
-            <link rel="stylesheet" type="text/css" href="loadplugin.php?target=plugin&type=css" />
-            <script src="js/admin.js"></script>
-<?php }
-else
-{ ?>
-            <script src="js/auth.js"></script>	
-<?php } ?>
+            <?php
+            $jsPath = realpath(__DIR__ . "/../../js");
+            if (file_exists($jsPath . "/lib/Gettext.js"))
+            {
+                echo '<script src="js/lib/Gettext.js"></script>';
+                echo '<script src="js/lib/Nuance.class.js"></script>';
+                echo '<script src="js/lib/date.js"></script>';
+            }
+            
+            if (isset($_SESSION['user_id']))
+            {
+                echo '<script src="loadplugin.php?target=plugin&type=js"></script>';
+                echo '<link rel="stylesheet" type="text/css" href="loadplugin.php?target=plugin&type=css" />';
+                echo '<script src="js/admin.js"></script>';
+            }
+            else
+            {
+                echo '<script src="js/auth.js"></script>';
+            }
+            ?>
     </head>
     <body>
     </body>

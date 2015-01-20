@@ -7,15 +7,18 @@ function ActiveOrder()
 {
     var state;
     this.ordersLength = 0;
-    this.setState = function(newState)
+
+    this.setState = function (newState)
     {
         state = newState;
     };
-    this.getState = function()
+
+    this.getState = function ()
     {
         return state;
     };
-    this.clear = function()
+
+    this.clear = function ()
     {
         for (var i in this)
         {
@@ -27,6 +30,7 @@ function ActiveOrder()
         this.ordersLength = 0;
     };
 }
+
 Nuance.EventMixin.call(window);
 
 var activeOrder = new ActiveOrder();
@@ -35,14 +39,16 @@ var dbDateFormat = 'yyyy-MM-dd';
 var dbDateTimeFormat = 'yyyy-MM-dd HH:mm:ss';
 var dateFormat = 'dd.MM.yyyy';
 var dateTimeFormat = 'HH:mm dd.MM.yyyy';
-if (!document.body) htmlEl.appendChild(document.createElement('body'));
-window.addEventListener('load', function()
+if (!document.body)
+    htmlEl.appendChild(document.createElement('body'));
+window.addEventListener('load', function ()
 {
-    if (htmlEl.children[2]) htmlEl.removeChild(htmlEl.children[2]);
+    if (htmlEl.children[2])
+        htmlEl.removeChild(htmlEl.children[2]);
 });
 
 Nuance.globalSorters = {
-    timestamp: function(v, ts)
+    timestamp: function (v, ts)
     {
         return ts;
     }
@@ -53,7 +59,7 @@ function round(value, places)
     var multiplier = Math.pow(10, places);
 
     return (Math.round(value * multiplier) / multiplier);
-};
+}
 
 function refund(id, callback)
 {
@@ -62,15 +68,13 @@ function refund(id, callback)
     if (values)
     {
         // Verify moneyflow type 
-        if (values.detailsname == 'order' ||
-            values.detailsname == 'adminpay')
+        if (values.detailsname == 'order' || values.detailsname == 'adminpay')
         {
             if (!values.refund)
             {
                 store.edit(id,
-                {
-                    refund: 1
-                }, function()
+                        {
+                            refund: 1}, function ()
                 {
                     store.load();
                     callback && callback();
@@ -79,34 +83,35 @@ function refund(id, callback)
             else
             {
                 new Nuance.MessageBox(
-                {
-                    text: _("This item is already refunded"),
-                    title: _("Error")
-                });
+                        {
+                            text: _("This item is already refunded"),
+                            title: _("Error")
+                        });
             }
         }
         else
         {
             new Nuance.MessageBox(
-            {
-                text: _("You can refund only orders and payments"),
-                title: _("Error")
-            });
+                    {
+                        text: _("You can refund only orders and payments"),
+                        title: _("Error")
+                    });
         }
     }
 }
 
 userExcludedFields = ['paymentdate', 'editdate', 'cash'];
-window.onConfigLoad = function()
+window.onConfigLoad = function ()
 {
     configProxy.off('afterload', onConfigLoad);
 
     var fractionalPart = configProxy.getValue('system', 'cash', 'fractionalPart');
-    smoneyf = function(cash)
+    smoneyf = function (cash)
     {
         return sprintf("%01." + fractionalPart + "f", cash);
     };
-    money = function(cash)
+
+    money = function (cash)
     {
         return round(parseFloat(cash), fractionalPart);
     };
@@ -118,44 +123,44 @@ window.onConfigLoad = function()
         var wrap = TabPanel.tabs.about;
         wrap.id = 'about-tab';
         var bodyWrap = ce('div',
-        {
-            id: 'about-body-wrap'
-        }, wrap);
+                {
+                    id: 'about-body-wrap'
+                }, wrap);
         var body = ce('div',
-        {
-            id: 'about-body'
-        }, bodyWrap);
+                {
+                    id: 'about-body'
+                }, bodyWrap);
 
         var version = configProxy.getValue('var', 'version', 'number');
         var branch = configProxy.getValue('var', 'version', 'branch');
         ce('h2',
-        {
-            innerHTML: _('Nuance Billing System'),
-            className: 'title'
-        }, body);
+                {
+                    innerHTML: _('Nuance Billing System'),
+                    className: 'title'
+                }, body);
         var versionLabel = ce('p',
-        {
-            innerHTML: sprintf(_('Version %s'), version)
-        }, body);
+                {
+                    innerHTML: sprintf(_('Version %s'), version)
+                }, body);
         if (branch !== 'stable')
         {
             ce('span',
-            {
-                className: "red",
-                innerHTML: " " + _(branch)
-            }, versionLabel);
+                    {
+                        className: "red",
+                        innerHTML: " " + _(branch)
+                    }, versionLabel);
         }
 
         ce('a',
-        {
-            innerHTML: _('Official site'),
-            href: 'http://nuance-bs.com/',
-            target: '_blank'
-        }, body);
+                {
+                    innerHTML: _('Official site'),
+                    href: 'http://nuance-bs.com/',
+                    target: '_blank'
+                }, body);
         ce('p',
-        {
-            innerHTML: _('All rights reserved') + ' &reg; ' + date.getFullYear()
-        }, body);
+                {
+                    innerHTML: _('All rights reserved') + ' &reg; ' + date.getFullYear()
+                }, body);
 
         // License info
         ce('br', null, body);
@@ -170,31 +175,28 @@ window.onConfigLoad = function()
         {
             licenseInfoWrap.removeChilds();
             ce('span',
-            {
-                innerHTML: _("Please wait...")
-            }, licenseInfoWrap);
+                    {
+                        innerHTML: _("Please wait...")
+                    }, licenseInfoWrap);
             Nuance.AjaxRequest("GET", "../../ajax.php?action=updatelicenseinfo", null, onsuccess);
-        };
+        }
 
-        var licenseInfoHeader = ce('div',
-        {
+        var licenseInfoHeader = ce('div', {
             id: 'license-info-header'
         }, body);
         ce('div',
-        {
-            innerHTML: _("License info"),
-            className: 'sub-title'
-        }, licenseInfoHeader);
+                {
+                    innerHTML: _("License info"),
+                    className: 'sub-title'}, licenseInfoHeader);
         ce('div',
-        {
-            innerHTML: _("Update"),
-            id: 'license-update-button',
-            className: "icon reload",
-            onclick: updateLicenseInfo
-        }, licenseInfoHeader);
+                {
+                    innerHTML: _("Update"),
+                    id: 'license-update-button',
+                    className: "icon reload",
+                    onclick: updateLicenseInfo
+                }, licenseInfoHeader);
 
-        var licenseInfoWrap = ce('div',
-        {
+        var licenseInfoWrap = ce('div', {
             id: 'license-info-wrap'
         }, body);
 
@@ -207,208 +209,201 @@ window.onConfigLoad = function()
                 if (licenseData.registered)
                 {
                     var levels = ['Unregistered', 'Standart', 'Pro'];
-                                        var expireDate = (Date.parse(licenseData.info.expires)).toString(dateFormat);
+                    var expireDate = (Date.parse(licenseData.info.expires)).toString(dateFormat);
                     ce('p',
-                    {
-                        innerHTML: _('Owner') + ": " + licenseData.info.owner
-                    }, licenseInfoWrap);
+                            {
+                                innerHTML: _('Owner') + ": " + licenseData.info.owner
+                            }, licenseInfoWrap);
                     ce('p',
-                    {
-                        innerHTML: _('Level') + ": " + _(levels[licenseData.info.level])
-                    }, licenseInfoWrap);
+                            {
+                                innerHTML: _('Level') + ": " + _(levels[licenseData.info.level])
+                            }, licenseInfoWrap);
                     ce('p',
-                    {
-                        innerHTML: _('Update permission expires') + ": " + expireDate
-                    }, licenseInfoWrap);
+                            {
+                                innerHTML: _('Update permission expires') + ": " + expireDate
+                            }, licenseInfoWrap);
                     ce('br', null, licenseInfoWrap);
                     ce('p',
-                    {
-                        innerHTML: _('Allowed plugins') + ":"
-                    }, licenseInfoWrap);
+                            {
+                                innerHTML: _('Allowed plugins') + ":"
+                            }, licenseInfoWrap);
                     var list = ce('ul', null, licenseInfoWrap);
                     for (var i = 0; i < licenseData.restrictions.allowedPlugins.length; i++)
                     {
                         ce('li',
-                        {
-                            innerHTML: _('plugin-' + licenseData.restrictions.allowedPlugins[i])
-                        }, list);
+                                {
+                                    innerHTML: _('plugin-' + licenseData.restrictions.allowedPlugins[i])
+                                }, list);
                     }
                 }
                 else
                 {
                     ce('span',
-                    {
-                        className: 'red',
-                        innerHTML: _('Unregistered version') + '&nbsp;&nbsp;'
-                    }, licenseInfoWrap);
+                            {
+                                className: 'red',
+                                innerHTML: _('Unregistered version') + '&nbsp;&nbsp;'
+                            }, licenseInfoWrap);
                     ce('a',
-                    {
-                        innerHTML: _("Register"),
-                        target: '_blank',
-                        href: 'http://nuance-bs.com/buy',
-                        id: 'register-link'
-                    }, licenseInfoWrap);
+                            {
+                                innerHTML: _("Register"),
+                                target: '_blank',
+                                href: 'http://nuance-bs.com/buy',
+                                id: 'register-link'
+                            }, licenseInfoWrap);
                     ce('br', null, licenseInfoWrap);
                     ce('br', null, licenseInfoWrap);
                     ce('p',
-                    {
-                        innerHTML: _('Restrictions') + ":"
-                    }, licenseInfoWrap);
+                            {
+                                innerHTML: _('Restrictions') + ":"
+                            }, licenseInfoWrap);
                     var restrictedTables = ['user', 'router', 'master'];
                     var list = ce('ul', null, licenseInfoWrap);
                     for (var i = 0; i < restrictedTables.length; i++)
                     {
                         var tableName = restrictedTables[i];
                         ce('li',
-                        {
-                            innerHTML: _('table-' + restrictedTables[i]) + ": " + licenseData.restrictions[restrictedTables[i]]
-                        }, list);
+                                {
+                                    innerHTML: _('table-' + restrictedTables[i]) + ": " + licenseData.restrictions[restrictedTables[i]]
+                                }, list);
                     }
                 }
             }
             else
             {
                 ce('p',
-                {
-                    innerHTML: _('Cannot obtain license data')
-                }, licenseInfoWrap);
+                        {
+                            innerHTML: _('Cannot obtain license data')
+                        }, licenseInfoWrap);
             }
         }
         showLicenseInfo();
     }
-    var topContainer = ce('div',
-    {
+    var topContainer = ce('div', {
         id: 'top-container'
     }, document.body);
     var userForm = ce('form',
-    {
-        id: 'user-form',
-        method: 'POST',
-        action: '/logout'
-    }, topContainer);
+            {
+                id: 'user-form',
+                method: 'POST',
+                action: '/logout'
+            }, topContainer);
     var userNameText = ce('p',
-    {
-        id: 'user-name',
-        innerHTML: sprintf(_("You are logged in as %s"), '<span class="bold">' + userName + '</span>')
-    }, userForm);
-    var logoWrap = ce('div',
-    {
+            {
+                id: 'user-name',
+                innerHTML: sprintf(_("You are logged in as %s"), '<span class="bold">' + userName + '</span>')
+            }, userForm);
+    var logoWrap = ce('div', {
         id: 'logo'
     }, topContainer);
     var logoHref = ce('a',
-    {
-        href: '/'
-    }, logoWrap);
-    var logoImage = ce('img',
-    {
+            {
+                href: '/'
+            }, logoWrap);
+    var logoImage = ce('img', {
         src: 'themes/default/img/logo.png'
     }, logoHref);
     ce('input',
-    {
-        type: 'hidden',
-        name: 'action',
-        value: 'logout'
-    }, userForm);
+            {
+                type: 'hidden',
+                name: 'action',
+                value: 'logout'
+            }, userForm);
     logoutButton = new Nuance.input.Button(
-    {
-        target: userForm,
-        value: _('Logout'),
-        onclick: function()
-        {
-            userForm.submit();
-        },
-        iconClass: 'logout'
-    });
+            {
+                target: userForm,
+                value: _('Logout'),
+                onclick: function () {
+                    userForm.submit();
+                },
+                iconClass: 'logout'
+            });
 
     pluginsTabs = {};
     Nuance.stores['user-idrenderer'] = {};
     var pppServiceStore = new Nuance.MemoryStore(
-    {
-        target: 'pppservice',
-        header: [
-            ["id", "id"],
-            ["name", "varchar"]
-        ],
-        data:
-        {
-            any: ["any", "Any"],
-            async: ["async", "Async"],
-            l2tp: ["l2tp", "L2TP"],
-            ovpn: ["ovpn", "OpenVPN"],
-            pppoe: ["pppoe", "PPPoE"],
-            pptp: ["pptp", "PPTP"],
-            sstp: ["sstp", "SSTP"]
-        }
-    });
+            {
+                target: 'pppservice',
+                header: [
+                    ["id", "id"],
+                    ["name", "varchar"]
+                ],
+                data:
+                        {
+                            any: ["any", "Any"],
+                            async: ["async", "Async"],
+                            l2tp: ["l2tp", "L2TP"],
+                            ovpn: ["ovpn", "OpenVPN"], pppoe: ["pppoe", "PPPoE"],
+                            pptp: ["pptp", "PPTP"],
+                            sstp: ["sstp", "SSTP"]
+                        }
+            });
     var routerTypeStore = new Nuance.MemoryStore(
-    {
-        target: 'routertype',
-        header: [
-            ["id", "id"],
-            ["name", "varchar"]
-        ],
-        data:
-        {
-            mikrotik: ["mikrotik", "Mikrotik IP/MAC"],
-            mikrotikppp: ["mikrotikppp", "Mikrotik PPP"]
-        }
-    });
+            {
+                target: 'routertype',
+                header: [
+                    ["id", "id"],
+                    ["name", "varchar"]
+                ],
+                data:
+                        {
+                            mikrotik: ["mikrotik", "Mikrotik IP/MAC"],
+                            mikrotikppp: ["mikrotikppp", "Mikrotik PPP"]
+                        }
+            });
     var acpLocaleStore = new Nuance.Store(
-    {
-        subscribePath: ['runtime', 'acplocale'],
-        owner: this,
-        target: 'acpLocale',
-        readOnly: true,
-        autoLoad: false
-    });
+            {
+                subscribePath: ['runtime', 'acplocale'],
+                owner: this,
+                target: 'acpLocale',
+                readOnly: true,
+                autoLoad: false
+            });
     var ucpLocaleStore = new Nuance.Store(
-    {
-        subscribePath: ['runtime', 'ucplocale'],
-        owner: this,
-        target: 'ucpLocale',
-        readOnly: true,
-        autoLoad: false
-    });
+            {
+                subscribePath: ['runtime', 'ucplocale'],
+                owner: this,
+                target: 'ucpLocale',
+                readOnly: true,
+                autoLoad: false
+            });
     var acpThemeStore = new Nuance.Store(
-    {
-        subscribePath: ['runtime', 'acptheme'],
-        owner: this,
-        target: 'acpTheme',
-        readOnly: true,
-        autoLoad: false
-    });
+            {
+                subscribePath: ['runtime', 'acptheme'],
+                owner: this,
+                target: 'acpTheme', readOnly: true,
+                autoLoad: false
+            });
     var ucpThemeStore = new Nuance.Store(
-    {
-        subscribePath: ['runtime', 'ucptheme'],
-        owner: this,
-        target: 'ucpTheme',
-        readOnly: true,
-        autoLoad: false
-    });
+            {
+                subscribePath: ['runtime', 'ucptheme'],
+                owner: this,
+                target: 'ucpTheme', readOnly: true,
+                autoLoad: false
+            });
     var timezoneStore = new Nuance.Store(
-    {
-        subscribePath: ['runtime', 'timezone'],
-        target: 'timezone'
-    });
+            {
+                subscribePath: ['runtime', 'timezone'],
+                target: 'timezone'
+            });
 
     var activeOrderStore = new Nuance.Store(
-    {
-        target: 'activeorder',
-        name: 'activeorder',
-        filter: "enddate>" + date.toString(dbDateTimeFormat)
-    });
+            {
+                target: 'activeorder',
+                name: 'activeorder',
+                filter: "enddate>" + date.toString(dbDateTimeFormat)
+            });
     var orderStore = new Nuance.Store(
-    {
-        target: 'order'
-    });
+            {
+                target: 'order'
+            });
     var pppStore = new Nuance.Store(
-    {
-        target: 'ppp'
-    });
+            {
+                target: 'ppp'
+            });
     var ipStore = new Nuance.Store(
-    {
-        target: 'ip'
-    });
+            {
+                target: 'ip'
+            });
 
     function loadActiveOrders()
     {
@@ -421,8 +416,7 @@ window.onConfigLoad = function()
             var order = orderStore.data[id];
             var userId = order[ns.user];
             var canceled = order[ns.canceled];
-            if (!canceled)
-            {
+            if (!canceled) {
                 activeOrder[userId] = order;
                 activeOrder.ordersLength++;
             }
@@ -436,201 +430,195 @@ window.onConfigLoad = function()
             activeOrder.setState('normal');
         }
     }
-    activeOrderStore.on('afterload', function()
-    {
+    activeOrderStore.on('afterload', function () {
         loadActiveOrders();
     });
 
     monthStore = new Nuance.MemoryStore(
-    {
-        target: 'month',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar'],
-            ['smallname', 'varchar'],
-            ['3rdname', 'varchar']
-        ],
-        data:
-        {
-            1: [1, _('January'), gt.ngettext("january", "january", 1), gt.ngettext("january", "january", 2)],
-            2: [2, _('February'), gt.ngettext("february", "february", 1), gt.ngettext("february", "february", 2)],
-            3: [3, _('March'), gt.ngettext("march", "march", 1), gt.ngettext("march", "march", 2)],
-            4: [4, _('April'), gt.ngettext("april", "april", 1), gt.ngettext("april", "april", 2)],
-            5: [5, _('May'), gt.ngettext("may", "may", 1), gt.ngettext("may", "may", 2)],
-            6: [6, _('June'), gt.ngettext("june", "june", 1), gt.ngettext("june", "june", 2)],
-            7: [7, _('July'), gt.ngettext("july", "july", 1), gt.ngettext("july", "july", 2)],
-            8: [8, _('August'), gt.ngettext("august", "august", 1), gt.ngettext("august", "august", 2)],
-            9: [9, _('September'), gt.ngettext("september", "september", 1), gt.ngettext("september", "september", 2)],
-            10: [10, _('October'), gt.ngettext("october", "october", 1), gt.ngettext("october", "october", 2)],
-            11: [11, _('November'), gt.ngettext("november", "november", 1), gt.ngettext("november", "november", 2)],
-            12: [12, _('December'), gt.ngettext("december", "december", 1), gt.ngettext("december", "december", 2)]
-        }
-    });
+            {
+                target: 'month',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar'], ['smallname', 'varchar'], ['3rdname', 'varchar']
+                ],
+                data:
+                        {
+                            1: [1, _('January'), gt.ngettext("january", "january", 1), gt.ngettext("january", "january", 2)],
+                            2: [2, _('February'), gt.ngettext("february", "february", 1), gt.ngettext("february", "february", 2)],
+                            3: [3, _('March'), gt.ngettext("march", "march", 1), gt.ngettext("march", "march", 2)],
+                            4: [4, _('April'), gt.ngettext("april", "april", 1), gt.ngettext("april", "april", 2)],
+                            5: [5, _('May'), gt.ngettext("may", "may", 1), gt.ngettext("may", "may", 2)], 6: [6, _('June'), gt.ngettext("june", "june", 1), gt.ngettext("june", "june", 2)],
+                            7: [7, _('July'), gt.ngettext("july", "july", 1), gt.ngettext("july", "july", 2)],
+                            8: [8, _('August'), gt.ngettext("august", "august", 1), gt.ngettext("august", "august", 2)],
+                            9: [9, _('September'), gt.ngettext("september", "september", 1), gt.ngettext("september", "september", 2)],
+                            10: [10, _('October'), gt.ngettext("october", "october", 1), gt.ngettext("october", "october", 2)],
+                            11: [11, _('November'), gt.ngettext("november", "november", 1), gt.ngettext("november", "november", 2)],
+                            12: [12, _('December'), gt.ngettext("december", "december", 1), gt.ngettext("december", "december", 2)]
+                        }
+            });
     dayStore = new Nuance.MemoryStore(
-    {
-        target: 'day',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {}
-    });
+            {
+                target: 'day',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {}
+            });
     var filterTypeStore = new Nuance.MemoryStore(
-    {
-        owner: this,
-        target: 'router-filtertype',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {
-            0: [0, _('Do not filter')],
-            1: [1, _('Filter by ARP')],
-            2: [2, _('Filter by filter rule')],
-            3: [3, _('Filter by mangle')]
-        }
-    });
+            {
+                owner: this,
+                target: 'router-filtertype',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {
+                            0: [0, _('Do not filter')],
+                            1: [1, _('Filter by ARP')],
+                            2: [2, _('Filter by filter rule')],
+                            3: [3, _('Filter by mangle')]
+                        }
+            });
 
     new Nuance.MemoryStore(
-    {
-        owner: this,
-        target: "typeOfCalculation",
-        header: [
-            ["id", "id"],
-            ["name", "varchar"]
-        ],
-        data:
-        {
-            advance: ["advance", _("Advance")],
-            postpay: ["postpay", _("Postpay")],
-            other: ["other", _("Other")]
-        }
-    });
+            {
+                owner: this,
+                target: "typeOfCalculation",
+                header: [
+                    ["id", "id"],
+                    ["name", "varchar"]
+                ],
+                data:
+                        {
+                            advance: ["advance", _("Advance")],
+                            postpay: ["postpay", _("Postpay")],
+                            other: ["other", _("Other")]}
+            });
 
     new Nuance.MemoryStore(
-    {
-        owner: this,
-        target: 'newOrdersWithdrawalType',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {
-            'full': ['full', _('Full month')],
-            'daily': ['daily', _('Actual days')]
-        }
-    });
+            {
+                owner: this,
+                target: 'newOrdersWithdrawalType',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {
+                            'full': ['full', _('Full month')],
+                            'daily': ['daily', _('Actual days')]
+                        }
+            });
 
     new Nuance.MemoryStore(
-    {
-        owner: this,
-        target: 'newUsersWithdrawalType',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {
-            'full': ['full', _('Full month')],
-            'daily': ['daily', _('Actual days')],
-            'nothing': ['nothing', _('Nothing')]
-        }
-    });
+            {
+                owner: this,
+                target: 'newUsersWithdrawalType',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {
+                            'full': ['full', _('Full month')],
+                            'daily': ['daily', _('Actual days')],
+                            'nothing': ['nothing', _('Nothing')]
+                        }
+            });
 
     new Nuance.MemoryStore(
-    {
-        owner: this,
-        target: 'swapOrdersWithdrawalType',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {
-            'full': ['full', _('Full month')],
-            'daily': ['daily', _('Actual days')]
-        }
-    });
+            {
+                owner: this,
+                target: 'swapOrdersWithdrawalType',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {
+                            'full': ['full', _('Full month')],
+                            'daily': ['daily', _('Actual days')]
+                        }
+            });
 
     discountTypeStore = new Nuance.MemoryStore(
-    {
-        owner: this,
-        target: 'discountType',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {
-            '%': ['%', '%'],
-            'm': ['m', _(configProxy.getValue('system', 'main', 'currency'))]
-        }
-    });
+            {
+                owner: this,
+                target: 'discountType',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {
+                            '%': ['%', '%'], 'm': ['m', _(configProxy.getValue('system', 'main', 'currency'))]
+                        }
+            });
 
     prefixStore = new Nuance.MemoryStore(
-    {
-        owner: this,
-        target: 'prefix',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {
-            'b': ['b', _('bit/s')],
-            'k': ['k', _('kbit/s')],
-            'M': ['M', _('Mbit/s')],
-            'G': ['G', _('Gbit/s')]
-        }
-    });
+            {
+                owner: this,
+                target: 'prefix',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {
+                            'b': ['b', _('bit/s')],
+                            'k': ['k', _('kbit/s')],
+                            'M': ['M', _('Mbit/s')],
+                            'G': ['G', _('Gbit/s')]
+                        }
+            });
 
     var userRendererStore = new Nuance.MemoryStore(
-    {
-        owner: this,
-        target: 'user-idrenderer',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {
-            0: [0, _('Not formatted')],
-            1: [1, _('Printf formatted')],
-            2: [2, _('Display separate field')],
-            3: [3, _('Display login')]
-        }
-    });
+            {
+                owner: this,
+                target: 'user-idrenderer',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {
+                            0: [0, _('Not formatted')],
+                            1: [1, _('Printf formatted')],
+                            2: [2, _('Display separate field')],
+                            3: [3, _('Display login')]
+                        }
+            });
     var refundTypeStore = new Nuance.MemoryStore(
-    {
-        target: 'refundOrdersType',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {
-            1: [1, _('Don`t refund')],
-            2: [2, _('Refund remains')],
-            3: [3, _('Refund all')]
-        }
-    });
+            {
+                target: 'refundOrdersType',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {
+                            1: [1, _('Don`t refund')],
+                            2: [2, _('Refund remains')],
+                            3: [3, _('Refund all')]
+                        }
+            });
     var scratchcardRendererStore = new Nuance.MemoryStore(
-    {
-        owner: this,
-        target: 'scratchcard-idrenderer',
-        header: [
-            ['id', 'id'],
-            ['name', 'varchar']
-        ],
-        data:
-        {
-            0: [0, _('Not formatted')],
-            1: [1, _('Printf formatted')]
-        }
-    });
+            {
+                owner: this,
+                target: 'scratchcard-idrenderer',
+                header: [
+                    ['id', 'id'],
+                    ['name', 'varchar']
+                ],
+                data:
+                        {
+                            0: [0, _('Not formatted')],
+                            1: [1, _('Printf formatted')]
+                        }
+            });
 
     var idRendererValue = configProxy.getValue('system', 'grid', 'user-idrenderer');
     var idRendererPrintfFormat = configProxy.getValue('system', 'grid', 'user-idrenderer-format');
@@ -638,32 +626,33 @@ window.onConfigLoad = function()
     function emptyreturn(i)
     {
         return i;
-    };
+    }
+
     idRenderer = emptyreturn;
     var idSorter = emptyreturn;
 
     switch (idRendererValue)
     {
         case 0:
-            idSorter = function(s, id)
+            idSorter = function (s, id)
             {
                 return parseInt(id);
             };
             break;
         case 1:
-            idRenderer = function(id)
+            idRenderer = function (id)
             {
                 return sprintf(idRendererPrintfFormat, id)
             };
             break;
         case 2:
-            idRenderer = function(id, row, ns)
+            idRenderer = function (id, row, ns)
             {
                 return row[ns.contractid];
             };
             break;
         case 3:
-            idRenderer = function(id, row, ns)
+            idRenderer = function (id, row, ns)
             {
                 return row[ns.login];
             };
@@ -674,462 +663,445 @@ window.onConfigLoad = function()
     {
         TabPanel.selectTabByName('moneyflow');
         Nuance.grids.moneyflow.setFilters(
-        {
-            user: id
-        });
+                {
+                    user: id
+                });
     }
     widgetPanel = new Nuance.WidgetPanel(
-    {
-        enabledWidgets: configProxy.getValue('user', 'widget', 'enabledWidgets', userId)
-    });
+            {
+                enabledWidgets: configProxy.getValue('user', 'widget', 'enabledWidgets', userId)
+            });
+
     tables = {
         target: document.body,
         selectedTab: location.hash.substr(1, location.hash.indexOf('/') !== -1 ? location.hash.indexOf('/') - 1 : Infinity),
         tabs:
-        {
-            dash:
-            {
-                title: _("Dashboard"),
-                name: 'dash',
-                content: widgetPanel.body
-            },
-            user:
-            {
-                title: _("Users"),
-                name: 'user',
-                grid:
                 {
-                    hiddenCols: ['contractid', 'sname', 'fname', 'pname', 'street', 'house', 'flat', 'disabled', 'paymentdate', 'login', 'password'],
-                    userHiddenCols: ['regdate', 'editdate'],
-                    excludedFields: userExcludedFields,
-                    configProxy: configProxy,
-                    virtualFields:
-                    {
-                        state:
-                        {
-                            order: 0
-                        },
-                        contract:
-                        {
-                            order: 2
-                        },
-                        username:
-                        {
-                            order: 3
-                        },
-                        address:
-                        {
-                            order: 9
-                        }
-                    },
-                    waitForStores: [
-                        'city',
-                        'street',
-                        'router',
-                        'tariff',
-                        'activeorder'
-                    ],
-                    filters:
-                    {
-                        state:
-                        {
-                            name: "state",
-                            column: 'state',
-                            filterFunction: function(id, selectedValue)
+                    dash:
                             {
-                                var store = Nuance.stores.user;
-                                switch (selectedValue)
-                                {
-                                    case 'disabled':
-                                        return store.data[id][store.ns.disabled];
-                                    case 'deny':
-                                        return !activeOrder.hasOwnProperty(id) && !store.data[id][store.ns.disabled];
-                                    case 'allow':
-                                        return activeOrder.hasOwnProperty(id) && !store.data[id][store.ns.disabled];
-                                }
-
+                                title: _("Dashboard"),
+                                name: 'dash',
+                                content: widgetPanel.body
                             },
-                            store: new Nuance.MemoryStore(
+                    user:
                             {
-                                header: [
-                                    ['id', 'text'],
-                                    ['name', 'text']
-                                ],
-                                data:
-                                {
-                                    allow: ['allow', _("allow")],
-                                    deny: ['deny', _("deny")],
-                                    disabled: ['disabled', _("disabled")]
-                                }
-                            })
-                        },
-                        referer: false,
-                        disabled: false
-                    },
-                    store: new Nuance.Store(
-                    {
-                        target: 'user',
-                        getNameByIdFn: function(id)
-                        {
-                            var row = this.getById(id);
-                            var ns = this.ns;
-                            if (row)
-                            {
-                                return idRenderer(id, row, ns) + ' - ' + (row[this.ns.sname] + (row[this.ns.fname] ? " " + row[this.ns.fname][0].toUpperCase() + "." : "") + (row[this.ns.pname] ? " " + row[this.ns.pname][0].toUpperCase() + "." : ""));
-                            }
-                            else
-                            {
-                                return '';
-                            }
-                        }
-                    }),
-                    customFields:
-                    {
-                        referrer:
-                        {
-                            parentList: false,
-                            selectOnlyItem: false,
-                            showNotSelected: true
-                        }
-                    },
-                    toolbarButtons: [
-
-                    ],
-                    contextMenuItems: [
-
-                    ],
-                    sorters:
-                    {
-                        iplist: ip2long,
-                        id: idSorter,
-                        cash: function(v, cash)
-                        {
-                            return cash;
-                        },
-                        discount: function(d, v)
-                        {
-                            if (v[v.length - 1] === '%')
-                            {
-                                return parseInt(v.substr(0, v.length - 1));
-                            }
-                            else
-                            {
-                                return parseInt(v);
-                            }
-                        }
-                    },
-                    name: 'user'
-                }
-            },
-            message: false,
-            moneyflow:
-            {
-                title: _("Payments history"),
-                name: 'moneyflow',
-                grid:
-                {
-                    waitForStores: [
-                        'user',
-                        'tariff',
-                        'order',
-                        'master'
-                    ],
-                    store: new Nuance.Store(
-                    {
-                        target: 'moneyflow',
-                        filter: location.hash.indexOf('moneyflow') !== 1 ? 'id=0' : false,
-                        autoLoad: true
-                    }),
-                    configProxy: configProxy,
-                    name: 'moneyflow',
-                    readOnly: true,
-                    hiddenCols: ['detailsname', 'detailsid'],
-                    excludedFields: ['detailsid', 'detailsname', 'user', 'sum', 'date', 'refund', 'name', 'comment'],
-                    toolbarButtons: [
-
-                    ],
-                    filters:
-                    {
-                        refund: false
-                    },
-                    contextMenuItems: []
-                }
-            },
-            tariff:
-            {
-                title: _("Tariffs"),
-                name: 'tariff',
-                grid:
-                {
-                    waitForStores: [
-                        'city'
-                    ],
-                    store: new Nuance.Store(
-                    {
-                        autoLoad: true,
-                        target: 'tariff'
-                    }),
-                    filters:
-                    {
-
-                    },
-                    configProxy: configProxy,
-                    name: 'tariff',
-                    hiddenCols: ['nightupspeed', 'nightdownspeed', 'downburstlimit', 'upburstlimit', 'downburstthreshold', 'upburstthreshold', 'downbursttime', 'upbursttime'],
-                    onlyIncludedFields: true,
-                    includedFields: ['id', 'name', 'price', 'comment', 'public', 'city', 'upspeed', 'downspeed']
-                }
-            },
-            city:
-            {
-                title: _("Cities"),
-                name: 'city',
-                group: 'locations',
-                hideReadOnly: true,
-                grid:
-                {
-                    store: new Nuance.Store(
-                    {
-                        autoLoad: true,
-                        target: 'city'
-                    }),
-                    configProxy: configProxy,
-                    name: 'city'
-                }
-            },
-            street:
-            {
-                title: _("Streets"),
-                group: 'locations',
-                hideReadOnly: true,
-                name: 'street',
-                grid:
-                {
-                    store: new Nuance.Store(
-                    {
-                        autoLoad: true,
-                        target: 'street'
-                    }),
-                    waitForStores: [
-                        'city'
-                    ],
-                    configProxy: configProxy,
-                    name: 'street'
-                }
-            },
-            router:
-            {
-                title: _("Routers"),
-                hideReadOnly: true,
-                name: 'router',
-                grid:
-                {
-                    store: new Nuance.Store(
-                    {
-                        autoLoad: true,
-                        target: 'router'
-                    }),
-                    virtualFields:
-                    {
-                        cpuload:
-                        {
-                            order: 7
-                        },
-                        freeram:
-                        {
-                            order: 7
-                        },
-                        version:
-                        {
-                            order: 7
-                        }
-                    },
-                    configProxy: configProxy,
-                    name: 'router',
-                    hiddenCols: ['pass'],
-                    contextMenuItems: [
-                        {
-                            title: _("CPU Stats"),
-                            beforeshow: function(selectionId, grid)
-                            {
-                                var grid = Nuance.grids.router;
-                                this.disabled = grid.getSelectedItems().length !== 1;
-                            },
-                            onclick: function()
-                            {
-                                var grid = Nuance.grids.router;
-                                var routerId = grid.getSelectedItems()[0];
-                                if (routerId)
-                                {
-                                    new Nuance.StatsPopup(
-                                    {
-                                        title: _("Router CPU statistics"),
-                                        path: 'graphs/cpu',
-                                        extraParams: '&router=' + routerId
-                                    });
-                                }
-                            }
-                        },
-                        {
-                            title: _("Interface Stats"),
-                            beforeshow: function(selectionId, grid)
-                            {
-                                var grid = Nuance.grids.router;
-                                this.disabled = grid.getSelectedItems().length !== 1;
-                            },
-                            onclick: function()
-                            {
-                                var grid = Nuance.grids.router;
-                                var routerId = grid.getSelectedItems()[0];
-                                var ifaceName = configProxy.getValue('router', 'main', 'outInterface', routerId);
-                                if (ifaceName)
-                                {
-                                    new Nuance.StatsPopup(
-                                    {
-                                        title: _("Router interface statistics"),
-                                        path: 'graphs/iface/' + ifaceName,
-                                        extraParams: '&router=' + routerId
-                                    });
-                                }
-                                else
-                                {
-                                    new Nuance.MessageBox(
-                                    {
-                                        text: _("Outer interface is not selected"),
-                                        title: _("Error")
-                                    });
-                                }
-                            }
-                        },
-                        {
-                            title: _("Router preferences"),
-                            beforeshow: function(selectionId, grid)
-                            {
-                                var grid = Nuance.grids.router;
-                                this.disabled = grid.getSelectedItems().length !== 1;
-                            },
-                            onclick: function()
-                            {
-                                var grid = Nuance.grids.router;
-                                var routerId = grid.getSelectedItems()[0];
-                                var ifacesStore = Nuance.stores['routerinterfaces' + routerId] || new Nuance.Store(
-                                {
-                                    target: 'routerinterfaces' + routerId,
-                                    path: '/interface/' + routerId + '/get',
-                                    forceLoad: true
-                                });
-                                new Nuance.PreferencesPopup(
-                                {
-                                    configProxy: configProxy,
-                                    owner: routerId,
-                                    type: 'router',
-                                    customOptions:
-                                    {
-                                        router:
+                                title: _("Users"), name: 'user',
+                                grid:
                                         {
-                                            main:
-                                            {
-                                                inInterface:
-                                                {
-                                                    type: 'link',
-                                                    store: ifacesStore
-                                                },
-                                                outInterface:
-                                                {
-                                                    type: 'link',
-                                                    store: ifacesStore
-                                                },
-                                                filterType:
-                                                {
-                                                    type: 'link',
-                                                    store: filterTypeStore
-                                                }
-                                            }
+                                            hiddenCols: ['contractid', 'sname', 'fname', 'pname', 'street', 'house', 'flat', 'disabled', 'paymentdate', 'login', 'password'],
+                                            userHiddenCols: ['regdate', 'editdate'],
+                                            excludedFields: userExcludedFields,
+                                            configProxy: configProxy,
+                                            virtualFields:
+                                                    {
+                                                        state:
+                                                                {
+                                                                    order: 0
+                                                                },
+                                                        contract:
+                                                                {
+                                                                    order: 2
+                                                                },
+                                                        username:
+                                                                {
+                                                                    order: 3
+                                                                },
+                                                        address:
+                                                                {
+                                                                    order: 9
+                                                                }
+                                                    },
+                                            waitForStores: [
+                                                'city',
+                                                'street',
+                                                'router',
+                                                'tariff',
+                                                'activeorder'
+                                            ],
+                                            filters:
+                                                    {
+                                                        state:
+                                                                {
+                                                                    name: "state",
+                                                                    column: 'state',
+                                                                    filterFunction: function (id, selectedValue)
+                                                                    {
+                                                                        var store = Nuance.stores.user;
+                                                                        switch (selectedValue)
+                                                                        {
+                                                                            case 'disabled':
+                                                                                return store.data[id][store.ns.disabled];
+                                                                            case 'deny':
+                                                                                return !activeOrder.hasOwnProperty(id) && !store.data[id][store.ns.disabled];
+                                                                            case 'allow':
+                                                                                return activeOrder.hasOwnProperty(id) && !store.data[id][store.ns.disabled];
+                                                                        }
+
+                                                                    },
+                                                                    store: new Nuance.MemoryStore(
+                                                                            {
+                                                                                header: [
+                                                                                    ['id', 'text'],
+                                                                                    ['name', 'text']
+                                                                                ],
+                                                                                data:
+                                                                                        {
+                                                                                            allow: ['allow', _("allow")],
+                                                                                            deny: ['deny', _("deny")], disabled: ['disabled', _("disabled")]
+                                                                                        }
+                                                                            })
+                                                                },
+                                                        referer: false,
+                                                        disabled: false
+                                                    },
+                                            store: new Nuance.Store(
+                                                    {
+                                                        target: 'user',
+                                                        getNameByIdFn: function (id)
+                                                        {
+                                                            var row = this.getById(id);
+                                                            var ns = this.ns;
+                                                            if (row)
+                                                            {
+                                                                return idRenderer(id, row, ns) + ' - ' + (row[this.ns.sname] + (row[this.ns.fname] ? " " + row[this.ns.fname][0].toUpperCase() + "." : "") + (row[this.ns.pname] ? " " + row[this.ns.pname][0].toUpperCase() + "." : ""));
+                                                            }
+                                                            else
+                                                            {
+                                                                return '';
+                                                            }
+                                                        }
+                                                    }),
+                                            customFields:
+                                                    {
+                                                        referrer:
+                                                                {
+                                                                    parentList: false,
+                                                                    selectOnlyItem: false,
+                                                                    showNotSelected: true
+                                                                }
+                                                    },
+                                            toolbarButtons: [
+                                            ],
+                                            contextMenuItems: [
+                                            ],
+                                            sorters:
+                                                    {
+                                                        iplist: ip2long,
+                                                        id: idSorter,
+                                                        cash: function (v, cash)
+                                                        {
+                                                            return cash;
+                                                        },
+                                                        discount: function (d, v)
+                                                        {
+                                                            if (v[v.length - 1] === '%') {
+                                                                return parseInt(v.substr(0, v.length - 1));
+                                                            }
+                                                            else
+                                                            {
+                                                                return parseInt(v);
+                                                            }
+                                                        }
+                                                    },
+                                            name: 'user'
                                         }
-                                    }
-                                });
-                            }
-                        }
-
-                    ]
-                }
-            },
-            master:
-            {
-                title: _("Administrators"),
-                hideReadOnly: true,
-                name: 'master',
-                grid:
-                {
-                    name: 'master',
-                    store: new Nuance.Store(
-                    {
-                        autoLoad: true,
-                        target: 'master',
-                        getNameByIdFn: function(id)
-                        {
-                            var row = this.getById(id);
-                            if (row)
+                            },
+                    message: false,
+                    moneyflow:
                             {
-                                return row[this.ns.login];
-                            }
-                            else
-                                return '';
-                        }
-                    }),
-                    customFields:
-                    {
-                        permittedstreet:
-                        {
-                            parentList: 'city'
-                        }
-                    },
-                    waitForStores: [],
-                    configProxy: configProxy,
-                    hiddenCols: ['theme', 'config', 'type', 'password', 'group'],
-                    excludedFields: ['group']
-                }
-            },
-            group: false,
-            log:
-            {
-                title: _("Log"),
-                name: 'log',
-                grid:
-                {
-                    name: 'log',
-                    readOnly: true,
-                    store: new Nuance.Store(
-                    {
-                        autoLoad: true,
-                        filter: location.hash.indexOf('scratchcard') !== 1 ? 'id=0' : false,
-                        target: 'log'
-                    }),
-                    virtualFields:
-                    {
-                        description:
-                        {
-                            order: 7
-                        }
-                    },
-                    hiddenCols: ['subtype', 'action', 'olddata', 'newdata'],
-                    waitForStores: [
-                        'master',
-                        'user',
-                        'router'
-                    ],
-                    configProxy: configProxy
-                }
-            },
+                                title: _("Payments history"),
+                                name: 'moneyflow',
+                                grid:
+                                        {
+                                            waitForStores: [
+                                                'user',
+                                                'tariff',
+                                                'order',
+                                                'master'
+                                            ],
+                                            store: new Nuance.Store(
+                                                    {
+                                                        target: 'moneyflow',
+                                                        filter: location.hash.indexOf('moneyflow') !== 1 ? 'id=0' : false,
+                                                        autoLoad: true
+                                                    }),
+                                            configProxy: configProxy,
+                                            name: 'moneyflow',
+                                            readOnly: true,
+                                            hiddenCols: ['detailsname', 'detailsid'],
+                                            excludedFields: ['detailsid', 'detailsname', 'user', 'sum', 'date', 'refund', 'name', 'comment'], toolbarButtons: [
+                                            ],
+                                            filters:
+                                                    {
+                                                        refund: false
+                                                    },
+                                            contextMenuItems: []
+                                        }
+                            },
+                    tariff:
+                            {
+                                title: _("Tariffs"),
+                                name: 'tariff',
+                                grid:
+                                        {
+                                            waitForStores: [
+                                                'city'
+                                            ],
+                                            store: new Nuance.Store(
+                                                    {
+                                                        autoLoad: true,
+                                                        target: 'tariff'
+                                                    }),
+                                            filters:
+                                                    {
+                                                    },
+                                            configProxy: configProxy,
+                                            name: 'tariff',
+                                            hiddenCols: ['nightupspeed', 'nightdownspeed', 'downburstlimit', 'upburstlimit', 'downburstthreshold', 'upburstthreshold', 'downbursttime', 'upbursttime'],
+                                            onlyIncludedFields: true,
+                                            includedFields: ['id', 'name', 'price', 'comment', 'public', 'city', 'upspeed', 'downspeed']
+                                        }
+                            },
+                    city:
+                            {
+                                title: _("Cities"),
+                                name: 'city',
+                                group: 'locations',
+                                hideReadOnly: true,
+                                grid:
+                                        {
+                                            store: new Nuance.Store(
+                                                    {
+                                                        autoLoad: true,
+                                                        target: 'city'
+                                                    }),
+                                            configProxy: configProxy,
+                                            name: 'city'
+                                        }
+                            },
+                    street:
+                            {
+                                title: _("Streets"),
+                                group: 'locations',
+                                hideReadOnly: true,
+                                name: 'street',
+                                grid:
+                                        {
+                                            store: new Nuance.Store(
+                                                    {
+                                                        autoLoad: true,
+                                                        target: 'street'
+                                                    }),
+                                            waitForStores: [
+                                                'city'
+                                            ],
+                                            configProxy: configProxy,
+                                            name: 'street'
+                                        }
+                            },
+                    router:
+                            {
+                                title: _("Routers"),
+                                hideReadOnly: true,
+                                name: 'router',
+                                grid:
+                                        {
+                                            store: new Nuance.Store(
+                                                    {
+                                                        autoLoad: true,
+                                                        target: 'router'
+                                                    }),
+                                            virtualFields:
+                                                    {
+                                                        cpuload:
+                                                                {
+                                                                    order: 7
+                                                                },
+                                                        freeram:
+                                                                {
+                                                                    order: 7
+                                                                },
+                                                        version:
+                                                                {
+                                                                    order: 7
+                                                                }
+                                                    },
+                                            configProxy: configProxy,
+                                            name: 'router',
+                                            hiddenCols: ['pass'],
+                                            contextMenuItems: [
+                                                {
+                                                    title: _("CPU Stats"),
+                                                    beforeshow: function (selectionId, grid)
+                                                    {
+                                                        var grid = Nuance.grids.router;
+                                                        this.disabled = grid.getSelectedItems().length !== 1;
+                                                    },
+                                                    onclick: function () {
+                                                        var grid = Nuance.grids.router;
+                                                        var routerId = grid.getSelectedItems()[0];
+                                                        if (routerId)
+                                                        {
+                                                            new Nuance.StatsPopup(
+                                                                    {
+                                                                        title: _("Router CPU statistics"),
+                                                                        path: 'graphs/cpu',
+                                                                        extraParams: '&router=' + routerId
+                                                                    });
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    title: _("Interface Stats"),
+                                                    beforeshow: function (selectionId, grid)
+                                                    {
+                                                        var grid = Nuance.grids.router;
+                                                        this.disabled = grid.getSelectedItems().length !== 1;
+                                                    },
+                                                    onclick: function () {
+                                                        var grid = Nuance.grids.router;
+                                                        var routerId = grid.getSelectedItems()[0];
+                                                        var ifaceName = configProxy.getValue('router', 'main', 'outInterface', routerId);
+                                                        if (ifaceName) {
+                                                            new Nuance.StatsPopup(
+                                                                    {
+                                                                        title: _("Router interface statistics"),
+                                                                        path: 'graphs/iface/' + ifaceName,
+                                                                        extraParams: '&router=' + routerId
+                                                                    });
+                                                        }
+                                                        else
+                                                        {
+                                                            new Nuance.MessageBox(
+                                                                    {
+                                                                        text: _("Outer interface is not selected"),
+                                                                        title: _("Error")
+                                                                    });
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    title: _("Router preferences"),
+                                                    beforeshow: function (selectionId, grid)
+                                                    {
+                                                        var grid = Nuance.grids.router;
+                                                        this.disabled = grid.getSelectedItems().length !== 1;
+                                                    },
+                                                    onclick: function () {
+                                                        var grid = Nuance.grids.router;
+                                                        var routerId = grid.getSelectedItems()[0];
+                                                        var ifacesStore = Nuance.stores['routerinterfaces' + routerId] || new Nuance.Store(
+                                                                {
+                                                                    target: 'routerinterfaces' + routerId, path: '/interface/' + routerId + '/get',
+                                                                    forceLoad: true
+                                                                });
+                                                        new Nuance.PreferencesPopup(
+                                                                {
+                                                                    configProxy: configProxy,
+                                                                    owner: routerId,
+                                                                    type: 'router',
+                                                                    customOptions:
+                                                                            {
+                                                                                router:
+                                                                                        {
+                                                                                            main:
+                                                                                                    {
+                                                                                                        inInterface:
+                                                                                                                {
+                                                                                                                    type: 'link',
+                                                                                                                    store: ifacesStore},
+                                                                                                        outInterface:
+                                                                                                                {
+                                                                                                                    type: 'link',
+                                                                                                                    store: ifacesStore},
+                                                                                                        filterType:
+                                                                                                                {
+                                                                                                                    type: 'link',
+                                                                                                                    store: filterTypeStore
+                                                                                                                }
+                                                                                                    }
+                                                                                        }
+                                                                            }
+                                                                });
+                                                    }
+                                                }
 
-            divider: tabPanelDivider
-        }
+                                            ]
+                                        }
+                            },
+                    master:
+                            {
+                                title: _("Administrators"),
+                                hideReadOnly: true,
+                                name: 'master',
+                                grid:
+                                        {
+                                            name: 'master',
+                                            store: new Nuance.Store(
+                                                    {
+                                                        autoLoad: true,
+                                                        target: 'master',
+                                                        getNameByIdFn: function (id)
+                                                        {
+                                                            var row = this.getById(id);
+                                                            if (row)
+                                                            {
+                                                                return row[this.ns.login];
+                                                            }
+                                                            else
+                                                                return '';
+                                                        }
+                                                    }),
+                                            customFields:
+                                                    {
+                                                        permittedstreet:
+                                                                {
+                                                                    parentList: 'city'
+                                                                }
+                                                    },
+                                            waitForStores: [],
+                                            configProxy: configProxy,
+                                            hiddenCols: ['theme', 'config', 'type', 'password', 'group'],
+                                            excludedFields: ['group']
+                                        }
+                            },
+                    group: false,
+                    log:
+                            {
+                                title: _("Log"),
+                                name: 'log',
+                                grid:
+                                        {
+                                            name: 'log',
+                                            readOnly: true,
+                                            store: new Nuance.Store(
+                                                    {
+                                                        autoLoad: true,
+                                                        filter: location.hash.indexOf('scratchcard') !== 1 ? 'id=0' : false,
+                                                        target: 'log'
+                                                    }),
+                                            virtualFields:
+                                                    {
+                                                        description:
+                                                                {
+                                                                    order: 7
+                                                                }
+                                                    },
+                                            hiddenCols: ['subtype', 'action', 'olddata', 'newdata'], waitForStores: [
+                                                'master',
+                                                'user',
+                                                'router'
+                                            ],
+                                            configProxy: configProxy}
+                            },
+                    divider: tabPanelDivider
+                }
     };
 
     tables.tabs.tariff.grid.filters.city = {
         name: "city",
         column: 'city',
-        filterFunction: function(id, selectedValue)
+        filterFunction: function (id, selectedValue)
         {
             var tariffStore = Nuance.stores.tariff;
             return tariffStore.data[id][tariffStore.ns.city].indexOf(selectedValue.toString()) !== -1;
@@ -1141,7 +1113,7 @@ window.onConfigLoad = function()
     if (fractionalPart)
     {
         var cashFormat = '%.' + fractionalPart + 'f';
-        formatMoney = function(v)
+        formatMoney = function (v)
         {
             var cash = sprintf(cashFormat, v);
             cash = cash.substr(0, cash.length - 1 - fractionalPart) + '<em class="disabled_text">' + cash.substr(cash.length - 1 - fractionalPart) + '</em>';
@@ -1150,10 +1122,10 @@ window.onConfigLoad = function()
     }
     else
     {
-        formatMoney = function(v)
+        formatMoney = function (v)
         {
             return Math.round(v);
-        }
+        };
     }
 
     for (var i = 0; i < pluginsLoaders.length; i++)
@@ -1161,14 +1133,11 @@ window.onConfigLoad = function()
         pluginsLoaders[i]();
     }
 
-
     // Init widgets
-
     widgetPanel.initWidgets();
     window.trigger('afterpluginsload');
 
     // Add documents tab
-
     if (licenseManager.checkPermission('ucp'))
     {
         pluginsTabs.documents = {
@@ -1177,239 +1146,238 @@ window.onConfigLoad = function()
             content: (new Nuance.input.Documents).body
         };
     }
+
     if (checkPermission(['table', 'user', 'edit', 'disabled']))
     {
         tables.tabs.user.grid.contextMenuItems.push(
-        {
-            action: 'disable',
-            beforeshow: function(selectionId, grid)
-            {
-                var grid = Nuance.grids.user;
-
-                if (grid.getSelectedItems().length !== 1)
                 {
-                    this.disabled = true;
-                    this.title = _("Disable");
-                }
-                else
-                {
-                    var userStore = Nuance.stores.user,
-                        selectedUserId = Nuance.grids.user.getSelectedItems()[0],
-                        selectedUser = userStore.getById(selectedUserId),
-                        userIsDisabled = selectedUser[userStore.ns.disabled];
-                    this.disabled = false;
-                    this.title = userIsDisabled ? _("Enable") : _("Disable");
-                    this.onclick = function()
+                    action: 'disable',
+                    beforeshow: function (selectionId, grid)
                     {
-                        var valuesArray = [];
-                        valuesArray[userStore.ns.disabled] = 0 + !userIsDisabled;
-                        userStore.edit(selectedUserId, valuesArray);
-                    };
-                }
-            },
-            bottomSeparator: true
+                        var grid = Nuance.grids.user;
 
-        });
-    };
+                        if (grid.getSelectedItems().length !== 1)
+                        {
+                            this.disabled = true;
+                            this.title = _("Disable");
+                        }
+                        else
+                        {
+                            var userStore = Nuance.stores.user,
+                                    selectedUserId = Nuance.grids.user.getSelectedItems()[0],
+                                    selectedUser = userStore.getById(selectedUserId),
+                                    userIsDisabled = selectedUser[userStore.ns.disabled];
+                            this.disabled = false;
+                            this.title = userIsDisabled ? _("Enable") : _("Disable");
+                            this.onclick = function () {
+                                var valuesArray = [];
+                                valuesArray[userStore.ns.disabled] = 0 + !userIsDisabled;
+                                userStore.edit(selectedUserId, valuesArray);
+                            };
+                        }
+                    },
+                    bottomSeparator: true
+
+                });
+    }
+
     if (checkPermission(['statistics']))
     {
         tables.tabs.user.grid.contextMenuItems.push(
-        {
-            title: _("Stats"),
-            beforeshow: function(selectionId, grid)
-            {
-                var grid = Nuance.grids.user;
-                this.disabled = grid.getSelectedItems().length !== 1;
-            },
-            onclick: function()
-            {
-                var grid = Nuance.grids.user;
-                var id = grid.getSelectedItems()[0];
-                var routerId = id ? grid.store.getById(id)[grid.store.ns.router] : undefined;
-                if (routerId)
                 {
-                    new Nuance.StatsPopup(
+                    title: _("Stats"),
+                    beforeshow: function (selectionId, grid)
                     {
-                        title: _("User statistics"),
-                        path: 'graphs/queue/' + id,
-                        extraParams: '&router=' + routerId
-                    });
-                }
-                else
-                {
-                    new Nuance.MessageBox(
+                        var grid = Nuance.grids.user;
+                        this.disabled = grid.getSelectedItems().length !== 1;
+                    },
+                    onclick: function ()
                     {
-                        text: _("User dont have the router"),
-                        title: _("Error")
-                    });
-                }
-            }
-        });
+                        var grid = Nuance.grids.user;
+                        var id = grid.getSelectedItems()[0];
+                        var routerId = id ? grid.store.getById(id)[grid.store.ns.router] : undefined;
+                        if (routerId)
+                        {
+                            new Nuance.StatsPopup({
+                                title: _("User statistics"),
+                                path: 'graphs/queue/' + id,
+                                extraParams: '&router=' + routerId
+                            });
+                        }
+                        else
+                        {
+                            new Nuance.MessageBox({
+                                text: _("User dont have the router"),
+                                title: _("Error")
+                            });
+                        }
+                    }
+                });
     }
+
     if (checkPermission(['table', 'moneyflow', 'add']))
     {
         tables.tabs.user.grid.contextMenuItems.push(
-        {
-            title: _('Fund'),
-            beforeshow: function(selectionId, grid)
-            {
-                var grid = Nuance.grids.user;
-                this.disabled = grid.getSelectedItems().length !== 1;
-            },
-            onclick: function()
-            {
-                var grid = Nuance.grids.user;
-                var id = grid.getSelectedItems()[0];
-                new Nuance.FundPopup(
                 {
-                    userId: id
+                    title: _('Fund'),
+                    beforeshow: function (selectionId, grid)
+                    {
+                        var grid = Nuance.grids.user;
+                        this.disabled = grid.getSelectedItems().length !== 1;
+                    },
+                    onclick: function ()
+                    {
+                        var grid = Nuance.grids.user;
+                        var id = grid.getSelectedItems()[0];
+                        new Nuance.FundPopup(
+                                {
+                                    userId: id
+                                });
+                    }
                 });
-            }
-        });
 
         tables.tabs.user.grid.toolbarButtons.push(
-        {
-            value: _("Fund"),
-            iconClass: 'money',
-            onselectionchange: function(selectionId, grid)
-            {
-                this.setDisabled(selectionId.length !== 1 || !checkPermission(['table', 'moneyflow', 'add']));
-            },
-            onclick: function()
-            {
-                var grid = Nuance.grids.user;
-                var id = grid.getSelectedItems()[0];
-                new Nuance.FundPopup(
                 {
-                    userId: id
+                    value: _("Fund"),
+                    iconClass: 'money',
+                    onselectionchange: function (selectionId, grid)
+                    {
+                        this.setDisabled(selectionId.length !== 1 || !checkPermission(['table', 'moneyflow', 'add']));
+                    },
+                    onclick: function ()
+                    {
+                        var grid = Nuance.grids.user;
+                        var id = grid.getSelectedItems()[0];
+                        new Nuance.FundPopup(
+                                {
+                                    userId: id
+                                });
+                    }
                 });
-            }
-        });
 
         tables.tabs.moneyflow.grid.toolbarButtons.push(
-        {
-            value: _("Fund"),
-            iconClass: 'money',
-            onclick: function()
-            {
-                new Nuance.FundPopup(
-                {});
-            }
-        });
+                {
+                    value: _("Fund"),
+                    iconClass: 'money',
+                    onclick: function ()
+                    {
+                        new Nuance.FundPopup({});
+                    }
+                });
 
     }
 
     if (checkPermission(['table', 'moneyflow', 'read']))
     {
         tables.tabs.user.grid.contextMenuItems.push(
-        {
-            title: _("Payments history"),
-            beforeshow: function(selectionId, grid)
-            {
-                var grid = Nuance.grids.user;
-                this.disabled = grid.getSelectedItems().length !== 1;
-            },
-            onclick: function()
-            {
-                var grid = Nuance.grids.user;
-                var id = grid.getSelectedItems()[0];
-                showUserPayments(id);
-            }
-        });
+                {
+                    title: _("Payments history"),
+                    beforeshow: function (selectionId, grid)
+                    {
+                        var grid = Nuance.grids.user;
+                        this.disabled = grid.getSelectedItems().length !== 1;
+                    },
+                    onclick: function ()
+                    {
+                        var grid = Nuance.grids.user;
+                        var id = grid.getSelectedItems()[0];
+                        showUserPayments(id);
+                    }
+                });
     }
+
     if (checkPermission(['table', 'moneyflow', 'edit']))
     {
         tables.tabs.moneyflow.grid.contextMenuItems.push(
-        {
-            title: _("Refund"),
-            beforeshow: function(selectionId, grid)
-            {
-                var grid = Nuance.grids.user;
-                this.disabled = grid.getSelectedItems().length !== 1;
-            },
-            onclick: function()
-            {
-                var grid = Nuance.grids.moneyflow;
-                var id = grid.getSelectedItems()[0];
-                refund(id);
-            }
-        });
+                {
+                    title: _("Refund"),
+                    beforeshow: function (selectionId, grid)
+                    {
+                        var grid = Nuance.grids.user;
+                        this.disabled = grid.getSelectedItems().length !== 1;
+                    },
+                    onclick: function ()
+                    {
+                        var grid = Nuance.grids.moneyflow;
+                        var id = grid.getSelectedItems()[0];
+                        refund(id);
+                    }
+                });
     }
 
     if (checkPermission(['preference', 'user']))
     {
         tables.tabs.user.grid.contextMenuItems.push(
-        {
-            title: _("Preferences"),
-            beforeshow: function(selectionId, grid)
-            {
-                var grid = Nuance.grids.user;
-                this.disabled = grid.getSelectedItems().length !== 1;
-            },
-            onclick: function()
-            {
-                var grid = Nuance.grids.user;
-                var userId = grid.getSelectedItems()[0];
-                new Nuance.PreferencesPopup(
                 {
-                    configProxy: configProxy,
-                    owner: userId,
-                    type: 'subscriber',
-                    customOptions:
+                    title: _("Preferences"),
+                    beforeshow: function (selectionId, grid)
                     {
-                        router:
-                        {
-                            main:
-                            {
-                                filterType:
+                        var grid = Nuance.grids.user;
+                        this.disabled = grid.getSelectedItems().length !== 1;
+                    },
+                    onclick: function ()
+                    {
+                        var grid = Nuance.grids.user;
+                        var userId = grid.getSelectedItems()[0];
+                        new Nuance.PreferencesPopup(
                                 {
-                                    type: 'link',
-                                    store: filterTypeStore
-                                }
-                            }
-                        }
+                                    configProxy: configProxy,
+                                    owner: userId,
+                                    type: 'subscriber',
+                                    customOptions:
+                                            {
+                                                router:
+                                                        {
+                                                            main:
+                                                                    {
+                                                                        filterType:
+                                                                                {
+                                                                                    type: 'link',
+                                                                                    store: filterTypeStore
+                                                                                }
+                                                                    }
+                                                        }
+                                            }
+                                });
                     }
                 });
-            }
-        });
     }
 
     if (checkPermission(['table', 'moneyflow', 'add']))
     {
         tables.tabs.user.grid.contextMenuItems.push(
-        {
-            title: _("Free internet"),
-            beforeshow: function(selectionId, grid)
-            {
-                var grid = Nuance.grids.user;
-                                this.disabled = grid.getSelectedItems().length !== 1;
-            },
-            topSeparator: true,
-            bottomSeparator: true,
-            onclick: function()
-            {
-                var grid = Nuance.grids.user;
-                var userStore = Nuance.stores.user;
-                var id = grid.getSelectedItems()[0];
-                var tariffId = id ? userStore.getById(id)[userStore.ns.tariff] : undefined;
-                if (tariffId)
                 {
-                    new Nuance.FreeInetPopup(
+                    title: _("Free internet"),
+                    beforeshow: function (selectionId, grid)
                     {
-                        tariff: tariffId,
-                        user: id
-                    });
-                }
-                else
-                {
-                    new Nuance.MessageBox(
+                        var grid = Nuance.grids.user;
+                        this.disabled = grid.getSelectedItems().length !== 1;
+                    },
+                    topSeparator: true,
+                    bottomSeparator: true,
+                    onclick: function ()
                     {
-                        text: _("User have no selected tariff"),
-                        title: _("Error")
-                    });
-                }
-            }
-        });
+                        var grid = Nuance.grids.user;
+                        var userStore = Nuance.stores.user;
+                        var id = grid.getSelectedItems()[0];
+                        var tariffId = id ? userStore.getById(id)[userStore.ns.tariff] : undefined;
+                        if (tariffId)
+                        {
+                            new Nuance.FreeInetPopup(
+                                    {
+                                        tariff: tariffId,
+                                        user: id
+                                    });
+                        }
+                        else
+                        {
+                            new Nuance.MessageBox({
+                                text: _("User have no selected tariff"),
+                                title: _("Error")
+                            });
+                        }
+                    }
+                });
     }
 
     if (checkPermission(['preference', 'system']))
@@ -1418,15 +1386,16 @@ window.onConfigLoad = function()
         tables.tabs.preferences = {
             title: _("Preferences"),
             name: 'preferences'
-        }
+        };
     }
+
     if (!checkPermission(['statistics']))
     {
         delete tables.tabs.dash;
     }
 
     var pluginsTabsCount = 0;
-    for (var i in pluginsTabs)
+    for (var i in pluginsTabs) 
     {
         if (pluginsTabs.hasOwnProperty(i))
         {
@@ -1437,12 +1406,12 @@ window.onConfigLoad = function()
     if (pluginsTabsCount)
     {
         toolsTabPanel = new Nuance.TabPanel(
-        {
-            name: 'tools',
-            prefix: 'v',
-            selectedTab: location.hash.substr(location.hash.indexOf('/') + 1),
-            tabs: pluginsTabs
-        });
+                {
+                    name: 'tools',
+                    prefix: 'v',
+                    selectedTab: location.hash.substr(location.hash.indexOf('/') + 1),
+                    tabs: pluginsTabs
+                });
         tables.tabs.tools = {
             title: _("Tools"),
             name: 'tools',
@@ -1455,14 +1424,14 @@ window.onConfigLoad = function()
         }
         toolsTabPanel.on('tabchange', onToolsTabChange);
     }
+
     if (checkPermission(['preference', 'system']))
     {
         tables.tabs.about = {
             title: _("About"),
             name: 'about'
-        }
+        };
     }
-
 
     for (var i in tables.tabs)
     {
@@ -1474,46 +1443,15 @@ window.onConfigLoad = function()
     loadOnDemandTables = ['moneyflow', 'scratchcard', 'log'];
 
     TabPanel = new Nuance.TabPanel(tables);
-
-
-    /*
-  if ( checkPermission ( ['table', 'user', 'edit'] ) )
-  {
-    Nuance.grids.user.onEdit = function (o )
-    {
-      var self=this
-        , opts = tables.tabs.user.grid
-        , selectedItems = this.getSelectedItems();
-      if (selectedItems.length===1 && !opts.readOnly)
-      {
-        var form=new Nuance.EditPopup(
-            {
-              winLayout: 'triple',
-              //bodyLayout: 'triple',
-              store: self.store,
-              customFields: opts.customFields,
-              onlyIncludedFields: opts.onlyIncludedFields,
-              excludedFields: self.excludedFields,
-              includedFields: opts.includedFields,
-              recordId: self.recordId || selectedItems[0]
-            }
-        );
-
-
-
-      }
-    }
-  }
-*/
     var switchEl = TabPanel.body.firstChild;
     var stretchEl = ce('li',
-    {
-        className: 'spoiler-stretch'
-    }, TabPanel.body.firstChild);
+            {
+                className: 'spoiler-stretch'
+            }, TabPanel.body.firstChild);
     var spoilerEl = ce('li',
-    {
-        className: 'spoiler icon menu'
-    }, TabPanel.body.firstChild);
+            {
+                className: 'spoiler icon menu'
+            }, TabPanel.body.firstChild);
     var spoilerList = ce('ul', null, spoilerEl);
     var previousWidth = document.body.clientWidth;
 
@@ -1528,8 +1466,7 @@ window.onConfigLoad = function()
     function getItemsTotalWidth()
     {
         var width = 0;
-        for (var i = 0; i < switchEl.children.length; i++)
-        {
+        for (var i = 0; i < switchEl.children.length; i++) {
             if (!switchEl.children[i].classList.contains('stretch'))
             {
                 width += switchEl.children[i].clientWidth;
@@ -1579,11 +1516,11 @@ window.onConfigLoad = function()
             }
         }
     }
+
     window.addEventListener('resize', onResize);
     onResize();
 
-
-    configProxy.on('beforeconfigdefaultsread', function(type, owner, config)
+    configProxy.on('beforeconfigdefaultsread', function (type, owner, config)
     {
         switch (type)
         {
@@ -1606,7 +1543,6 @@ window.onConfigLoad = function()
         }
     });
 
-
     if (Nuance.grids.user)
     {
 
@@ -1618,21 +1554,21 @@ window.onConfigLoad = function()
             form.body.classList.add('flex');
 
             var dataEl = ce('div',
-            {
-                className: 'popup-body double'
-            });
+                    {
+                        className: 'popup-body double'
+                    });
             var ipDataEl = ce('div',
-            {
-                className: 'popup-body flex flex-column'
-            });
+                    {
+                        className: 'popup-body flex flex-column'
+                    });
             var pppDataEl = ce('div',
-            {
-                className: 'popup-body flex flex-column'
-            });
+                    {
+                        className: 'popup-body flex flex-column'
+                    });
             var preferencesEl = ce('div',
-            {
-                className: 'popup-body'
-            });
+                    {
+                        className: 'popup-body'
+                    });
 
             while (form.body.children.length)
             {
@@ -1644,17 +1580,17 @@ window.onConfigLoad = function()
             if (isAdding)
             {
                 var ipStore = new Nuance.MemoryStore(
-                {
-                    header: cloneArray(Nuance.stores.ip.header),
-                    data:
-                    {}
-                });
+                        {
+                            header: cloneArray(Nuance.stores.ip.header),
+                            data:
+                                    {}
+                        });
                 var pppStore = new Nuance.MemoryStore(
-                {
-                    header: cloneArray(Nuance.stores.ppp.header),
-                    data:
-                    {}
-                });
+                        {
+                            header: cloneArray(Nuance.stores.ppp.header),
+                            data:
+                                    {}
+                        });
                 Nuance.stores.ip_memory = ipStore;
                 Nuance.stores.ppp_memory = pppStore;
             }
@@ -1664,75 +1600,71 @@ window.onConfigLoad = function()
                 var pppStore = Nuance.stores.ppp;
             }
             var ipTable = new Nuance.Grid(
-            {
-                store: ipStore,
-                target: ipDataEl,
-                hiddenCols: ['id', 'user'],
-                name: 'ip',
-                onlyIncludedFields: true,
-                includedFields: ['ip', 'mac', 'router', 'port']
-            });
+                    {
+                        store: ipStore,
+                        target: ipDataEl,
+                        hiddenCols: ['id', 'user'],
+                        name: 'ip',
+                        onlyIncludedFields: true,
+                        includedFields: ['ip', 'mac', 'router', 'port']
+                    });
             ipTable.render();
-            ipTable.on('beforeadd', function(values)
+            ipTable.on('beforeadd', function (values)
             {
                 var ns = Nuance.stores.ip.ns;
                 values[ns.user] = form.recordId;
             });
-
-
             var pppTable = new Nuance.Grid(
-            {
-                store: pppStore,
-                target: pppDataEl,
-                hiddenCols: ['id', 'user'],
-                name: 'ppp',
-                onlyIncludedFields: true,
-                includedFields: ['login', 'password', 'router', 'localip', 'remoteip', 'pppservice']
-            });
+                    {
+                        store: pppStore,
+                        target: pppDataEl,
+                        hiddenCols: ['id', 'user'],
+                        name: 'ppp',
+                        onlyIncludedFields: true,
+                        includedFields: ['login', 'password', 'router', 'localip', 'remoteip', 'pppservice']
+                    });
             if (!isAdding)
             {
                 ipTable.setFilters(
-                {
-                    user: form.recordId
-                });
+                        {
+                            user: form.recordId
+                        });
                 pppTable.setFilters(
-                {
-                    user: form.recordId
-                });
+                        {
+                            user: form.recordId
+                        });
             }
             pppTable.render();
-            pppTable.on('beforeadd', function(values)
+            pppTable.on('beforeadd', function (values)
             {
                 var ns = Nuance.stores.ppp.ns;
                 values[ns.id] = 1;
                 values[ns.user] = form.recordId;
-                c(42)
+                c(42);
             });
-
 
             var filterTypeStore = new Nuance.MemoryStore(
-            {
-                target: 'router-filtertype',
-                header: [
-                    ['id', 'id'],
-                    ['name', 'varchar']
-                ],
-                data:
-                {
-                    0: [0, _('Do not filter')],
-                    1: [1, _('Filter by ARP')],
-                    2: [2, _('Filter by filter rule')],
-                    3: [3, _('Filter by mangle')]
-                }
-            });
-
+                    {
+                        target: 'router-filtertype',
+                        header: [
+                            ['id', 'id'],
+                            ['name', 'varchar']
+                        ],
+                        data:
+                                {
+                                    0: [0, _('Do not filter')],
+                                    1: [1, _('Filter by ARP')],
+                                    2: [2, _('Filter by filter rule')],
+                                    3: [3, _('Filter by mangle')]
+                                }
+                    });
 
             var preferencesPopup = new Nuance.RouterUserPreferencesActivity(
-            {
-                configProxy: configProxy,
-                owner: form.recordId,
-                type: 'subscriber'
-            });
+                    {
+                        configProxy: configProxy,
+                        owner: form.recordId,
+                        type: 'subscriber'
+                    });
             var fields = preferencesPopup.fields;
             for (var i = 0; i < fields.length; i++)
             {
@@ -1740,40 +1672,39 @@ window.onConfigLoad = function()
             }
             var popupTabs = {
                 data:
-                {
-                    title: _("Main data"),
-                    name: 'data',
-                    content: dataEl
-                },
+                        {
+                            title: _("Main data"),
+                            name: 'data',
+                            content: dataEl
+                        },
                 ipdata:
-                {
-                    title: _("IP Data"),
-                    name: 'ipdata',
-                    content: ipDataEl
-                },
+                        {
+                            title: _("IP Data"),
+                            name: 'ipdata',
+                            content: ipDataEl
+                        },
                 pppdata:
-                {
-                    title: _("PPP data"),
-                    name: 'pppdata',
-                    content: pppDataEl
-                },
+                        {
+                            title: _("PPP data"),
+                            name: 'pppdata',
+                            content: pppDataEl
+                        },
                 preferences:
-                {
-                    title: _("Preferences"),
-                    name: 'preferences',
-                    content: preferencesEl
-                }
-            }
+                        {
+                            title: _("Preferences"),
+                            name: 'preferences',
+                            content: preferencesEl
+                        }
+            };
             var tabPanel = new Nuance.TabPanel(
-            {
-                target: form.body,
-                prefix: 'prefpopup',
-                tabs: popupTabs
-            });
-
+                    {
+                        target: form.body,
+                        prefix: 'prefpopup',
+                        tabs: popupTabs
+                    });
             tabPanel.on('tabchange', ipTable.onDataChange);
             tabPanel.on('tabchange', pppTable.onDataChange);
-            form.on('save', function()
+            form.on('save', function ()
             {
                 preferencesPopup.save();
                 console.log(form);
@@ -1782,7 +1713,7 @@ window.onConfigLoad = function()
         Nuance.grids.user.on('addform', extendUserForm);
         Nuance.grids.user.on('editform', extendUserForm);
 
-        Nuance.grids.user.on('afteradd', function(response)
+        Nuance.grids.user.on('afteradd', function (response)
         {
             // Just get an id 
             for (var id in response.db.user.data)
@@ -1800,13 +1731,13 @@ window.onConfigLoad = function()
             form.body.classList.add('flex');
 
             var dataEl = ce('div',
-            {
-                className: 'popup-body double'
-            });
+                    {
+                        className: 'popup-body double'
+                    });
             var preferencesEl = ce('div',
-            {
-                className: 'popup-body'
-            });
+                    {
+                        className: 'popup-body'
+                    });
 
             while (form.body.children.length)
             {
@@ -1816,59 +1747,59 @@ window.onConfigLoad = function()
             }
 
             var filterTypeStore = new Nuance.MemoryStore(
-            {
-                target: 'router-filtertype',
-                header: [
-                    ['id', 'id'],
-                    ['name', 'varchar']
-                ],
-                data:
-                {
-                    0: [0, _('Do not filter')],
-                    1: [1, _('Filter by ARP')],
-                    2: [2, _('Filter by filter rule')],
-                    3: [3, _('Filter by mangle')]
-                }
-            });
+                    {
+                        target: 'router-filtertype',
+                        header: [
+                            ['id', 'id'],
+                            ['name', 'varchar']
+                        ],
+                        data:
+                                {
+                                    0: [0, _('Do not filter')],
+                                    1: [1, _('Filter by ARP')],
+                                    2: [2, _('Filter by filter rule')],
+                                    3: [3, _('Filter by mangle')]
+                                }
+                    });
 
 
             var ifacesStore = Nuance.stores['routerinterfaces' + form.recordId] || new Nuance.Store(
-            {
-                target: 'routerinterfaces' + form.recordId,
-                subscribePath: ['interface', form.recordId],
-                path: 'interface/' + form.recordId + '/get',
-                forceLoad: true
-            });
-            var preferencesPopup = new Nuance.RouterUserPreferencesActivity(
-            {
-                configProxy: configProxy,
-                owner: form.recordId,
-                type: 'router',
-                customOptions:
-                {
-                    router:
                     {
-                        main:
-                        {
-                            inInterface:
-                            {
-                                type: 'link',
-                                store: ifacesStore
-                            },
-                            outInterface:
-                            {
-                                type: 'link',
-                                store: ifacesStore
-                            },
-                            filterType:
-                            {
-                                type: 'link',
-                                store: filterTypeStore
-                            }
-                        }
-                    }
-                }
-            });
+                        target: 'routerinterfaces' + form.recordId,
+                        subscribePath: ['interface', form.recordId],
+                        path: 'interface/' + form.recordId + '/get',
+                        forceLoad: true
+                    });
+            var preferencesPopup = new Nuance.RouterUserPreferencesActivity(
+                    {
+                        configProxy: configProxy,
+                        owner: form.recordId,
+                        type: 'router',
+                        customOptions:
+                                {
+                                    router:
+                                            {
+                                                main:
+                                                        {
+                                                            inInterface:
+                                                                    {
+                                                                        type: 'link',
+                                                                        store: ifacesStore
+                                                                    },
+                                                            outInterface:
+                                                                    {
+                                                                        type: 'link',
+                                                                        store: ifacesStore
+                                                                    },
+                                                            filterType:
+                                                                    {
+                                                                        type: 'link',
+                                                                        store: filterTypeStore
+                                                                    }
+                                                        }
+                                            }
+                                }
+                    });
             var fields = preferencesPopup.fields;
             for (var i = 0; i < fields.length; i++)
             {
@@ -1876,64 +1807,32 @@ window.onConfigLoad = function()
             }
             var popupTabs = {
                 data:
-                {
-                    title: _("Main data"),
-                    name: 'data',
-                    content: dataEl
-                },
+                        {
+                            title: _("Main data"),
+                            name: 'data',
+                            content: dataEl
+                        },
                 preferences:
-                {
-                    title: _("Preferences"),
-                    name: 'preferences',
-                    content: preferencesEl
-                }
-            }
+                        {
+                            title: _("Preferences"),
+                            name: 'preferences',
+                            content: preferencesEl
+                        }
+            };
             var tabPanel = new Nuance.TabPanel(
-            {
-                target: form.body,
-                prefix: 'prefpopup',
-                tabs: popupTabs
-            });
-
+                    {
+                        target: form.body,
+                        prefix: 'prefpopup',
+                        tabs: popupTabs
+                    });
         }
 
         Nuance.grids.router.on('addform', extendRouterForm);
         Nuance.grids.router.on('editform', extendRouterForm);
 
-
-
-        /*
-
-        Nuance.grids.user.onAdd=function()
-        {
-          var maxEntries=licenseManager.checkPermission(name) || Infinity;
-          if (dataOrder.length<maxEntries)
-          {
-            var form=new Nuance.AddPopup(
-              {
-                store: self.store,
-                customFields: opts.customFields, 
-                onlyIncludedFields: opts.onlyIncludedFields,
-                excludedFields: self.excludedFields, 
-                includedFields: opts.includedFields, 
-                recordId: 0
-              }
-            );
-          }
-          else
-          {
-            new Nuance.MessageBox(
-              {
-                title: _("License restriction"), 
-                text: '&nbsp;'+_('You have been reached maximum table entries permitted by your license.<br>Please <a target="_blank" href="http://nuance-bs.com/">upgrade your license</a>.')
-              }
-            );
-          }
-        }
-        */
     }
 
-    Nuance.grids.user && Nuance.grids.user.on('beforerender', function(formattingRows, data, ns, displayData, displayNs)
+    Nuance.grids.user && Nuance.grids.user.on('beforerender', function (formattingRows, data, ns, displayData, displayNs)
     {
         // State
         var stateIndex = displayNs.state;
@@ -1943,9 +1842,7 @@ window.onConfigLoad = function()
         var disabledHTML = '<p class="state ' + disabledCls + '" title="' + _(disabledCls) + '"></p>';
         var allowHTML = '<p class="state ' + allowCls + '" title="' + _(allowCls) + '"></p>';
         var denyHTML = '<p class="state ' + denyCls + '" title="' + _(denyCls) + '"></p>';
-
         var contractIndex = displayNs.contract;
-
         var usernameIndex = displayNs.username;
         var trimUserName = configProxy.getValue('system', 'grid', 'trimUserName');
 
@@ -1976,7 +1873,6 @@ window.onConfigLoad = function()
             }
 
             // Contract ID
-
             displayData[id][contractIndex] = idRenderer(data[id][ns.id], data[id], ns);
 
             // Username
@@ -1988,8 +1884,8 @@ window.onConfigLoad = function()
             else
             {
                 displayData[id][usernameIndex] = (row[ns.sname] || '') + ' ' +
-                    (row[ns.fname] || '') + ' ' +
-                    (row[ns.pname] || '');
+                        (row[ns.fname] || '') + ' ' +
+                        (row[ns.pname] || '');
             }
 
             // Address
@@ -2027,7 +1923,6 @@ window.onConfigLoad = function()
             {
                 displayData[id][tariffIndex] = selectedTariffName;
             }
-
             // IP list
             if (data[id][ns.iplist])
             {
@@ -2059,9 +1954,7 @@ window.onConfigLoad = function()
         }
     });
 
-
-
-    Nuance.grids.moneyflow && Nuance.grids.moneyflow.on('beforerender', function(formattingRows, data, ns, displayData, displayNs)
+    Nuance.grids.moneyflow && Nuance.grids.moneyflow.on('beforerender', function (formattingRows, data, ns, displayData, displayNs)
     {
         var nameIndex = displayNs.name;
         var userIndex = displayNs.user;
@@ -2072,7 +1965,6 @@ window.onConfigLoad = function()
 
             // Refund type
             displayData[id][refundTypeIndex] = row[ns.refund] ? '<p class="icon refund"></p>' : '';
-
             // Name
             if (row[ns.name])
             {
@@ -2085,50 +1977,50 @@ window.onConfigLoad = function()
                 switch (detailsName)
                 {
                     case 'scratchcard':
-                        {
-                            displayData[id][nameIndex] = _('Fund with scratchcard');
-                            break;
-                        }
+                    {
+                        displayData[id][nameIndex] = _('Fund with scratchcard');
+                        break;
+                    }
                     case 'refund':
-                        {
-                            displayData[id][nameIndex] = sprintf(_('Refund operation %s'), detailsId);
-                            break;
-                        };
+                    {
+                        displayData[id][nameIndex] = sprintf(_('Refund operation %s'), detailsId);
+                        break;
+                    }
                     case 'referrerpay':
-                        {
-                            displayData[id][nameIndex] = sprintf(_('Referral charge from %s'), Nuance.stores.user.getNameById(detailsId));
-                            break;
-                        };
+                    {
+                        displayData[id][nameIndex] = sprintf(_('Referral charge from %s'), Nuance.stores.user.getNameById(detailsId));
+                        break;
+                    }
                     case 'order':
                     case 'temporder':
+                    {
+                        var order = Nuance.stores.order.getById(detailsId);
+                        if (order)
                         {
-                            var order = Nuance.stores.order.getById(detailsId);
-                            if (order)
+                            var orderNs = Nuance.stores.order.ns;
+                            var startDate = order[orderNs.startdate];
+                            var endDate = order[orderNs.enddate];
+                            if (detailsName === 'order')
                             {
-                                var orderNs = Nuance.stores.order.ns;
-                                var startDate = order[orderNs.startdate];
-                                var endDate = order[orderNs.enddate];
-                                if (detailsName === 'order')
-                                {
-                                    var text = _('Order ');
-                                }
-                                else
-                                {
-                                    var text = _('Temporary order ');
-                                }
-                                displayData[id][nameIndex] = text + Nuance.stores.tariff.getNameById(order[orderNs.detailsid]) + _(' from ') + startDate + _(' to ') + endDate;
+                                var text = _('Order ');
                             }
                             else
                             {
-                                displayData[id][nameIndex] = _('Unknown order');
+                                var text = _('Temporary order ');
                             }
-                            break;
-                        };
-                    case 'adminpay':
+                            displayData[id][nameIndex] = text + Nuance.stores.tariff.getNameById(order[orderNs.detailsid]) + _(' from ') + startDate + _(' to ') + endDate;
+                        }
+                        else
                         {
-                            displayData[id][nameIndex] = _('Fund by ') + Nuance.stores.master.getNameById(detailsId);
-                            break;
-                        };
+                            displayData[id][nameIndex] = _('Unknown order');
+                        }
+                        break;
+                    }
+                    case 'adminpay':
+                    {
+                        displayData[id][nameIndex] = _('Fund by ') + Nuance.stores.master.getNameById(detailsId);
+                        break;
+                    }
                     default:
                         displayData[id][nameIndex] = '';
                         break;
@@ -2137,17 +2029,15 @@ window.onConfigLoad = function()
         }
     });
 
-
-
-    Nuance.grids.log && Nuance.grids.log.on('beforerender', function(formattingRows, data, ns, displayData, displayNs)
+    Nuance.grids.log && Nuance.grids.log.on('beforerender', function (formattingRows, data, ns, displayData, displayNs)
     {
         var typeIndex = ns.type,
-            subtypeIndex = ns.subtype,
-            oldDataIndex = ns.olddata,
-            newDataIndex = ns.newdata,
-            targetSectionIndex = ns.targetsection,
-            targetIdIndex = ns.targetid,
-            masterIndex = ns.master;
+                subtypeIndex = ns.subtype,
+                oldDataIndex = ns.olddata,
+                newDataIndex = ns.newdata,
+                targetSectionIndex = ns.targetsection,
+                targetIdIndex = ns.targetid,
+                masterIndex = ns.master;
 
         var displayTypeIndex = displayNs.type;
         var displayMasterIndex = displayNs.master;
@@ -2155,14 +2045,12 @@ window.onConfigLoad = function()
         var displayTargetIdIndex = displayNs.targetid;
         var displayDescriptionIndex = displayNs.description;
 
-
-
         var action = '';
         var description = '';
         var row,
-            newData,
-            oldData,
-            detailsData = [];
+                newData,
+                oldData,
+                detailsData = [];
 
         for (var id in data)
         {
@@ -2281,8 +2169,7 @@ window.onConfigLoad = function()
                                                 {
                                                     var oldValues = oldValue;
                                                 }
-                                                for (var j = 0; j < oldValues.length; j++)
-                                                {
+                                                for (var j = 0; j < oldValues.length; j++) {
                                                     oldValues[j] = store.getNameById(oldValues[j]);
                                                 }
                                                 oldValue = oldValues.join(', ');
@@ -2310,8 +2197,7 @@ window.onConfigLoad = function()
                                                 {
                                                     var newValues = newValue;
                                                 }
-                                                for (var j = 0; j < newValues.length; j++)
-                                                {
+                                                for (var j = 0; j < newValues.length; j++) {
                                                     newValues[j] = store.getNameById(newValues[j]);
                                                 }
                                                 newValue = newValues.join(', ');
@@ -2326,9 +2212,6 @@ window.onConfigLoad = function()
                                 action = _("Remove from database");
                                 break;
                         }
-
-
-
                     }
                     break;
                 case 'auth':
@@ -2377,37 +2260,6 @@ window.onConfigLoad = function()
         }
     });
 
-    /*
-      function onCashChange(event,userId, o)
-      {
-        if (typeof o.cash!=='undefined' ||
-            typeof o.disabled!=='undefined' ||
-            !activeOrder[id] ||
-            typeof o.credit!=='undefined')
-        {
-          Nuance.stores.activeorder.load();
-          Nuance.stores.moneyflow.load();
-        };
-      }
-      Nuance.grids.user && Nuance.stores.user.on('afteradd', onCashChange);
-      Nuance.grids.user && Nuance.stores.user.on('afteredit', onCashChange);
-        
-      Nuance.stores.moneyflow && Nuance.stores.moneyflow.on('afteradd', 
-        function ()
-        {
-          Nuance.stores.activeorder.load();
-          Nuance.stores.moneyflow.load();
-          Nuance.stores.user.load();
-        }
-      );
-      Nuance.stores.moneyflow && Nuance.stores.moneyflow.on('afteredit', 
-        function ()
-        {
-          Nuance.stores.activeorder.load();
-          Nuance.stores.user.load();
-        }
-      );
-      */
     var preferencesWasLoaded = false;
     var aboutWasLoaded = false;
 
@@ -2415,40 +2267,40 @@ window.onConfigLoad = function()
     {
         preferencesWasLoaded = true;
         var preferencesPopup = new Nuance.PreferencesActivity(
-        {
-            configProxy: configProxy,
-            target: TabPanel.tabs.preferences,
-            type: 'system',
-            customOptions:
-            {
-                system:
                 {
-                    main:
-                    {
-                        timezone:
-                        {
-                            type: 'charlink',
-                            store: Nuance.stores.timezone
-                        }
-                    },
-                    ucp:
-                    {
-                        documents:
-                        {
-                            type: 'hidden'
-                        },
-                        mainPageText:
-                        {
-                            type: 'multitext'
-                        },
-                        contactsPageText:
-                        {
-                            type: 'multitext'
-                        }
-                    }
-                }
-            }
-        });
+                    configProxy: configProxy,
+                    target: TabPanel.tabs.preferences,
+                    type: 'system',
+                    customOptions:
+                            {
+                                system:
+                                        {
+                                            main:
+                                                    {
+                                                        timezone:
+                                                                {
+                                                                    type: 'charlink',
+                                                                    store: Nuance.stores.timezone
+                                                                }
+                                                    },
+                                            ucp:
+                                                    {
+                                                        documents:
+                                                                {
+                                                                    type: 'hidden'
+                                                                },
+                                                        mainPageText:
+                                                                {
+                                                                    type: 'multitext'
+                                                                },
+                                                        contactsPageText:
+                                                                {
+                                                                    type: 'multitext'
+                                                                }
+                                                    }
+                                        }
+                            }
+                });
     }
 
     function onTabSwitch(tabName)
@@ -2475,6 +2327,7 @@ window.onConfigLoad = function()
 
         }
     }
+
     TabPanel.on('tabchange', onTabSwitch);
     if (TabPanel.getSelectedTab())
     {
@@ -2488,63 +2341,61 @@ window.onConfigLoad = function()
             aboutWasLoaded = true;
         }
     }
-}
+};
 
 var acl;
 
 function loadAcl(response)
-    {
-        acl = response.acl;
-        configProxy = new Nuance.ConfigProxy(
-        {
-            onload: onConfigLoad,
-            autoLoad: true,
-            onedit:
+{
+    acl = response.acl;
+    configProxy = new Nuance.ConfigProxy(
             {
-                user:
-                {
-                    width: function()
-                    {
-                        var cssStr = "";
-                        if (configProxy.__config.user[userId])
+                onload: onConfigLoad,
+                autoLoad: true,
+                onedit:
                         {
-                            var css = configProxy.__config.user[userId].width;
-                            for (var rule in css)
-                            {
-                                var el = rule.split(':');
-                                cssStr += '#' + el[0] + "-tab span." + el[1] + " {width: " + css[rule] + "px;}\n";
-                            }
-                            (ge('configcss') || ce('style',
-                            {
-                                id: 'configcss',
-                                type: 'text/css'
-                            }, document.getElementsByTagName('head')[0]))
-                            .innerHTML = cssStr;
-                        }
-                    }
-                },
-                system:
-                {
-                    grid: function()
-                    {
-                        var index = userExcludedFields.indexOf('contractid')
-                        var userIdRenderer = configProxy.getValue('system', 'grid', 'user-idrenderer');
-                        if (index != -1)
-                        {
-                            userExcludedFields.splice(index, 1);
-                        }
+                            user:
+                                    {
+                                        width: function ()
+                                        {
+                                            var cssStr = "";
+                                            if (configProxy.__config.user[userId])
+                                            {
+                                                var css = configProxy.__config.user[userId].width;
+                                                for (var rule in css)
+                                                {
+                                                    var el = rule.split(':');
+                                                    cssStr += '#' + el[0] + "-tab span." + el[1] + " {width: " + css[rule] + "px;}\n";
+                                                }
+                                                (ge('configcss') || ce('style',
+                                                        {
+                                                            id: 'configcss',
+                                                            type: 'text/css'
+                                                        }, document.getElementsByTagName('head')[0]))
+                                                        .innerHTML = cssStr;
+                                            }
+                                        }
+                                    },
+                            system:
+                                    {
+                                        grid: function ()
+                                        {
+                                            var index = userExcludedFields.indexOf('contractid');
+                                            var userIdRenderer = configProxy.getValue('system', 'grid', 'user-idrenderer');
+                                            if (index != -1)
+                                            {
+                                                userExcludedFields.splice(index, 1);
+                                            }
 
-
-                        if (userIdRenderer != 2)
-                        {
-                            userExcludedFields.push('contractid');
+                                            if (userIdRenderer != 2)
+                                            {
+                                                userExcludedFields.push('contractid');
+                                            }
+                                        }
+                                    }
                         }
-                    }
-                }
-            }
-        });
-    }
-    //Nuance.AjaxRequest ('GET', 'ajax.php?action=getacl', null, loadAcl); 
+            });
+}
 
 ajaxProxy.on(['acl'], loadAcl);
 
@@ -2582,6 +2433,6 @@ function checkPermission(path)
 }
 
 ajaxProxy.get('/all/get',
-{
-    activetab: location.hash.replace('#', '')
-});
+        {
+            activetab: location.hash.replace('#', '')
+        });

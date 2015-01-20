@@ -2,11 +2,12 @@ var c = console.log.bind(console);
 RegExp.escape = function (text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
+
 Date.prototype.getJsTime = Date.prototype.getTime;
 Date.prototype.getTime = function ()
 {
     return Math.round(this.getJsTime() / 1000);
-}
+};
 var tabPanelDivider = 0;
 
 Object.defineProperty(Object.prototype, 'hasPath', {
@@ -47,7 +48,8 @@ Array.prototype.pushUnique = function (value)
     {
         return false;
     }
-}
+};
+
 Object.defineProperty(Array.prototype, 'pushUnique', {
     value: function (value)
     {
@@ -103,7 +105,7 @@ HTMLElement.prototype.removeChilds = function ()
     {
         this.removeChild(this.lastChild);
     }
-}
+};
 
 Object.defineProperty(Array.prototype, 'remove', {
     value: function (value)
@@ -125,7 +127,7 @@ URLParams = function (o)
     for (var attrname in o) {
         this[attrname] = o[attrname];
     }
-}
+};
 
 paramsToString = function ()
 {
@@ -135,7 +137,7 @@ paramsToString = function ()
         paramsArr.push(prop + '=' + encodeURIComponent(this[prop]));
     }
     return paramsArr.join('&');
-}
+};
 
 Object.defineProperty(URLParams.prototype, 'toString',
         {
@@ -321,13 +323,15 @@ JSON.parse = function (str)
         console.error("Error while parsing string: ");
         console.error(str);
     }
-}
+};
 
 function ip2long(ip)
 {
     ip = ip.split(".");
     if (ip.length != 4)
+    {
         return 0;
+    }
     else
     {
         for (var i = 0; i < ip.length; i++)
@@ -350,7 +354,8 @@ function getUrlParams(params)
 
 var gt = new Gettext();
 
-function _(msgid) {
+function _(msgid)
+{
     var str = gt.gettext(msgid);
     if (str == msgid && debug)
     {
@@ -389,10 +394,10 @@ function ge(id)
     return document.getElementById(id);
 }
 
-function falsefunc() {
+function falsefunc()
+{
     return false;
 }
-;
 
 function mergeProps(obj1, obj2, allowRewrite)
 {
@@ -466,6 +471,7 @@ function mergeProps(obj1, obj2, allowRewrite)
     }
     return obj3;
 }
+
 function cloneObject(object)
 {
     return mergeProps(object, {}, true);
@@ -481,7 +487,8 @@ function cloneArray(array)
     return newArray;
 }
 
-function mergeProps_old(obj1, obj2, allowRewrite) {
+function mergeProps_old(obj1, obj2, allowRewrite)
+{
     var obj3 = {};
     for (var attrname in obj1) {
         obj3[attrname] = obj1[attrname];
@@ -516,6 +523,7 @@ var Nuance =
             EventMixin: function ()
             {
                 this._eventHandlers = {};
+
                 this.on = function (eventName, handler, immediately)
                 {
                     if (!this._eventHandlers)
@@ -561,9 +569,7 @@ var Nuance =
             },
             AjaxProxy: function (o)
             {
-                var self = this,
-                        response = null,
-                        listeners = [];
+                var self = this, response = null, listeners = [];
 
                 this.trigger = function (newResponse)
                 {
@@ -576,6 +582,7 @@ var Nuance =
                         }
                     }
                 };
+
                 this.get = function (path, params, callback)
                 {
                     function onSuccess(data)
@@ -584,6 +591,7 @@ var Nuance =
                     }
                     Nuance.AjaxRequest("GET", path, params, onSuccess);
                 };
+
                 this.post = function (path, params, callback)
                 {
                     function onSuccess(data)
@@ -593,6 +601,7 @@ var Nuance =
                     }
                     Nuance.AjaxRequest("POST", path, params, onSuccess);
                 };
+
                 this.on = function (path, callback, immediately)
                 {
                     listeners.push([path, callback]);
@@ -615,8 +624,8 @@ var Nuance =
                             path: '*'
                         };
                 Nuance.EventMixin.call(this, o);
-                var loadPath = "/config/get";
                 o.onload && this.on('afterload', o.onload);
+
                 var onsuccess = function (resp)
                 {
                     self.__config = mergeProps(self.__config, resp.config.data, true);
@@ -633,11 +642,13 @@ var Nuance =
                         }
                     }
                     self.trigger('afterload');
-                }
+                };
+
                 this.load = function ()
                 {
-                    ajaxProxy.get(loadPath, null, onsuccess);
-                }
+                    ajaxProxy.get("/config/get", null, onsuccess);
+                };
+
                 this.save = function (type, path, name, value, owner)
                 {
                     var varType = 'string';
@@ -657,10 +668,12 @@ var Nuance =
                             value = JSON.stringify(value);
                             break;
                     }
+
                     function onSuccess(o)
                     {
                         self.trigger('afteredit', o);
                     }
+
                     ajaxProxy.post('/config/set', mergeProps(params,
                             {
                                 type: type
@@ -671,9 +684,9 @@ var Nuance =
                                 , vartype: varType
                                 , value: value
                             }
-                    , true)
-                            );
+                    , true));
                 };
+
                 this.getValue = function (type, path, name, owner)
                 {
                     var value;
@@ -688,21 +701,25 @@ var Nuance =
                     }
                     return value;
                 };
+
                 this.getConfigTree = function (type, owner)
                 {
                     self.trigger('beforeconfigread', type, owner, self.__config[type][owner]);
                     return self.__config[type][owner];
                 };
+
                 this.getDefaults = function (type, owner)
                 {
                     var defaultConfig = cloneObject(self.__default[type]);
                     self.trigger('beforeconfigdefaultsread', type, owner, defaultConfig);
                     return defaultConfig;
                 };
+
                 this.getValues = function (type, path)
                 {
                     return self.__config[type][path];
                 };
+
                 this.setValue = function (type, path, name, value, owner)
                 {
                     owner = (owner === undefined) ? defaultOwner : owner;
@@ -719,6 +736,7 @@ var Nuance =
                     }
                     this.save(type, path, name, value, owner);
                 };
+
                 ajaxProxy.on(['config'], onsuccess);
             },
             AjaxRequest: function (method, path, post, onsuccess, onerror, simpleResponse)
@@ -757,10 +775,12 @@ var Nuance =
                 {
                     xmlHttp.open(method, path, true);
                 }
+
                 if (method === 'POST')
                 {
                     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 }
+
                 xmlHttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
                 xmlHttp.onreadystatechange = function ()
                 {
@@ -786,7 +806,9 @@ var Nuance =
                         else
                         {
                             if (xmlHttp.status == 401)
+                            {
                                 location.href = 'auth.php';
+                            }
                             onerror && onerror(xmlHttp.status, xmlHttp.status ? JSON.parse(xmlHttp.responseText) : null);
                         }
                     }
@@ -861,8 +883,7 @@ var Nuance =
                                         className: 'button',
                                         innerHTML: o.value || ""
                                     },
-                            this.body
-                                    );
+                            this.body);
                             if (o.id)
                             {
                                 self.el.id = o.id;
@@ -1174,7 +1195,6 @@ var Nuance =
                                     }
                                     return false;
                                 }
-
                             };
                             this.setValue = function (value)
                             {
@@ -1229,11 +1249,13 @@ var Nuance =
                                     searchhandler = o.onvaluechange || function () {
                                     },
                                     canSearch = false;
+
                             function handleSearch()
                             {
                                 v = self.getValue();
                                 v && searchhandler(v);
                             }
+
                             function clearSearch()
                             {
                                 self.setValue();
@@ -1288,14 +1310,12 @@ var Nuance =
                         },
                         DateField: function (o)
                         {
-
                             /*
                              *
                              * yearsCount
                              * yearsOffset
                              *
                              */
-
 
                             this.body = ce('div', {className: 'date-field-wrap field-wrap'}, o.target);
                             var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
@@ -1468,7 +1488,7 @@ var Nuance =
                             {
                                 disabled = !!d;
                                 self.el.disabled = disabled;
-                            }
+                            };
                             Nuance.input.__Field.call(this, o);
                         },
                         PasswordField: function (o)
@@ -1489,25 +1509,25 @@ var Nuance =
                             {
                                 realValue = value;
                                 self.el.placeholder = value ? _("Type to change password") : '';
-                            }
+                            };
 
                             this.getRealValue = function ()
                             {
                                 return realValue;
-                            }
+                            };
                             this.getValue = function ()
                             {
                                 return self.el.value || self.getRealValue();
-                            }
+                            };
                             this.isDisabled = function ()
                             {
                                 return disabled;
-                            }
+                            };
                             this.setDisabled = function (d)
                             {
                                 disabled = !!d;
                                 self.el.disabled = disabled;
-                            }
+                            };
                             Nuance.input.__Field.call(this, o);
                         },
                         ViewPasswordField: function (o)
@@ -1544,21 +1564,21 @@ var Nuance =
                             this.setValue = function (value)
                             {
                                 self.el.value = value;
-                            }
+                            };
 
                             this.getValue = function ()
                             {
                                 return self.el.value;
-                            }
+                            };
                             this.isDisabled = function ()
                             {
                                 return disabled;
-                            }
+                            };
                             this.setDisabled = function (d)
                             {
                                 disabled = !!d;
                                 self.el.disabled = disabled;
-                            }
+                            };
                             Nuance.input.__Field.call(this, o);
                         },
                         GenerateViewPasswordField: function (o)
@@ -1581,7 +1601,7 @@ var Nuance =
                                 {
                                     self.toggleView();
                                 }
-                            }
+                            };
                         },
                         FileField: function (o)
                         {
@@ -1594,7 +1614,7 @@ var Nuance =
                             {
                                 if (value)
                                     button.innerHTML = _("Select new file");
-                            }
+                            };
 
                             var el = ce('input', {type: 'file', name: o.name}, self.body);
                             el.style.display = "none";
@@ -1611,7 +1631,7 @@ var Nuance =
                                         button.innerHTML = _("File selected");
                                     }
                                 }
-                            }
+                            };
                             var button = ce('div', {className: 'button file-button', onclick: function (e) {
                                     el.click.call(el, e);
                                 }, innerHTML: value ? _("Select new file") : _("Select file")}, self.body);
@@ -1653,7 +1673,7 @@ var Nuance =
                                     onchange.call(self);
                                     self.trigger('change', checked);
                                 }
-                            }
+                            };
                             el.onkeypress = function (e)
                             {
                                 if (e.which == 32)
@@ -1661,18 +1681,18 @@ var Nuance =
                                     self.setValue(!self.getValue());
                                 }
                                 return false;
-                            }
+                            };
                             this.getPartial = function ()
                             {
                                 return partial;
-                            }
+                            };
                             this.setPartial = function ()
                             {
                                 partial = true;
                                 el.classList.add('partial');
                                 el.classList.remove('checked');
                                 switchEl.innerHTML = partialText;
-                            }
+                            };
                             switchEl.onselectstart = falsefunc;
                             switchEl.onmousedown = falsefunc;
                             this.setValue = function (value)
@@ -1683,7 +1703,7 @@ var Nuance =
                                 el.classList.remove('partial');
                                 el.classList[checked ? 'add' : 'remove']('checked');
                                 switchEl.innerHTML = checked ? onText : offText;
-                            }
+                            };
                             this.getValue = function ()
                             {
                                 var value = checked;
@@ -1697,18 +1717,18 @@ var Nuance =
                                         break;
                                 }
                                 return value;
-                            }
+                            };
                             if (o.value !== null)
                                 this.setValue(o.value);
                             this.isDisabled = function ()
                             {
                                 return disabled;
-                            }
+                            };
                             this.setDisabled = function (d)
                             {
                                 disabled = !!d;
                                 el.classList[disabled ? 'add' : 'remove']('disabled');
-                            }
+                            };
                         },
                         ComboBox: function (o)
                         {
@@ -1762,7 +1782,7 @@ var Nuance =
                             this.getName = function ()
                             {
                                 return name;
-                            }
+                            };
                             function updateSelection()
                             {
                                 var stringValues = [];
@@ -1966,7 +1986,7 @@ var Nuance =
                                 {
                                     close();
                                 }
-                            }
+                            };
                             this.setValue = function (value)
                             {
                                 valueType = typeof value;
@@ -2182,7 +2202,6 @@ var Nuance =
                                     el.classList.add('loading');
                                     self.setDisabled(true);
                                 }
-
                             }
 
                             this.load = function ()
@@ -2241,7 +2260,7 @@ var Nuance =
                             {
                                 tariffCombobox.setDisabled(disabled);
                                 changeButton.style.display = disabled ? 'none' : '';
-                            }
+                            };
 
                             var userId = this.form.recordId;
                             var fieldIndex = o.index;
@@ -2281,7 +2300,6 @@ var Nuance =
                                         refund(moneyflowId,
                                                 function ()
                                                 {
-
                                                     Nuance.stores.user.load(function ()
                                                     {
                                                         var userData = Nuance.stores.user.getById(userId, true);
@@ -2289,8 +2307,7 @@ var Nuance =
                                                     Nuance.stores.activeorder.load(onChange);
                                                 }
                                         );
-                                    }
-                                    );
+                                    });
                                 }
                                 if (userStore.data[userId][fieldIndex] !== selectedTariffId)
                                 {
@@ -2301,6 +2318,7 @@ var Nuance =
                                     changeTariff();
                                 }
                             }
+
                             function onChange()
                             {
                                 changeButton.classList.add('arrowright');
@@ -2373,6 +2391,7 @@ var Nuance =
                                 table.push(self);
                             }
                             var documents;
+
                             function loadDocuments()
                             {
                                 self.body.removeChilds();
@@ -2411,7 +2430,7 @@ var Nuance =
                                 {
                                     loadingPopup.close();
                                     configProxy.load();
-                                }
+                                };
                                 xhr.send(formData);
                             }
                             function docPopup(o)
@@ -2435,7 +2454,7 @@ var Nuance =
                                                     [
                                                         {value: index !== -1 ? _("Edit") : _("Add"), onclick: upload},
                                                         {value: _("Cancel"), onclick: function () {
-                                                                popup.close()
+                                                                popup.close();
                                                             }}
                                                     ]
                                         });
@@ -2507,6 +2526,7 @@ var Nuance =
                                         }}),
                                     table = ce('div', {className: 'tarifflist field'}, this.body),
                                     rows = [];
+
                             function TariffRow(o)
                             {
                                 var row = ce('div', {className: 'tarifflist-row'}, o.target),
@@ -2520,10 +2540,11 @@ var Nuance =
                                 var dlField = new Nuance.input.TextField({value: o.dl ? o.dl : '', target: row});
                                 var ulField = new Nuance.input.TextField({value: o.ul ? o.ul : '', target: row});
                             }
+
                             this.getName = function ()
                             {
                                 return o.name;
-                            }
+                            };
 
                             this.setValue = function (value)
                             {
@@ -2538,7 +2559,8 @@ var Nuance =
                                         break;
                                 }
                                 new TariffRow({target: table});
-                            }
+                            };
+
                             new TariffRow({target: table});
                         },
                         AccountField: function (o)
@@ -2620,7 +2642,6 @@ var Nuance =
                                 var macField = new Nuance.input.TextField({target: tRow});
                                 var deleteButton = new Nuance.input.Button({target: tRow, onclick: this.remove, iconClass: 'remove'});
 
-
                                 function verifyIp(e)
                                 {
                                     var ip = ipField.getValue();
@@ -2636,7 +2657,7 @@ var Nuance =
                                     }
                                     else
                                         new Nuance.MessageBox({title: ":(", text: _("MAC address not found")});
-                                }
+                                };
                                 o.mac && setMacValue(o.mac);
                                 this.remove = function ()
                                 {
@@ -2674,10 +2695,12 @@ var Nuance =
                                 this.getValue = function () {
                                     return [ipField.getValue(), macField.getValue().toLowerCase().replace(/[^0-9a-f]/g, '')]
                                 };
+
                                 this.isDisabled = function ()
                                 {
                                     return disabled;
-                                }
+                                };
+
                                 this.setDisabled = function (d)
                                 {
                                     disabled = !!d;
@@ -2685,12 +2708,11 @@ var Nuance =
                                     toMacButton.setDisabled(disabled);
                                     macField.setDisabled(disabled);
                                     deleteButton.setDisabled(disabled);
-                                }
+                                };
 
                                 toMacButton.el.onclick = macPress;
                                 rows.push(this);
                             }
-
 
                             this.setValue = function (value)
                             {
@@ -2705,7 +2727,8 @@ var Nuance =
                                 {
                                     new IpRow({target: table, ip: prop, mac: value[prop]});
                                 }
-                            }
+                            };
+
                             this.getValue = function ()
                             {
                                 var tmpObj = {};
@@ -2717,12 +2740,13 @@ var Nuance =
                                 }
                                 return JSON.stringify(tmpObj);
                             };
-                            // Add one empty row for new records
 
+                            // Add one empty row for new records
                             this.isDisabled = function ()
                             {
                                 return disabled;
                             };
+
                             this.setDisabled = function (d)
                             {
                                 disabled = !!d;
@@ -2735,7 +2759,6 @@ var Nuance =
                             };
 
                             Nuance.input.__Field.call(this, o);
-
                             var routerField = o.form.getFields()['router'];
                             function toggleMode()
                             {
@@ -2792,17 +2815,15 @@ var Nuance =
                                             localIP[3] = '1';
                                             rows[0].ipField.el.value = localIP.join('.');
                                         }
-                                    }
+                                    };
                                 }
-
                             }
                             routerField.addEventListener('change', toggleMode);
 
                         },
                         PermissionList: function (o)
                         {
-                            var self = this,
-                                    disabled = false;
+                            var self = this, disabled = false;
                             this.body = ce('div', {className: 'permissionlist-field-wrap field-wrap double'}, o.target);
                             var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
                             this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
@@ -2871,8 +2892,6 @@ var Nuance =
                                 }
                                 return aclMap;
                             }
-                            ;
-
 
                             function onCheckboxChange()
                             {
@@ -2902,7 +2921,6 @@ var Nuance =
                                                 hasFalseValues = true;
                                             }
                                         }
-
                                     }
 
                                     if (hasPartialValues || (hasTrueValues && hasFalseValues))
@@ -2915,6 +2933,7 @@ var Nuance =
                                     }
                                     parentNode = parentNode.parentNode;
                                 }
+
                                 function updateChilds(parentNode)
                                 {
                                     for (var checkbox in parentNode)
@@ -3051,7 +3070,7 @@ var Nuance =
                                 var aclMap = generateAclMap();
                                 getValues(aclMap, checkboxTree);
                                 return JSON.stringify(aclMap);
-                            }
+                            };
 
                             var checkboxTree = {};
 
@@ -3067,7 +3086,7 @@ var Nuance =
                             this.isDisabled = function ()
                             {
                                 return disabled;
-                            }
+                            };
 
                             function setCheckboxDisabled(checkboxTree)
                             {
@@ -3084,7 +3103,7 @@ var Nuance =
                             {
                                 disabled = !!d;
                                 setCheckboxDisabled(checkboxTree);
-                            }
+                            };
                             this.setValue('{}');
                             Nuance.input.__Field.call(this, o);
                         }
@@ -3297,7 +3316,7 @@ var Nuance =
                 }
                 this.getFields = function () {
                     return fieldsByName;
-                }
+                };
                 if (o.buttons)
                 {
                     var buttons = o.buttons;
@@ -3327,7 +3346,6 @@ var Nuance =
             },
             PreferencesActivity: function (o)
             {
-
                 var self = this,
                         changedOptions = [],
                         configType = type = o.type,
@@ -3345,6 +3363,7 @@ var Nuance =
 
                 var saveMessage = ce('div', {className: 'save-message flex-wrap', style: 'display: none;'}, tabPanel.contentEl);
                 var saveMessageText = ce('div', {className: 'save-message-text', innerHTML: _("Some settings were changed. Do you want to save it?")}, saveMessage);
+
                 function saveChanges()
                 {
                     for (var i = 0; i < changedOptions.length; i++)
@@ -3356,6 +3375,7 @@ var Nuance =
                     changedOptions = [];
                     saveMessage.style.display = 'none';
                 }
+
                 function discardChanges()
                 {
                     for (var i = 0; i < changedOptions.length; i++)
@@ -3365,12 +3385,13 @@ var Nuance =
                     changedOptions = [];
                     saveMessage.style.display = 'none';
                 }
+                
                 var saveButton = new Nuance.input.Button({value: _("Save"), iconClass: 'ok', target: saveMessage, onclick: saveChanges});
                 var cancelButton = new Nuance.input.Button({value: _("Cancel"), iconClass: 'remove', target: saveMessage, onclick: discardChanges});
-
                 var fields = [];
                 var fieldsTree = {};
                 this.fields = fields;
+
                 this.getValues = function ()
                 {
                     var values = [];
@@ -3382,6 +3403,7 @@ var Nuance =
                     }
                     return values;
                 };
+
                 this.getField = function (fieldName)
                 {
                     for (var i = 0; i < fields.length; i++)
@@ -3389,13 +3411,15 @@ var Nuance =
                         if (fields[i].getName() == fieldName)
                             return fields[i];
                     }
-                }
+                };
+
                 var sections = [];
                 for (var i in currentOwnerConfig)
                 {
                     sections.push(i);
                 }
                 var prevSection;
+
                 function onChange()
                 {
                     if (this.getValue() !== this.initialValue)
@@ -3412,6 +3436,7 @@ var Nuance =
                     }
                     saveMessage.style.display = changedOptions.length ? '' : 'none';
                 }
+
                 for (var n = 0; n < sections.length; n++)
                 {
                     var i = sections[n];
@@ -3443,7 +3468,7 @@ var Nuance =
                             {
                             }
                         }
-                        ;
+
                         var field;
                         var fieldOpts =
                                 {
@@ -3490,7 +3515,6 @@ var Nuance =
                                         fieldOpts.parentList = field;
                                         break;
                                     }
-                                    ;
                                 }
                                 field = new Nuance.input.ComboBox(fieldOpts);
                                 break;
@@ -3499,7 +3523,6 @@ var Nuance =
                                 field = new Nuance.input.TextField(fieldOpts);
                                 break;
                         }
-                        ;
                         field.form = self;
                         field.initialValue = value;
                         field.section = i;
@@ -3520,7 +3543,6 @@ var Nuance =
                 }
 
                 // Cranch: disable some fields which depends on others
-
                 fieldsTree.grid['user-idrenderer'].addEventListener('change', function ()
                 {
                     fieldsTree.grid['user-idrenderer-format'].setDisabled(fieldsTree.grid['user-idrenderer'].getValue() !== 1);
@@ -3547,15 +3569,12 @@ var Nuance =
                         case 'other':
                             fieldsTree.cash['creditMonths'].setDisabled(false);
                             break;
-
                     }
                     onChange.call(fieldsTree.cash['creditMonths']);
-
                 });
 
                 fieldsTree.tariff['nightHourStart'].setValue('00:00:00');
                 fieldsTree.tariff['nightHourStart'].setDisabled(true);
-
 
                 var showNotificationsField = fieldsTree.cash['showNotifications'];
                 showNotificationsField.on('change', function ()
@@ -3564,8 +3583,6 @@ var Nuance =
                     fieldsTree.cash['notificationsOffset'].setDisabled(hideNotificationsPreferencesValue);
                     fieldsTree.cash['notificationsDuration'].setDisabled(hideNotificationsPreferencesValue);
                 }, true);
-
-
             },
             RouterUserPreferencesActivity: function (o)
             {
@@ -3578,7 +3595,6 @@ var Nuance =
                  * configProxy
                  *
                  */
-
                 var self = this,
                         configType = type = o.type,
                         configProxy = o.configProxy,
@@ -3586,7 +3602,6 @@ var Nuance =
                         config = configProxy.getConfigTree(type, owner),
                         defaults = configProxy.getDefaults(type, owner),
                         currentOwnerConfig = mergeProps(defaults, config, true);
-
                 this.save = function ()
                 {
                     for (var d = 0; d < fields.length; d++)
@@ -3600,7 +3615,7 @@ var Nuance =
                             configProxy.setValue(configType, field.section, field.getName(), newValue, owner)
                         }
                     }
-                }
+                };
                 var fields = [];
                 var fieldsTree = {};
                 this.fields = fields;
@@ -3656,7 +3671,7 @@ var Nuance =
                             {
                             }
                         }
-                        ;
+
                         var field;
                         var fieldOpts =
                                 {
@@ -3700,7 +3715,6 @@ var Nuance =
                                         fieldOpts.parentList = field;
                                         break;
                                     }
-                                    ;
                                 }
                                 field = new Nuance.input.ComboBox(fieldOpts);
                                 break;
@@ -3709,7 +3723,6 @@ var Nuance =
                                 field = new Nuance.input.TextField(fieldOpts);
                                 break;
                         }
-                        ;
                         field.form = self;
                         field.section = i;
                         fields.push(field);
@@ -3729,7 +3742,6 @@ var Nuance =
             {
                 var self = this,
                         o = o || {};
-
                 o.title = _("Send broadcast message");
                 function sendBroadcastMessage()
                 {
@@ -3786,7 +3798,6 @@ var Nuance =
             {
                 var self = this,
                         userId = o.userId;
-
                 o.title = _("Messages");
 
                 Nuance.Popup.call(this, o);
@@ -3819,16 +3830,14 @@ var Nuance =
                     var text = newMessageField.getValue();
                     if (text)
                     {
-                        var message =
-                                {
-                                    text: text,
-                                    sender: window.userId,
-                                    sender_is_admin: 1,
-                                    recipient: userId,
-                                    recipient_is_admin: 0,
-                                    date: (new Date).toString(dbDateTimeFormat),
-                                    is_new: 1
-                                };
+                        var message = {
+                            text: text,
+                            sender: window.userId,
+                            sender_is_admin: 1,
+                            recipient: userId,
+                            recipient_is_admin: 0,
+                            date: (new Date).toString(dbDateTimeFormat),
+                            is_new: 1};
                         newMessageField.setValue('');
                         messageStore.add(message);
                     }
@@ -3871,7 +3880,6 @@ var Nuance =
                             }
                             renderMessage(message[ns.text], sender, message[ns.date], message[ns.is_new], message[ns.recipient_is_admin])
                         }
-
                     }
                     historyField.scrollTop = historyField.scrollHeight;
                 }
@@ -3879,14 +3887,11 @@ var Nuance =
                 messageStore.on('afterload', loadHistory, true);
                 messageStore.on('afteradd', loadHistory);
                 messageStore.on('afteredit', loadHistory);
-
-
             },
             StatsPopup: function (o)
             {
                 var infoWindow = new Nuance.Popup({
-                    closable: true,
-                    title: o.title || ''
+                    closable: true, title: o.title || ''
                 });
                 infoWindow._popupWin.classList.add('stat-window');
                 var periods = ['daily', 'weekly', 'monthly', 'yearly'];
@@ -3936,10 +3941,8 @@ var Nuance =
                  
                  */
                 var self = this;
-                var onlyIncludedFields = o.onlyIncludedFields,
-                        excludedFields = o.excludedFields || [],
-                        customFields = o.customFields || {},
-                        includedFields = o.includedFields || [];
+                var onlyIncludedFields = o.onlyIncludedFields, excludedFields = o.excludedFields || [],
+                        customFields = o.customFields || {}, includedFields = o.includedFields || [];
                 excludedFields.push('id');
                 var fieldsByName = {};
                 if (onlyIncludedFields && !includedFields)
@@ -3956,24 +3959,22 @@ var Nuance =
                 this.getValues = function ()
                 {
                     var values = cloneArray(o.store.data[o.recordId] || []);
-                    for (var i = 0; i < fields.length; i++)
-                    {
+                    for (var i = 0; i < fields.length; i++) {
                         values[fields[i].index] = fields[i].getValue();
                     }
                     return values;
                 };
                 this.getField = function (fieldName)
                 {
-                    for (var i = 0; i < fields.length; i++)
-                    {
+                    for (var i = 0; i < fields.length; i++) {
                         if (fields[i].getName() == fieldName)
                             return fields[i];
                     }
-                }
-                this.getFields = function () {
+                };
+                this.getFields = function ()
+                {
                     return fieldsByName;
-                }
-
+                };
                 for (var i = 0; i < o.store.header.length; i++)
                 {
                     var hname = o.store.header[i][0];// header name
@@ -4059,8 +4060,7 @@ var Nuance =
                             {
                                 hname = o.store.header[i][2];
                             }
-                            if (Nuance.stores[hname])
-                            {
+                            if (Nuance.stores[hname]) {
                                 fieldOpts.store = Nuance.stores[hname];
                                 if (!fieldOpts.hasOwnProperty('parentList'))
                                 {
@@ -4093,7 +4093,6 @@ var Nuance =
                             field = new Nuance.input.TextField(fieldOpts);
                             break;
                     }
-                    ;
                     fieldsByName[hname] = field;
                     field.index = i;
                     fields.push(field);
@@ -4158,7 +4157,6 @@ var Nuance =
                         orderStore = Nuance.stores.order,
                         moneyflowStore = Nuance.stores.moneyflow,
                         o = o || {};
-
                 o.title = _("Free internet");
                 o.winLayout = 'double';
                 o.bodyLayout = 'double';
@@ -4185,17 +4183,14 @@ var Nuance =
                     {
                         self.close();
 
-
                         Nuance.grids.user.setState('loading');
                         var newOrderValues =
-                                {
-                                    user: o.user,
+                                {user: o.user,
                                     detailsname: 'tariff',
                                     detailsid: o.tariff,
                                     startdate: Date.today().toString(dbDateTimeFormat),
                                     enddate: Date.today().addDays(duration).addSeconds(-1).toString(dbDateTimeFormat)
-                                }
-
+                                };
                         if (fields.ispaid.getValue())
                         {
                             newOrderValues.temp = 0;
@@ -4220,7 +4215,7 @@ var Nuance =
                                                 user: o.user,
                                                 detailsid: orderId,
                                                 date: Date.today().toString(dbDateTimeFormat)
-                                            }
+                                            };
 
                                     if (fields.ispaid.getValue())
                                     {
@@ -4243,7 +4238,6 @@ var Nuance =
                                         periodEndDate.addMonths(1);
                                         periodEndDate.addSeconds(-1);
 
-
                                         if (withdrawalDay)
                                         {
                                             periodStartDate.addDays(withdrawalDay);
@@ -4256,13 +4250,11 @@ var Nuance =
                                             periodEndDate.addMonths(-1);
                                         }
 
-
                                         var a = periodEndDate.getTime() - periodStartDate.getTime();
                                         var b = endDate.getTime() - startDate.getTime();
 
                                         var tariffStore = Nuance.stores.tariff;
                                         var tariffRow = tariffStore.getById(o.tariff, true);
-
                                         var tariffPrice = tariffRow.price;
                                         var percentage = b / a;
                                         newMoneyflowValues.sum = money(tariffPrice * percentage);
@@ -4358,7 +4350,7 @@ var Nuance =
                     }
                 };
                 o.buttons = [{onclick: okClick, value: _("Fund"), submit: true, iconClass: 'add'}, {onclick: function () {
-                            self.close()
+                            self.close();
                         }, value: _("Cancel"), iconClass: 'remove'}];
                 Nuance.Popup.call(this, o);
 
@@ -4394,7 +4386,6 @@ var Nuance =
                             var order = activeOrder[userId];
                             var currentCash = money(userStore.getById(userId, true).cash);
 
-
                             if (order && !order[Nuance.stores.order.ns.temp])  // User already have inet, propose to pay for next month
                             {
                                 var fullMonthSum = true;
@@ -4403,7 +4394,6 @@ var Nuance =
                             {
                                 var fullMonthSum = false;
                             }
-
 
                             function onSuccess(response)
                             {
@@ -4437,9 +4427,9 @@ var Nuance =
                     self.trigger('save');
                     o.onAdd && o.onAdd();
                     self.close();
-                }
+                };
                 o.buttons = [{onclick: okClick, value: _("Add"), submit: true, iconClass: 'add'}, {onclick: function () {
-                            self.close()
+                            self.close();
                         }, value: _("Cancel"), iconClass: 'remove'}];
                 Nuance.StorePopup.call(this, o);
             },
@@ -4453,12 +4443,12 @@ var Nuance =
                 {
                     self.trigger('save');
                     o.onEdit && o.onEdit();
-                }
+                };
                 o.buttons = [{onclick: okClick, value: _("Save"), submit: true, iconClass: 'ok'}, {onclick: function () {
                             self.close()
                         }, value: _("Cancel"), iconClass: 'remove'}];
                 Nuance.StorePopup.call(this, o);
-                // Disable some fields which are not allowed to change
+                // Disable some fields which are not allowed to change                
                 var fields = this.getFields();
                 for (var i in fields)
                 {
@@ -4467,7 +4457,6 @@ var Nuance =
                         fields[i].setDisabled(true);
                     }
                 }
-
             },
             DeletePopup: function (o)
             {
@@ -4481,7 +4470,7 @@ var Nuance =
                 {
                     self.close();
                     store.del(o.recordId);
-                }
+                };
                 var store = o.store;
                 var storeName = store.name;
                 var id = o.recordId;
@@ -4508,8 +4497,7 @@ var Nuance =
                 var tabPanelSwitch = this.tabPanelSwitch || ce('ul', {id: prefix + 'tabpanel-switch', className: 'tabpanel-switch'}, tabPanelBody);
                 var tabPanelContent = this.tabPanelContent || ce('div', {id: prefix + 'tabpanel-content', className: 'tabpanel-content'}, tabPanelBody);
                 var groups = {};
-                var selectedTab,
-                        tabsSwitchesByIndex = [],
+                var selectedTab, tabsSwitchesByIndex = [],
                         selectedTabId,
                         master = o.master;
                 var scrollWidth = 40;
@@ -4534,11 +4522,11 @@ var Nuance =
                     selectedTab = tabsSwitchesByIndex[index];
                     if (oldIndex !== null && tabsSwitchesByIndex[oldIndex].parentNode.parentNode.classList.contains('group'))
                     {
-                        tabsSwitchesByIndex[oldIndex].parentNode.parentNode.classList.remove('selected')
+                        tabsSwitchesByIndex[oldIndex].parentNode.parentNode.classList.remove('selected');
                     }
                     if (tabsSwitchesByIndex[index].parentNode.parentNode.classList.contains('group'))
                     {
-                        tabsSwitchesByIndex[index].parentNode.parentNode.classList.add('selected')
+                        tabsSwitchesByIndex[index].parentNode.parentNode.classList.add('selected');
                     }
                     selectedTab.classList.add('selected');
                     if (oldIndex !== null)
@@ -4552,16 +4540,16 @@ var Nuance =
                 this.getSelectedTab = function ()
                 {
                     return selectedTab;
-                }
+                };
                 this.getSelectedTabId = function ()
                 {
                     return selectedTabId;
-                }
+                };
                 Nuance.EventMixin.call(this, o);
                 this.selectTabByName = function (name)
                 {
                     self.tabs[name] && self.selectTabById(self.tabs[name].index);
-                }
+                };
                 function createGroup(name)
                 {
                     var groupWrapEl = ce('li', {className: 'group'}, tabPanelSwitch);
@@ -4608,8 +4596,7 @@ var Nuance =
                                     className: 'item',
                                     name: o.name,
                                     innerHTML: o.title
-                                },
-                        switchTarget);
+                                }, switchTarget);
                         if (o.grid)
                         {
                             var tabContent = (new Nuance.Grid(o.grid)).el;
@@ -4617,8 +4604,7 @@ var Nuance =
                         else if (o.content)
                         {
                             var tabContent = o.content;
-                        }
-                        else
+                        } else
                         {
                             var tabContent = ce('div');
                         }
@@ -4658,7 +4644,8 @@ var Nuance =
                     self.selectTabByName(o.selectedTab);
                 }
                 var tabSwitch = tabPanelSwitch.children[0];
-                if (!selectedTab && tabPanelSwitch.children.length) {
+                if (!selectedTab && tabPanelSwitch.children.length)
+                {
                     tabFound = true;
                     selectedTab = tabSwitch;
                     this.selectTabById(tabSwitch.index);
@@ -4672,12 +4659,12 @@ var Nuance =
                 this.getState = function ()
                 {
                     return state;
-                }
+                };
                 this.readOnly = true;
                 this.getState = function ()
                 {
                     return 'loaded';
-                }
+                };
                 Nuance.EventMixin.call(this, o);
                 this.owner = o.owner;
                 this.name = o.name || o.target;
@@ -4706,7 +4693,7 @@ var Nuance =
                     {
                         return this.data[id];
                     }
-                }
+                };
                 this.on = function (eventName, callback)
                 {
                     if (!Array.isArray(callbacks[eventName]))
@@ -4717,7 +4704,7 @@ var Nuance =
                     {
                         callbacks[eventName].push(callback);
                     }
-                }
+                };
                 this.fireEvent = function (eventName, args)
                 {
                     if (Array.isArray(callbacks[eventName]))
@@ -4728,7 +4715,7 @@ var Nuance =
                         }
                     }
                     firstLoad = false;
-                }
+                };
                 var createNs = function ()
                 {
                     var arr = {};
@@ -4748,7 +4735,6 @@ var Nuance =
 
                     var beforeEvent = new Nuance.Event({type: "before" + action});
                     self.trigger('before' + action, beforeEvent, id, postData);
-
                     var afterEvent = new Nuance.Event({type: "after" + action});
                     self.trigger('after' + action, afterEvent, id, postData);
                     callback(postData);
@@ -4796,19 +4782,19 @@ var Nuance =
                 this.setState = function (newState)
                 {
                     state = newState;
-                }
+                };
                 this.getState = function ()
                 {
                     return state;
-                }
+                };
                 this.setFilter = function (value)
                 {
                     filterStr = value ? value : '*';
-                }
+                };
                 this.getFilter = function ()
                 {
                     return filterStr;
-                }
+                };
                 this.readOnly = o.readOnly;
                 this.owner = o.owner;
                 this.name = o.name || o.target;
@@ -4827,7 +4813,6 @@ var Nuance =
                 {
                     this.getNameById = o.getNameByIdFn;
                 }
-
                 this.getById = function (id, asObject)
                 {
                     if (asObject && this.data[id])
@@ -4843,7 +4828,7 @@ var Nuance =
                     {
                         return this.data[id];
                     }
-                }
+                };
                 var createNs = function ()
                 {
                     var arr = {};
@@ -4853,10 +4838,12 @@ var Nuance =
                     }
                     return arr;
                 };
+
                 this.getLastLoadTime = function ()
                 {
                     return lastLoadTime;
-                }
+                };
+
                 var loadData = function (r)
                 {
                     lastLoadTime = (new Date).getTime();
@@ -4880,8 +4867,7 @@ var Nuance =
                     }
                     else
                     {
-                        for (var i = 0; i < deleted.length; i++)
-                        {
+                        for (var i = 0; i < deleted.length; i++) {
                             delete self.data[deleted[i]];
                         }
                         for (var id in data)
@@ -4910,27 +4896,28 @@ var Nuance =
                     self.trigger('afterload');
                     if (typeof callback === 'function')
                         callback();
-                }
+                };
+
                 this.load = function (callback)
                 {
                     state = 'loading';
                     self.trigger('beforeload');
 
-
                     var path = o.path ? o.path : "db/" + o.target + '/get?filter=' + filterStr;
                     Nuance.AjaxRequest("GET", path, null, onSuccess);
                 };
+
                 this.on('afterload', function ()
                 {
                     firstLoad = false;
                 });
+
                 this.send = function (action, id, postData, cb)
                 {
                     var callback = cb || falsefunc;
 
                     var beforeEvent = new Nuance.Event({type: "before" + action});
                     self.trigger('before' + action, beforeEvent, id, postData);
-
                     function onerror()
                     {
                         var errorEvent = new Nuance.Event({type: action + 'error'});
@@ -4942,13 +4929,12 @@ var Nuance =
                         var afterEvent = new Nuance.Event({type: "after" + action});
                         self.trigger('after' + action, afterEvent, id, postData);
                         callback(response, postData);
-                        c('onsucc')
-                    }
+                        c('onsucc');
+                    };
 
                     ajaxProxy.post("/db/" + target + "/" + action, (postData ? postData.toString() : null), onsuccess);
-                    //ajaxProxy.on(['db', o.target], onSuccess,false);
-
                 };
+
                 this.add = function (values, callback)
                 {
                     if (values)
@@ -4975,6 +4961,7 @@ var Nuance =
                         throw new Error('Please provide values to store.add');
                     }
                 };
+                
                 this.edit = function (id, values, callback)
                 {
                     var postData = new URLParams;
@@ -5016,7 +5003,6 @@ var Nuance =
                 this.setFilter(o.filter);
                 o.forceLoad && this.load();
                 ajaxProxy.on(o.subscribePath || ['db', o.target], onSuccess, false);
-
                 // Add self to the global stores list
                 if (this.name)
                 {
@@ -5029,7 +5015,6 @@ var Nuance =
                         throw new Error("Store with name '" + this.name + "' already exists");
                     }
                 }
-
             },
             WidgetPanel: function (o)
             {
@@ -5042,14 +5027,12 @@ var Nuance =
                 this.body = ce('div', {className: 'widget-panel-wrap'}, o.target);
                 this.el = ce('div', {className: 'widget-panel'}, this.body);
 
-
                 this.availableWidget = {};
 
                 this.registerWidget = function (o)
                 {
                     this.availableWidgets[o.name] = o;
-                }
-
+                };
 
                 this.enabledWidgets =
                         [
@@ -5072,13 +5055,12 @@ var Nuance =
 
                 this.initWidgets = function (o)
                 {
-                    for (var i = 0; i < self.enabledWidgets.length; i++)
-                    {
+                    for (var i = 0; i < self.enabledWidgets.length; i++) {
                         var widgetOptions = self.enabledWidgets[i];
                         widgetOptions.target = self.el;
                         new widgetOptions.type(widgetOptions);
                     }
-                }
+                };
             },
             widget:
                     {
@@ -5096,7 +5078,7 @@ var Nuance =
                                 var adminPaymentsRow = ce('p', {className: 'widget-row'}, self.content);
                                 ce('span', {className: 'widget-option', innerHTML: _("Sum of cashier payments")}, adminPaymentsRow);
                                 var adminPaymentsValue = ce('span', {className: 'widget-value'}, adminPaymentsRow);
-                            }
+                            };
                         },
                         WidgetRow: function (o)
                         {
@@ -5108,13 +5090,12 @@ var Nuance =
                             {
                                 valueEl.innerHTML = value;
                                 valueEl.classList.remove('loading');
-                            }
+                            };
 
                             if (o.loading)
                             {
                                 valueEl.classList.add('loading');
                             }
-
                         },
                         PaymentsStatisticsWidget: function (o)
                         {
@@ -5123,7 +5104,7 @@ var Nuance =
                             var options =
                                     {
                                         title: _('Payments statistics')
-                                    }
+                                    };
                             o = mergeProps(o, options, true);
                             Nuance.widget.__Widget.call(this, o);
 
@@ -5204,7 +5185,6 @@ var Nuance =
                                 monthSelector.on('change', displayStatistics);
                             }
                             ajaxProxy.on(['statistics'], onLoad);
-                            //Nuance.AjaxRequest('GET', 'ajax.php?action=getstatistics', null, onLoad);
                         },
                         PotentialPaymentsStatisticsWidget: function (o)
                         {
@@ -5212,13 +5192,12 @@ var Nuance =
                             var options =
                                     {
                                         title: _('Potential payments statistics')
-                                    }
+                                    };
                             o = mergeProps(o, options, true);
                             Nuance.widget.__Widget.call(this, o);
 
                             var userStore = Nuance.stores.user;
                             var tariffStore = Nuance.stores.tariff;
-
                             function onLoad()
                             {
                                 self.content.removeChilds();
@@ -5272,7 +5251,7 @@ var Nuance =
                             var options =
                                     {
                                         title: _('Settlements statistics')
-                                    }
+                                    };
                             o = mergeProps(o, options, true);
                             Nuance.widget.__Widget.call(this, o);
 
@@ -5309,8 +5288,7 @@ var Nuance =
                                                 {
                                                     return 1;
                                                 }
-                                                else if (usersByCity[a] > usersByCity[b])
-                                                {
+                                                else if (usersByCity[a] > usersByCity[b]) {
                                                     return -1;
                                                 }
                                                 else
@@ -5339,14 +5317,13 @@ var Nuance =
                             var options =
                                     {
                                         title: _('Tariff statistics')
-                                    }
+                                    };
                             o = mergeProps(o, options, true);
                             Nuance.widget.__Widget.call(this, o);
 
                             this.el.classList.add('tariff-statistics-widget');
                             var userStore = Nuance.stores.user;
                             var tariffStore = Nuance.stores.tariff;
-
                             function onLoad()
                             {
                                 self.content.removeChilds();
@@ -5396,9 +5373,7 @@ var Nuance =
                                         var count = ce('span', {className: 'widget-value', innerHTML: usersByTariff[n] + ' (' + Math.round(usersByTariff[n] / usersCount * 100) + '%)'}, row);
                                     }
                                 }
-
                             }
-
 
                             userStore.on('afterload', onLoad, true);
                             tariffStore.on('afterload', onLoad, true);
@@ -5409,13 +5384,12 @@ var Nuance =
                             var options =
                                     {
                                         title: _('Subscribers statistics')
-                                    }
+                                    };
                             o = mergeProps(o, options, true);
                             Nuance.widget.__Widget.call(this, o);
                             var userStore = Nuance.stores.user;
                             var orderStore = Nuance.stores.activeorder;
                             var routerStore = Nuance.stores.router;
-
                             var activeUsersCountRow = new Nuance.widget.WidgetRow(
                                     {
                                         title: _("Number of active subscribers"),
@@ -5426,16 +5400,14 @@ var Nuance =
 
                             var inactiveUsersCountRow = new Nuance.widget.WidgetRow(
                                     {
-                                        title: _("Number of inactive subscribers"),
-                                        target: self.content,
+                                        title: _("Number of inactive subscribers"), target: self.content,
                                         loading: true
                                     }
                             );
 
                             var disabledUsersCountRow = new Nuance.widget.WidgetRow(
                                     {
-                                        title: _("Number of disabled subscribers"),
-                                        target: self.content,
+                                        title: _("Number of disabled subscribers"), target: self.content,
                                         loading: true
                                     }
                             );
@@ -5483,6 +5455,7 @@ var Nuance =
 
                             function onRouterStatesLoad()
                             {
+                                return;
                                 var onlineUsersCount = 0;
 
                                 var allRoutersCount = 0;
@@ -5502,16 +5475,6 @@ var Nuance =
                                 }
                                 onlineUsersCountValue.classList.remove('loading');
                                 onlineUsersCountValue.innerHTML = onlineUsersCount;
-                                /*
-                                 if (allRoutersCount !== onlineRoutersCount)
-                                 {
-                                 onlineUsersCountRoutersCount.innerHTML="&nbsp;"+sprintf(gt.ngettext("(information are displayed for %d router)", "(information are displayed for %d routers)", onlineRoutersCount), onlineRoutersCount);
-                                 }
-                                 else
-                                 {
-                                 onlineUsersCountRoutersCount.innerHTML='';
-                                 }*/
-
                             }
 
                             function onUserStoreLoad()
@@ -5519,7 +5482,6 @@ var Nuance =
                                 var allUsersCount = userStore.length;
 
                                 allUsersCountRow.setValue(allUsersCount);
-
                             }
 
                             function onRouterStoreLoad()
@@ -5546,8 +5508,7 @@ var Nuance =
                                 onUserStoreLoad();
                             }
 
-                            if (orderStore.getState() !== 'loaded')
-                            {
+                            if (orderStore.getState() !== 'loaded') {
                                 orderStore.on('afterload', onOrderStoreLoad);
                                 orderStore.on('afterload', calculateInactiveUsers);
                             }
@@ -5559,18 +5520,15 @@ var Nuance =
                     },
             Grid: function (opts)
             {
-                this.el = ce('div', {id: opts.name + '-tab', className: 'grid'}, opts.target); //grid body
-                var self = this,
-                        coverWrap = ce('div', {id: opts.name + '-cover-wrap', className: 'cover-wrap'}, this.el),
-                        cover = ce('div', {id: opts.name + '-cover', className: 'cover'}, coverWrap),
-                        coverTextWrap = ce('p', {className: 'cover-text-wrap'}, cover),
-                        coverText = ce('span', {className: 'cover-text'}, coverTextWrap),
-                        name = opts.name,
-                        gridState,
-                        filters = opts.filters || [],
-                        sortname,
-                        sortdesc,
-                        waitForStores = opts.waitForStores || [],
+                this.el = ce('div', {id: opts.name + '-tab', className: 'grid'}, opts.target);
+                //grid body                 
+                var self = this;
+                var coverWrap = ce('div', {id: opts.name + '-cover-wrap', className: 'cover-wrap'}, this.el);
+                var cover = ce('div', {id: opts.name + '-cover', className: 'cover'}, coverWrap);
+                var coverTextWrap = ce('p', {className: 'cover-text-wrap'}, cover);
+                var coverText = ce('span', {className: 'cover-text'}, coverTextWrap);
+                var name = opts.name;
+                var gridState, filters = opts.filters || [], sortname, sortdesc, waitForStores = opts.waitForStores || [],
                         hiddenCols = opts.hiddenCols || [],
                         userHiddenCols = configProxy.getValue('user', 'grid', name + '-hiddenCols', userId) || [];
                 this.excludedFields = opts.excludedFields || [];
@@ -5582,7 +5540,6 @@ var Nuance =
                         };
 
                 var proxyParams = mergeProps(storeDefaultProps, opts.proxyParams, true);
-
                 if (opts.store)
                 {
                     if (opts.store.constructor === Nuance.Store || opts.store.constructor === Nuance.MemoryStore)
@@ -5616,13 +5573,10 @@ var Nuance =
                             });
                             self.trigger('save');
                         }
-                        ;
                         var form = new Nuance.AddPopup(
-                                {
-                                    store: self.store,
+                                {store: self.store,
                                     customFields: opts.customFields,
-                                    onlyIncludedFields: opts.onlyIncludedFields,
-                                    excludedFields: self.excludedFields,
+                                    onlyIncludedFields: opts.onlyIncludedFields, excludedFields: self.excludedFields,
                                     includedFields: opts.includedFields,
                                     recordId: 0,
                                     onAdd: onAdd
@@ -5639,11 +5593,10 @@ var Nuance =
                                 }
                         );
                     }
-                }
+                };
                 this.onEdit = function ()
                 {
-                    if (selectedItems.length === 1 && !opts.readOnly)
-                    {
+                    if (selectedItems.length === 1 && !opts.readOnly) {
                         function onEdit()
                         {
                             var values = form.getValues();
@@ -5653,13 +5606,12 @@ var Nuance =
                             self.trigger('afteredit', values);
                             self.trigger('save');
                         }
-                        ;
+
                         var form = new Nuance.EditPopup(
                                 {
                                     store: self.store,
                                     customFields: opts.customFields,
-                                    onlyIncludedFields: opts.onlyIncludedFields,
-                                    excludedFields: self.excludedFields,
+                                    onlyIncludedFields: opts.onlyIncludedFields, excludedFields: self.excludedFields,
                                     includedFields: opts.includedFields,
                                     recordId: self.recordId || selectedItems[0],
                                     onEdit: onEdit
@@ -5667,7 +5619,7 @@ var Nuance =
                         );
                         self.trigger('editform', form);
                     }
-                }
+                };
                 this.onDel = function ()
                 {
                     if (selectedItems.length === 1)
@@ -5679,13 +5631,13 @@ var Nuance =
                                 }
                         );
                     }
-                }
+                };
                 var dependentStores = [];
                 this.addDependentStore = function (name)
                 {
                     if (dependentStores.indexOf(name) === -1)
                         dependentStores.push(name);
-                }
+                };
 
                 if (!opts.readOnly)
                 {
@@ -5741,9 +5693,9 @@ var Nuance =
                     var toolbarButtons = [];
                 }
                 toolbarButtons.push({onclick: self.store.load, iconClass: 'reload', scope: self});
-
-                var toolbarEl = ce('div', {className: 'toolbar'}, this.el), //grid toolbar
-                        filtersWrapEl = ce('div', {className: "filter-wrap"}, this.el),
+                var toolbarEl = ce('div', {className: 'toolbar'}, this.el);
+                //grid toolbar
+                var filtersWrapEl = ce('div', {className: "filter-wrap"}, this.el),
                         filtersEl = ce('div', {className: "filter"}, filtersWrapEl),
                         buttons = [],
                         gridTableHeader = ce('div', {className: 'header'}, self.el),
@@ -5776,8 +5728,6 @@ var Nuance =
                 this.getName = function () {
                     return name;
                 };
-
-
                 var horizontalScroll;
                 gridTable.addEventListener(
                         'scroll',
@@ -5793,14 +5743,13 @@ var Nuance =
                 gridTable.onselectstart = function (e)
                 {
                     e.preventDefault();
-                }
+                };
                 gridTable.ondblclick = function (e)
                 {
-                    if (gridState === 'normal')
-                    {
+                    if (gridState === 'normal') {
                         dblClickHandler(e);
                     }
-                }
+                };
 
                 gridTable.oncontextmenu = gridTable.onclick = function (e)
                 {
@@ -5828,18 +5777,18 @@ var Nuance =
                         }
                     }
                     return false;
-                }
+                };
 
                 opts.sorters = mergeProps(Nuance.globalSorters, opts.sorters, true);
                 Nuance.grids[opts.name] = this;
                 this.getSelectedItems = function ()
                 {
                     return selectedItems;
-                }
+                };
                 this.getTableEl = function ()
                 {
                     return gridTable;
-                }
+                };
                 this.addButton = function (btn)
                 {
                     if (Array.isArray(btn)) // if it is button group
@@ -5883,7 +5832,6 @@ var Nuance =
                     {
                         buttons[i].onselectionchange && buttons[i].onselectionchange(self.getSelectedItems(), self);
                     }
-                    ;
                 }
                 function selectRow(id, multiSelect)
                 {
@@ -5926,7 +5874,7 @@ var Nuance =
                         }
                     }
                 }
-                ;
+
                 function selectAllRows()
                 {
                     selectedItems = cloneArray(dataOrder);
@@ -5936,13 +5884,14 @@ var Nuance =
                         gridTable.children[i].classList.add('selected');
                     }
                 }
-                ;
+
                 var unselectRow = function ()
                 {
                     selectedRow = null;
                     selectedItems = [];
                     fireOnSelectionChange();
-                }
+                };
+
                 fireOnSelectionChange();
                 this.setState = function (state)
                 {
@@ -5971,7 +5920,6 @@ var Nuance =
                     {
                         self.el.insertBefore(coverWrap, gridTable);
                     }
-
                     switch (state)
                     {
                         case 'loading':
@@ -6012,15 +5960,16 @@ var Nuance =
                         }
                     }
                     gridState = state;
-                }
+                };
+
                 function loadDependentStores()
                 {
                     var header = self.store.header;
                     var types = ['link', 'multilink', 'tarifflink'];
-                    for (var i = 0; i < header.length; i++)
+                    for (var i = 0; i < header.length; i++) 
                     {
                         var type = header[i][1];
-                        var name = header[i][0];// header name
+                        var name = header[i][0];// header name                         
                         if (types.indexOf(type) !== -1 && name !== 'referrer')
                         {
                             self.addDependentStore(name);
@@ -6047,19 +5996,16 @@ var Nuance =
                         displayData[id] = [];
                         sourceData[id] = [];
                     }
-                    for (var d = 0; d < header.length; d++)
-                    {
+                    for (var d = 0; d < header.length; d++) {
                         for (var j in virtualFields)
                         {
                             if (virtualFields[j].order === d)
                             {
                                 var hname = j;
 
-                                if (userHiddenCols.indexOf(hname) !== -1 || hiddenCols.indexOf(hname) !== -1)
-                                {
+                                if (userHiddenCols.indexOf(hname) !== -1 || hiddenCols.indexOf(hname) !== -1) {
                                     continue;
                                 }
-                                ;
 
                                 newHeader.push([j, 'text']);
                                 displayNs[hname] = newHeader.length - 1;
@@ -6080,7 +6026,6 @@ var Nuance =
                                         displayData[id][displayData[id].length - 1] = opts.customRenderers[hname](displayData[id][displayData[id].length - 1], data[id], ns);
                                     }
                                 }
-
                             }
                         }
 
@@ -6090,7 +6035,6 @@ var Nuance =
                         {
                             continue;
                         }
-                        ;
                         switch (htype)
                         {
                             case 'multilink':
@@ -6103,8 +6047,7 @@ var Nuance =
                                 {
                                     var names = [];
                                     var ids = data[id][d];
-                                    for (var i = 0; i < ids.length; i++)
-                                    {
+                                    for (var i = 0; i < ids.length; i++) {
                                         names.push(Nuance.stores[hname].getNameById(ids[i]));
                                     }
                                     displayData[id].push(names.join(', '));
@@ -6172,11 +6115,9 @@ var Nuance =
                                 break;
                             }
                         }
-                        ;
 
                         newHeader.push(header[d]);
                         displayNs[hname] = newHeader.length - 1;
-
                         for (var id in data)
                         {
                             sourceData[id].push(data[id][d]);
@@ -6190,13 +6131,13 @@ var Nuance =
                 this.remoteSort = function ()
                 {
                     sort(configProxy.getValue('user', 'sorter', name, userId), configProxy.getValue('user', 'sorter', name + 'direction', userId));
-                }
+                };
                 this.setSorting = function (sn, sd)
                 {
                     sortname = sn;
                     sortdesc = sd;
                     scrollOffset = 0;
-                }
+                };
                 var sort = function ()
                 {
                     if (!self.store.header || !self.store.header.length)
@@ -6205,11 +6146,11 @@ var Nuance =
                     var index = 0;
                     for (var col in self.displayHeader)
                     {
-                        if (self.displayHeader[col][0] == sortname) {
+                        if (self.displayHeader[col][0] == sortname) 
+                        {
                             index = col;
                             break;
                         }
-                        ;
                     }
                     var hname = self.displayHeader[index][0];
                     var htype = self.displayHeader[index][1];
@@ -6225,15 +6166,12 @@ var Nuance =
                         {
                             dataOrder.push(id);
                         }
-
-                        if (opts.sorters && opts.sorters[htype])
-                        {
+                        if (opts.sorters && opts.sorters[htype]) {
                             dataOrder.sort(function (a, b) {
                                 return (opts.sorters[htype](self.displayData[a][index], self.sourceData[a][index]) > opts.sorters[htype](self.displayData[b][index], self.sourceData[b][index])) ? 1 : -1
                             });
                         }
-                        else if (opts.sorters && opts.sorters[hname])
-                        {
+                        else if (opts.sorters && opts.sorters[hname]) {
                             dataOrder.sort(function (a, b) {
                                 return (opts.sorters[hname](self.displayData[a][index], self.sourceData[a][index]) > opts.sorters[hname](self.displayData[b][index], self.sourceData[b][index])) ? 1 : -1
                             });
@@ -6255,8 +6193,7 @@ var Nuance =
                     sorterCol = gridTableHeader.children[index * 2];
                 };
                 this.sort = sort;
-                var onSortHeaderClick = function ()
-                {
+                var onSortHeaderClick = function () {
                     if (this == sorterCol)
                     {
                         this.classList.toggle('sort-up');
@@ -6264,8 +6201,7 @@ var Nuance =
                         dataOrder = dataOrder.reverse();
                         sortdesc = !sortdesc;
                     }
-                    else
-                    {
+                    else {
                         sorterCol.classList.remove('sort-down');
                         sorterCol.classList.remove('sort-up');
                         self.setSorting(this.classList[0], false);
@@ -6279,6 +6215,7 @@ var Nuance =
                 {
                     searchStr = value ? new RegExp('(' + RegExp.escape(value) + ')(?!([^<]+)?>)', 'i') : value;
                 }
+
                 this.setSearch = function (v)
                 {
                     setSearch(v);
@@ -6289,7 +6226,7 @@ var Nuance =
                     }
                     scrollOffset = 0;
                 };
-
+                
                 function search()
                 {
                     if (searchStr)
@@ -6315,14 +6252,12 @@ var Nuance =
                         }
                     }
                 }
+
                 var filtersIsLoaded = false, filtersComboboxes = {}, filtersIsDisplayed = false;
                 function filter()
                 {
-                    var data = self.store.data,
-                            displayData = self.displayData,
-                            foundRow;
-                    for (var i in filtersComboboxes)
-                    {
+                    var data = self.store.data, displayData = self.displayData, foundRow;
+                    for (var i in filtersComboboxes) {
                         var combobox = filtersComboboxes[i];
                         var value = combobox.getValue();
                         var columnName = combobox.getName();
@@ -6366,8 +6301,7 @@ var Nuance =
                     for (var i = 0; i < self.store.header.length; i++)
                     {
                         var column = self.store.header[i];
-                        if (filters[column[0]] !== false && !filters[column[0]])
-                        {
+                        if (filters[column[0]] !== false && !filters[column[0]]) {
                             if (column[1].substr(column[1].length - 4) === 'link')
                             {
                                 if (typeof column[2] === 'string' && Nuance.stores[column[2]])
@@ -6389,19 +6323,18 @@ var Nuance =
                                 filters[column[0]] =
                                         {
                                             name: column[0],
-                                            store: new Nuance.MemoryStore(
-                                                    {
-                                                        header:
-                                                                [
-                                                                    ['id', 'text'],
-                                                                    ['name', 'text']
-                                                                ],
-                                                        data:
-                                                                {
-                                                                    'yes': ['yes', _("Yes")],
-                                                                    'no': ['no', _("No")]
-                                                                }
-                                                    }
+                                            store: new Nuance.MemoryStore({
+                                                header:
+                                                        [
+                                                            ['id', 'text'],
+                                                            ['name', 'text']
+                                                        ],
+                                                data:
+                                                        {
+                                                            'yes': ['yes', _("Yes")],
+                                                            'no': ['no', _("No")]
+                                                        }
+                                            }
                                             ),
                                             filterFunction: function (id, selectedValue)
                                             {
@@ -6417,7 +6350,6 @@ var Nuance =
                                         };
                             }
                         }
-
                     }
 
                     for (var i in filters)
@@ -6453,8 +6385,8 @@ var Nuance =
                         filtersEl.innerHTML = '<span class="filter-text">' + _("There are no available filters") + '</span>';
                     }
                     filtersIsLoaded = true;
-
                 }
+
                 function showFilters()
                 {
                     if (!filtersIsLoaded)
@@ -6484,6 +6416,7 @@ var Nuance =
                         showFilters();
                     }
                 }
+
                 function setFilters(newFilters)
                 {
                     if (newFilters)
@@ -6503,6 +6436,7 @@ var Nuance =
                         hideFilters();
                     }
                 }
+
                 this.setFilters = setFilters;
                 new Nuance.input.StretchField({target: toolbarEl});
                 var searchBar = new Nuance.input.SearchField({target: toolbarEl, onvaluechange: function (v) {
@@ -6512,13 +6446,11 @@ var Nuance =
                 var filterButton = new Nuance.input.Button({target: toolbarEl, iconClass: "filter", onlyIcon: true, onclick: toggleFilters});
                 gridTableHeader.onmousedrag = falsefunc;
                 gridTableHeader.onselectstart = falsefunc;
-                var drawHeader = function ()
-                {
+                var drawHeader = function () {
                     // Creating header
                     var header = self.displayHeader;
                     gridTableHeader.innerHTML = '';
-                    for (var d = 0; d < header.length; d++)
-                    {
+                    for (var d = 0; d < header.length; d++) {
                         ce(
                                 'span',
                                 {
@@ -6534,9 +6466,7 @@ var Nuance =
                         var onmousedown = function (e)
                         {
                             var self = this,
-                                    targetRow = self.previousSibling,
-                                    classN = targetRow.classList[0],
-                                    cursorOffset = -4,
+                                    targetRow = self.previousSibling, classN = targetRow.classList[0], cursorOffset = -4,
                                     rect = targetRow.getBoundingClientRect(),
                                     cover = ce('div', {className: 'resize-cover'}, targetRow);
 
@@ -6547,7 +6477,7 @@ var Nuance =
                             document.onmousemove = function (e)
                             {
                                 cover.style.width = targetRow.style.width = (e.pageX - rect.left) + cursorOffset + "px";
-                            }
+                            };
                             document.onmouseup = function ()
                             {
                                 document.onmouseup = document.onmousemove = self.onmouseup = null;
@@ -6555,10 +6485,10 @@ var Nuance =
                                 gridTable.classList.remove('resizing');
                                 configProxy.setValue('user', "width", name + ":" + targetRow.classList[0], targetRow.offsetWidth - 8, userId);
                                 targetRow.removeChild(cover);
-                            }
+                            };
                             e.preventDefault();
                             document.onmousemove(e);
-                        }
+                        };
 
                         ce(
                                 'p',
@@ -6583,9 +6513,7 @@ var Nuance =
                         var options = [];
                         var header = self.store.header,
                                 newHeader = [];
-                        for (var d = 0; d < header.length; d++)
-                        {
-
+                        for (var d = 0; d < header.length; d++) {
                             for (var j in virtualFields)
                             {
                                 if (virtualFields[j].order === d)
@@ -6599,8 +6527,7 @@ var Nuance =
 
                         var header = newHeader;
 
-                        for (var i = 0; i < header.length; i++)
-                        {
+                        for (var i = 0; i < header.length; i++) {
                             var columnName = header[i][0];
                             if (hiddenCols.indexOf(columnName) === -1 ||
                                     (virtualFields[columnName] && hiddenCols.indexOf(columnName) === -1)
@@ -6656,7 +6583,7 @@ var Nuance =
                             );
                         }
                         return false;
-                    }
+                    };
                     var headerRightButton = ce('div',
                             {
                                 className: 'header-context-menu-button icon check',
@@ -6680,13 +6607,12 @@ var Nuance =
                             );
 
                     gridTableHeader.scrollLeft = 0;
-                }
+                };
                 var topRenderedRow = 0;
                 var bottomRenderedRow = -1;
                 var oldScrollTop;
                 var surroundRows = 20;
-                if (window.tableRowComputedHeight)
-                {
+                if (window.tableRowComputedHeight) {
                     var rowHeight = window.tableRowComputedHeight;
                 }
                 else
@@ -6711,8 +6637,7 @@ var Nuance =
                         var anyProp = prop;
                         break;
                     }
-                    for (var d = 0; d < self.displayData[anyProp].length; d++)
-                    {
+                    for (var d = 0; d < self.displayData[anyProp].length; d++) {
                         ce('span', {className: 'table-cell ' + self.displayHeader[d][0]}, gridTableRow);
                     }
                 }
@@ -6734,7 +6659,8 @@ var Nuance =
                     {
                         self.displayData[id][self.displayNs[name]] = value;
                     }
-                }
+                };
+
                 function renderRows()
                 {
                     if (gridTable.offsetHeight)
@@ -6783,8 +6709,7 @@ var Nuance =
 
                     var rowsCount = endEl - startEl + 2;
                     topStretchEl.style.height = startEl * rowHeight + 'px';
-                    if (scrollUp)
-                    {
+                    if (scrollUp) {
                         while (gridTable.children[rowsCount])
                         {
                             gridTable.removeChild(gridTable.children[rowsCount]);
@@ -6801,15 +6726,13 @@ var Nuance =
                     }
 
                     oldScrollTop = gridTable.scrollTop;
-
                     topRenderedRow = startEl;
                     bottomRenderedRow = endEl;
 
                     for (var i = 0; i < selectedItems.length; i++)
                     {
                         var row = document.getElementById(name + '-' + selectedItems[i]);
-                        if (row)
-                        {
+                        if (row) {
                             row.classList.add('selected');
                         }
                     }
@@ -6828,8 +6751,7 @@ var Nuance =
                 var needToRender = true;
                 this.render = function ()
                 {
-                    if (name === 'user' && !activeOrder)
-                    {
+                    if (name === 'user' && !activeOrder) {
                         return;
                     }
                     gridTable.onscroll = false;
@@ -6846,7 +6768,6 @@ var Nuance =
                     filter();
                     search();
                     stretchEl.style.height = (rowHeight * dataOrder.length) + 'px';
-
 
                     if (self.store.getState() === 'loading')
                     {
@@ -6883,7 +6804,6 @@ var Nuance =
                         gridTable.onscroll = tableOnScroll;
                         var storeLength = self.store.length;
                         statusBar.classList.add('icon');
-
                         if (storeLength !== dataOrder.length)
                         {
                             if (document.body.offsetWidth < 1024)
@@ -6908,7 +6828,6 @@ var Nuance =
                         }
                     }
 
-
                     if (dataOrder.indexOf(lastSelectedItem) !== -1)
                     {
                         var selectedRow = ge(name + '-' + lastSelectedItem);
@@ -6916,7 +6835,7 @@ var Nuance =
                             gridTable.scrollTop = selectedRow.offsetTop - 80;
                     }
                     needToRender = false;
-                }
+                };
 
                 self.setSorting(configProxy.getValue('user', 'sorter', name, userId), configProxy.getValue('user', 'sorter', name + 'direction', userId));
                 function beforeAction()
@@ -6928,10 +6847,7 @@ var Nuance =
                 self.store.on('beforeedit', beforeAction);
                 self.store.on('beforeremove', beforeAction);
 
-
-
                 // Check if all helper stores are loaded
-
                 waitForStores.push(self.store.name);
 
                 self.onDataChange = function ()
@@ -6947,13 +6863,14 @@ var Nuance =
                             renderRows();
                         }
                     }
-                }
+                };
 
                 function forceRender()
                 {
                     needToRender = true;
                     self.onDataChange();
                 }
+
                 function onKeyPress(e)
                 {
                     if (TabPanel.getSelectedTab().name === name && self.store.getState() === 'loaded')
@@ -6981,20 +6898,17 @@ var Nuance =
                 }
 
                 this.store.on('afterload', setHooks);
-
             },
             LicenseManager: function ()
             {
                 var self = this;
-
                 var licenseData = configProxy.getValue('var', 'main', 'licenseData');
-
                 this.checkPermission = function (name)
                 {
                     if (typeof licenseData == 'object')
                     {
                         return licenseData.restrictions[name];
                     }
-                }
+                };
             }
-        }
+        };

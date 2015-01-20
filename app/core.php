@@ -1,6 +1,7 @@
 <?php
 
 define("PLUGINS", __DIR__ . '/../plugins/');
+define("MODULES", __DIR__ . '/modules');
 
 // Set runtime preferences
 $sessionId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : false;
@@ -562,7 +563,7 @@ function getDirs($path)
 
 function getModules()
 {
-    return getDirs('../modules');
+    return getDirs(MODULES);
 }
 
 function getDirsAsStore($path, $checkFn)

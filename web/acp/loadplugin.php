@@ -7,6 +7,7 @@ if (isset($_GET['name']))
 {
     $name = $_GET['name'];
 }
+
 $type = $_GET['type'];
 $target = $_GET['target'];
 if ($target == 'plugin' && preg_match("%^js|css$%", $type))
