@@ -513,7 +513,6 @@ Gettext.prototype.parse_po = function(data) {
         }
     }
 
-
     // handle the final entry
     if (typeof(buffer['msgid']) != 'undefined') {
         var msg_ctxt_id = (typeof(buffer['msgctxt']) != 'undefined' &&

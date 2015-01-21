@@ -1,8 +1,6 @@
 <?php
 
-define("ROOT", __DIR__ . DIRECTORY_SEPARATOR);
-define("NUANCE", ROOT . "/../../app/" . DIRECTORY_SEPARATOR);
-
+include 'include.inc';
 require_once NUANCE . "core.php";
 
 session_start();
@@ -250,13 +248,7 @@ $router->map('GET', '/all/get', function ($params)
             case 'acplocale':
             case 'ucplocale':
                 {
-                    $checkFn = function($el)
-                    {
-                        global $newTarget, $domain;
-                        if (file_exists("../$newTarget/$el/LC_MESSAGES/$domain.mo") || file_exists("../$newTarget/$el/LC_MESSAGES/$domain.po"))
-                            return true;
-                    };
-                    $response['runtime'][$target]['data'] = getDirsAsStore("../$newTarget", $checkFn);
+                    $response['runtime'][$target]['data'] = getDirsAsStore("../$domain/" . $newTarget, $checkFn);
                 }
                 break;
         }
