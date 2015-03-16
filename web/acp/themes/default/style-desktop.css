@@ -23,7 +23,7 @@
 #tabpanel-switch
 {
   overflow: hidden;
-  height: 33px;
+  height: 31px;
   display: flex;
   display: -webkit-box;
 }
