@@ -4672,6 +4672,14 @@ var Nuance =
                 this.header = o.header;
                 this.errors = o.errors || [];
                 this.data = o.data || {};
+                
+                // Detect last used ID
+                var lastId = 0;
+                for (var i in this.data)
+                {
+                  lastId = i;
+                }
+
                 this.sortOrder = o.sortOrder || {};
                 this.getNameById = ((typeof o.getNameByIdFn != 'function') ? function (id)
                 {
@@ -4694,28 +4702,6 @@ var Nuance =
                         return this.data[id];
                     }
                 };
-                this.on = function (eventName, callback)
-                {
-                    if (!Array.isArray(callbacks[eventName]))
-                    {
-                        callbacks[eventName] = [callback];
-                    }
-                    else
-                    {
-                        callbacks[eventName].push(callback);
-                    }
-                };
-                this.fireEvent = function (eventName, args)
-                {
-                    if (Array.isArray(callbacks[eventName]))
-                    {
-                        for (var i = 0; i < callbacks[eventName].length; i++)
-                        {
-                            callbacks[eventName][i].apply(self, args);
-                        }
-                    }
-                    firstLoad = false;
-                };
                 var createNs = function ()
                 {
                     var arr = {};
@@ -4729,43 +4715,28 @@ var Nuance =
                 this.load = function ()
                 {
                 };
-                this.send = function (action, id, postData, cb)
-                {
-                    var callback = cb || falsefunc;
-
-                    var beforeEvent = new Nuance.Event({type: "before" + action});
-                    self.trigger('before' + action, beforeEvent, id, postData);
-                    var afterEvent = new Nuance.Event({type: "after" + action});
-                    self.trigger('after' + action, afterEvent, id, postData);
-                    callback(postData);
-                };
                 this.add = function (values, callback)
                 {
+                    self.trigger('beforeload');
                     if (values)
                     {
-                        if (Array.isArray(values))
-                        {
-                            var postData = new URLParams;
-                            for (var i = 0; i < values.length; i++)
-                            {
-                                if (typeof values[i] !== 'undefined')
-                                {
-                                    postData[self.header[i][0]] = values[i];
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var postData = new URLParams(values);
-                        }
-                        this.send('add', null, postData, callback);
+                      self.data[ ++lastId ] = values;
                     }
+                    self.trigger('afterload');
+                    if (typeof callback === 'function')
+                        callback();
                 };
                 this.edit = function (id, values)
                 {
+                  self.trigger('beforeload');
+                  self.data[ id ] = values;
+                  self.trigger('afterload');
                 };
                 this.del = function (id)
                 {
+                  self.trigger('beforeload');
+                  delete self.data[ id ];
+                  self.trigger('afterload');
                 };
             },
             Store: function (o)
@@ -4929,7 +4900,6 @@ var Nuance =
                         var afterEvent = new Nuance.Event({type: "after" + action});
                         self.trigger('after' + action, afterEvent, id, postData);
                         callback(response, postData);
-                        c('onsucc');
                     };
 
                     ajaxProxy.post("/db/" + target + "/" + action, (postData ? postData.toString() : null), onsuccess);

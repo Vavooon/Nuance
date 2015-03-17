@@ -1577,38 +1577,54 @@ window.onConfigLoad = function ()
                 dataEl.appendChild(children);
             }
 
-            if (isAdding)
+            // Load existing records into memory store
+            var ipStoreData = {};
+            var pppStoreData = {};
+            if (!isAdding)
             {
-                var ipStore = new Nuance.MemoryStore(
-                        {
-                            header: cloneArray(Nuance.stores.ip.header),
-                            data:
-                                    {}
-                        });
-                var pppStore = new Nuance.MemoryStore(
-                        {
-                            header: cloneArray(Nuance.stores.ppp.header),
-                            data:
-                                    {}
-                        });
-                Nuance.stores.ip_memory = ipStore;
-                Nuance.stores.ppp_memory = pppStore;
+              for ( var i in Nuance.stores.ip.data )
+              {
+                if ( Nuance.stores.ip.data[ i ][ Nuance.stores.ip.ns.user ] == form.recordId )
+                {
+                  ipStoreData[ i ] = cloneArray( Nuance.stores.ip.data[ i ] );
+                }
+              }
+
+              for ( var i in Nuance.stores.ppp.data )
+              {
+                if ( Nuance.stores.ppp.data[ i ][ Nuance.stores.ppp.ns.user ] == form.recordId )
+                {
+                  pppStoreData[ i ] = cloneArray( Nuance.stores.ppp.data[ i ] );
+                }
+              }
             }
-            else
-            {
-                var ipStore = Nuance.stores.ip;
-                var pppStore = Nuance.stores.ppp;
-            }
+            var dirtColumn = ['dirt', 'tinyint', 1];
+            var ipStoreHeader = cloneArray(Nuance.stores.ip.header);
+            ipStoreHeader.push( dirtColumn );
+            var pppStoreHeader = cloneArray(Nuance.stores.ppp.header);
+            pppStoreHeader.push( dirtColumn );
+            var ipStore = new Nuance.MemoryStore(
+              {
+                header: ipStoreHeader,
+                data: ipStoreData
+              }
+            );
+            var pppStore = new Nuance.MemoryStore(
+              {
+                header: pppStoreHeader,
+                data: pppStoreData
+              }
+            );
+
             var ipTable = new Nuance.Grid(
-                    {
-                        store: ipStore,
-                        target: ipDataEl,
-                        hiddenCols: ['id', 'user'],
-                        name: 'ip',
-                        onlyIncludedFields: true,
-                        includedFields: ['ip', 'mac', 'router', 'port']
-                    });
-            ipTable.render();
+              {
+                store: ipStore,
+                target: ipDataEl,
+                hiddenCols: ['id', 'user', 'dirt'],
+                name: 'ip',
+                onlyIncludedFields: true,
+                includedFields: ['ip', 'mac', 'router', 'port']
+              });
             ipTable.on('beforeadd', function (values)
             {
                 var ns = Nuance.stores.ip.ns;
@@ -1618,29 +1634,17 @@ window.onConfigLoad = function ()
                     {
                         store: pppStore,
                         target: pppDataEl,
-                        hiddenCols: ['id', 'user'],
+                        hiddenCols: ['id', 'user', 'dirt'],
                         name: 'ppp',
                         onlyIncludedFields: true,
                         includedFields: ['login', 'password', 'router', 'localip', 'remoteip', 'pppservice']
                     });
-            if (!isAdding)
-            {
-                ipTable.setFilters(
-                        {
-                            user: form.recordId
-                        });
-                pppTable.setFilters(
-                        {
-                            user: form.recordId
-                        });
-            }
-            pppTable.render();
+
+                    pppStore.on( 'afterload', function(){c(33)});
             pppTable.on('beforeadd', function (values)
             {
                 var ns = Nuance.stores.ppp.ns;
-                values[ns.id] = 1;
                 values[ns.user] = form.recordId;
-                c(42);
             });
 
             var filterTypeStore = new Nuance.MemoryStore(
