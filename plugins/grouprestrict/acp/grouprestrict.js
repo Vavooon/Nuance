@@ -2,9 +2,9 @@ function grouprestrict()
 {
   function init()
   {
-		tables.tabs.master.grid.excludedFields.splice(tables.tabs.master.grid.excludedFields.indexOf('usergroup'), 1);
-		tables.tabs.master.grid.excludedFields.splice(tables.tabs.master.grid.excludedFields.indexOf('usergroup'), 1);
-		tables.tabs.master.grid.waitForStores.push('usergroup');
+		tables.tabs.user.grid.excludedFields.splice(tables.tabs.user.grid.excludedFields.indexOf('usergroup'), 1);
+		tables.tabs.user.grid.excludedFields.splice(tables.tabs.user.grid.excludedFields.indexOf('usergroup'), 1);
+		tables.tabs.user.grid.waitForStores.push('usergroup');
     tables.tabs.usergroup=
     {
       title: _("User groups"), 
