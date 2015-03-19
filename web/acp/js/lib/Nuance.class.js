@@ -4088,6 +4088,9 @@ var Nuance =
                                     field = new Nuance.input.ComboBox(fieldOpts);
                                 }
                             }
+                            else {
+                                throw new Error( "There is no store for the field " + hname );
+                            }
                             break;
                         default:
                             field = new Nuance.input.TextField(fieldOpts);

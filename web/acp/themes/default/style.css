@@ -2334,35 +2334,6 @@ p.refund
   margin: 10px 18px;
 }
 
-#ppp-tab .filter-wrap,
-#ppp-tab .button-wrap .filter,
-#ppp-tab .search-wrap,
-#ppp-tab .statusbar-wrap,
-#ppp-tab .filters-enabled,
-#ip-tab .filter-wrap,
-#ip-tab .button-wrap .filter,
-#ip-tab .search-wrap,
-#ip-tab .statusbar-wrap,
-#ip-tab .filters-enabled
-{
-  display: none;
-}
-
-#ip-tab,
-#ppp-tab
-{
-  margin: 16px;
-  background-color: #fcfcfc;
-  border: 1px solid #eee;
-  border-radius: 6px;
-  overflow: hidden;
-}
-#ip-tab .statusbar-wrap,
-#ppp-tab .statusbar-wrap
-{
-  color: black;
-}
-
 
 .flex
 {

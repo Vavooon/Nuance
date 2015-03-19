@@ -319,7 +319,7 @@ window.onConfigLoad = function ()
             });
 
     pluginsTabs = {};
-    /*var pppServiceStore = new Nuance.MemoryStore(
+    new Nuance.MemoryStore(
             {
                 name: 'pppservice',
                 header: [
@@ -336,6 +336,7 @@ window.onConfigLoad = function ()
                             sstp: ["sstp", "SSTP"]
                         }
             });
+    /*
     var routerTypeStore = new Nuance.MemoryStore(
             {
                 name: 'routertype',
@@ -390,14 +391,6 @@ window.onConfigLoad = function ()
     var orderStore = new Nuance.Store(
             {
                 name: 'order'
-            });
-    var pppStore = new Nuance.Store(
-            {
-                name: 'ppp'
-            });
-    var ipStore = new Nuance.Store(
-            {
-                name: 'ip'
             });
 
     function loadActiveOrders()
@@ -791,6 +784,41 @@ window.onConfigLoad = function ()
                                             name: 'user'
                                         }
                             },
+                    ip: {
+                        title: _("IP accounts"),
+                        name: 'ip',
+                        grid: {
+                            store: new Nuance.Store(
+                            {
+                                name: 'ip'
+                            }),
+                            waitForStores: ['user', 'router'],
+                            hiddenCols: ['id'],
+                            name: 'ip',
+                            sorters: {
+                                ip: ip2long
+                            },
+                            excludedFields: ['id']
+                        }
+                    },
+                    ppp: {
+                        title: _("PPP accounts"),
+                        name: 'ppp',
+                        grid: {
+                            store: new Nuance.Store(
+                            {
+                                name: 'ppp'
+                            }),
+                            waitForStores: ['user', 'router'],
+                            hiddenCols: ['id', 'password'],
+                            name: 'ppp',
+                            sorters: {
+                                localip: ip2long,
+                                remoteip: ip2long
+                            },
+                            excludedFields: ['id']
+                        }
+                    },
                     message: false,
                     moneyflow:
                             {
@@ -1530,7 +1558,6 @@ window.onConfigLoad = function ()
 
     if (Nuance.grids.user)
     {
-      var ipStore, pppStore;
         function extendUserForm(form)
         {
             var isAdding = form.constructor == Nuance.AddPopup;
@@ -1542,14 +1569,7 @@ window.onConfigLoad = function ()
                     {
                         className: 'popup-body double'
                     });
-            var ipDataEl = ce('div',
-                    {
-                        className: 'popup-body flex flex-column'
-                    });
-            var pppDataEl = ce('div',
-                    {
-                        className: 'popup-body flex flex-column'
-                    });
+
             var preferencesEl = ce('div',
                     {
                         className: 'popup-body'
@@ -1562,110 +1582,6 @@ window.onConfigLoad = function ()
                 dataEl.appendChild(children);
             }
 
-            // Load existing records into memory store
-            var ipStoreData = {};
-            var pppStoreData = {};
-            if (!isAdding)
-            {
-              for ( var i in Nuance.stores.ip.data )
-              {
-                if ( Nuance.stores.ip.data[ i ][ Nuance.stores.ip.ns.user ] == form.recordId )
-                {
-                  ipStoreData[ i ] = cloneArray( Nuance.stores.ip.data[ i ] );
-                }
-              }
-
-              for ( var i in Nuance.stores.ppp.data )
-              {
-                if ( Nuance.stores.ppp.data[ i ][ Nuance.stores.ppp.ns.user ] == form.recordId )
-                {
-                  pppStoreData[ i ] = cloneArray( Nuance.stores.ppp.data[ i ] );
-                }
-              }
-            }
-            var originalIpStoreData = cloneObject( ipStoreData );
-            var originalPppStoreData = cloneObject( pppStoreData );
-            var dirtColumn = ['dirt', 'tinyint', 1];
-            var ipStoreHeader = cloneArray(Nuance.stores.ip.header);
-            ipStoreHeader.push( dirtColumn );
-            var pppStoreHeader = cloneArray(Nuance.stores.ppp.header);
-            pppStoreHeader.push( dirtColumn );
-            ipStore = new Nuance.MemoryStore(
-              {
-                header: ipStoreHeader,
-                data: ipStoreData
-              }
-            );
-            pppStore = new Nuance.MemoryStore(
-              {
-                header: pppStoreHeader,
-                data: pppStoreData
-              }
-            );
-
-            var ipTable = new Nuance.Grid(
-              {
-                store: ipStore,
-                target: ipDataEl,
-                hiddenCols: ['id', 'user', 'dirt'],
-                name: 'ip',
-                onlyIncludedFields: true,
-                includedFields: ['ip', 'mac', 'router', 'port']
-              });
-            var pppTable = new Nuance.Grid(
-              {
-                store: pppStore,
-                target: pppDataEl,
-                hiddenCols: ['id', 'user', 'dirt'],
-                name: 'ppp',
-                onlyIncludedFields: true,
-                includedFields: ['login', 'password', 'router', 'localip', 'remoteip', 'pppservice']
-              });
-
-
-            function markIpRecordDirt( values ) {
-                var ns = ipStore.ns;
-                values[ns.user] = form.recordId;
-                values[ns.dirt] = true;
-            }
-            ipTable.on('beforeadd', markIpRecordDirt );
-            ipTable.on('beforeedit', markIpRecordDirt );
-            ipTable.on('beforeremove', markIpRecordDirt );
-
-            function markPppRecordDirt( values ) {
-                var ns = ipStore.ns;
-                values[ns.user] = form.recordId;
-                values[ns.dirt] = true;
-            }
-            pppTable.on('beforeadd', markPppRecordDirt );
-            pppTable.on('beforeedit', markPppRecordDirt );
-            pppTable.on('beforeremove', markPppRecordDirt );
-
-            form.on( 'save', function(){
-              if ( !isAdding ) {
-                for ( var i in ipStore.data) {
-                  var record = ipStore.getById( i, true );
-                  if ( record.dirt ) {
-                    // Add all dirt entries into DB
-                    
-                    delete record.dirt;
-                    delete record.id;
-                    if ( isAdding ) {
-                      Nuance.stores.ip.add( record );
-                    }
-                    else {
-                      Nuance.stores.ip.edit( i, record );
-                    }
-                  }
-                }
-
-                for ( var i in originalIpStoreData ) {
-                  if ( !ipStore.data[ i ] ) {
-                    Nuance.stores.ip.remove( i );
-                  }
-                }
-              }
-            });
 
 
             var preferencesPopup = new Nuance.RouterUserPreferencesActivity(
@@ -1686,18 +1602,6 @@ window.onConfigLoad = function ()
                             name: 'data',
                             content: dataEl
                         },
-                ipdata:
-                        {
-                            title: _("IP Data"),
-                            name: 'ipdata',
-                            content: ipDataEl
-                        },
-                pppdata:
-                        {
-                            title: _("PPP data"),
-                            name: 'pppdata',
-                            content: pppDataEl
-                        },
                 preferences:
                         {
                             title: _("Preferences"),
@@ -1711,8 +1615,6 @@ window.onConfigLoad = function ()
                         prefix: 'prefpopup',
                         tabs: popupTabs
                     });
-            tabPanel.on('tabchange', ipTable.onDataChange);
-            tabPanel.on('tabchange', pppTable.onDataChange);
             form.on('save', function ()
             {
                 preferencesPopup.save();
@@ -1721,16 +1623,7 @@ window.onConfigLoad = function ()
         Nuance.grids.user.on('addform', extendUserForm);
         Nuance.grids.user.on('editform', extendUserForm);
 
-
-        Nuance.stores.user.on('afteradd', function( event, id ) {
-          for ( var i in ipStore.data ) {
-            var record = ipStore.getById( i, true );
-            delete record.id;
-            delete record.dirt;
-            record.user = id;
-            Nuance.stores.ip.add( record );
-          }
-        });
+;
     }
 
     if (Nuance.grids.router)
@@ -1949,6 +1842,16 @@ window.onConfigLoad = function ()
         }
     });
 
+    Nuance.grids.ip && Nuance.grids.ip.on('beforerender', function (formattingRows, data, ns, displayData, displayNs) {
+        var macIndex = displayNs.mac;
+        for (var id in data) {
+            var row = data[id];
+
+            // Refund type
+            displayData[id][macIndex] = row[ns.mac] ? row[ns.mac].replace(/:/g, '').toUpperCase().match(/.{1,2}/g).join(":") : '';
+
+        }
+    });
     Nuance.grids.moneyflow && Nuance.grids.moneyflow.on('beforerender', function (formattingRows, data, ns, displayData, displayNs)
     {
         var nameIndex = displayNs.name;
