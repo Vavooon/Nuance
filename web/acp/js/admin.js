@@ -103,6 +103,7 @@ function refund(id, callback)
 userExcludedFields = ['paymentdate', 'editdate', 'cash'];
 window.onConfigLoad = function ()
 {
+  c('onconfigload')
     configProxy.off('afterload', onConfigLoad);
 
     var fractionalPart = configProxy.getValue('system', 'cash', 'fractionalPart');
@@ -320,7 +321,7 @@ window.onConfigLoad = function ()
 
     pluginsTabs = {};
     Nuance.stores['user-idrenderer'] = {};
-    var pppServiceStore = new Nuance.MemoryStore(
+    /*var pppServiceStore = new Nuance.MemoryStore(
             {
                 target: 'pppservice',
                 header: [
@@ -349,7 +350,7 @@ window.onConfigLoad = function ()
                             mikrotik: ["mikrotik", "Mikrotik IP/MAC"],
                             mikrotikppp: ["mikrotikppp", "Mikrotik PPP"]
                         }
-            });
+            });*/
     var acpLocaleStore = new Nuance.Store(
             {
                 subscribePath: ['runtime', 'acplocale'],
@@ -436,7 +437,6 @@ window.onConfigLoad = function ()
 
     monthStore = new Nuance.MemoryStore(
             {
-                target: 'month',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar'], ['smallname', 'varchar'], ['3rdname', 'varchar']
@@ -458,7 +458,6 @@ window.onConfigLoad = function ()
             });
     dayStore = new Nuance.MemoryStore(
             {
-                target: 'day',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -1545,7 +1544,6 @@ window.onConfigLoad = function ()
 
     if (Nuance.grids.user)
     {
-
         function extendUserForm(form)
         {
             var isAdding = form.constructor == Nuance.AddPopup;
@@ -1598,6 +1596,8 @@ window.onConfigLoad = function ()
                 }
               }
             }
+            var originalIpStoreData = cloneObject( ipStoreData );
+            var originalPppStoreData = cloneObject( pppStoreData );
             var dirtColumn = ['dirt', 'tinyint', 1];
             var ipStoreHeader = cloneArray(Nuance.stores.ip.header);
             ipStoreHeader.push( dirtColumn );
@@ -1606,12 +1606,14 @@ window.onConfigLoad = function ()
             var ipStore = new Nuance.MemoryStore(
               {
                 header: ipStoreHeader,
+                name: 'ipmemorystore',
                 data: ipStoreData
               }
             );
             var pppStore = new Nuance.MemoryStore(
               {
                 header: pppStoreHeader,
+                name: 'pppmemorystore',
                 data: pppStoreData
               }
             );
@@ -1625,26 +1627,59 @@ window.onConfigLoad = function ()
                 onlyIncludedFields: true,
                 includedFields: ['ip', 'mac', 'router', 'port']
               });
-            ipTable.on('beforeadd', function (values)
-            {
-                var ns = Nuance.stores.ip.ns;
-                values[ns.user] = form.recordId;
-            });
             var pppTable = new Nuance.Grid(
-                    {
-                        store: pppStore,
-                        target: pppDataEl,
-                        hiddenCols: ['id', 'user', 'dirt'],
-                        name: 'ppp',
-                        onlyIncludedFields: true,
-                        includedFields: ['login', 'password', 'router', 'localip', 'remoteip', 'pppservice']
-                    });
+              {
+                store: pppStore,
+                target: pppDataEl,
+                hiddenCols: ['id', 'user', 'dirt'],
+                name: 'ppp',
+                onlyIncludedFields: true,
+                includedFields: ['login', 'password', 'router', 'localip', 'remoteip', 'pppservice']
+              });
 
-                    pppStore.on( 'afterload', function(){c(33)});
-            pppTable.on('beforeadd', function (values)
-            {
-                var ns = Nuance.stores.ppp.ns;
+
+            function markIpRecordDirt( values ) {
+                var ns = ipStore.ns;
                 values[ns.user] = form.recordId;
+                values[ns.dirt] = true;
+            }
+            ipTable.on('beforeadd', markIpRecordDirt );
+            ipTable.on('beforeedit', markIpRecordDirt );
+            ipTable.on('beforeremove', markIpRecordDirt );
+
+            function markPppRecordDirt( values ) {
+                var ns = ipStore.ns;
+                values[ns.user] = form.recordId;
+                values[ns.dirt] = true;
+            }
+            pppTable.on('beforeadd', markPppRecordDirt );
+            pppTable.on('beforeedit', markPppRecordDirt );
+            pppTable.on('beforeremove', markPppRecordDirt );
+
+            form.on( 'save', function(){
+              if ( !isAdding ) {
+                for ( var i in ipStore.data) {
+                  var record = ipStore.getById( i, true );
+                  if ( record.dirt ) {
+                    // Add all dirt entries into DB
+                    
+                    delete record.dirt;
+                    delete record.id;
+                    if ( isAdding ) {
+                      Nuance.stores.ip.add( record );
+                    }
+                    else {
+                      Nuance.stores.ip.edit( i, record );
+                    }
+                  }
+                }
+
+                for ( var i in originalIpStoreData ) {
+                  if ( !ipStore.data[ i ] ) {
+                    Nuance.stores.ip.remove( i );
+                  }
+                }
+              }
             });
 
             var filterTypeStore = new Nuance.MemoryStore(
@@ -1711,19 +1746,20 @@ window.onConfigLoad = function ()
             form.on('save', function ()
             {
                 preferencesPopup.save();
-                console.log(form);
             });
         }
         Nuance.grids.user.on('addform', extendUserForm);
         Nuance.grids.user.on('editform', extendUserForm);
 
-        Nuance.grids.user.on('afteradd', function (response)
-        {
-            // Just get an id 
-            for (var id in response.db.user.data)
-            {
-                c(id, Nuance.stores.ppp_memory)
-            }
+
+        Nuance.stores.user.on('afteradd', function( event, id ) {
+          for ( var i in Nuance.stores.ipmemorystore.data ) {
+            var record = Nuance.stores.ipmemorystore.getById( i, true );
+            delete record.id;
+            delete record.dirt;
+            record.user = id;
+            Nuance.stores.ip.add( record );
+          }
         });
     }
 

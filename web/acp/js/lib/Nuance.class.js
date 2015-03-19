@@ -4656,10 +4656,6 @@ var Nuance =
                 var self = this,
                         callbacks = [],
                         target = o.target;
-                this.getState = function ()
-                {
-                    return state;
-                };
                 this.readOnly = true;
                 this.getState = function ()
                 {
@@ -4738,6 +4734,18 @@ var Nuance =
                   delete self.data[ id ];
                   self.trigger('afterload');
                 };
+            if (this.name)
+                {
+                    if (!Nuance.stores[this.name])
+                    {
+                        Nuance.stores[this.name] = this;
+                        console.log(this.name)
+                    }
+                    else
+                    {
+                        throw new Error("Store with name '" + this.name + "' already exists");
+                    }
+                }
             },
             Store: function (o)
             {
@@ -4898,6 +4906,11 @@ var Nuance =
                     {
                         loadData(response);
                         var afterEvent = new Nuance.Event({type: "after" + action});
+                        c(response)
+                        if ( action === 'add' ) {
+                          for ( var id in response.db[o.target].data ) {
+                          }
+                        }
                         self.trigger('after' + action, afterEvent, id, postData);
                         callback(response, postData);
                     };
@@ -4978,12 +4991,17 @@ var Nuance =
                 {
                     if (!Nuance.stores[this.name])
                     {
+                        console.log(this.name)
                         Nuance.stores[this.name] = this;
                     }
                     else
                     {
                         throw new Error("Store with name '" + this.name + "' already exists");
                     }
+                }
+                else
+                {
+                  throw new Error("Store should have a name");
                 }
             },
             WidgetPanel: function (o)
@@ -6860,7 +6878,7 @@ var Nuance =
                     {
                         var store = Nuance.stores[waitForStores[i]];
                         store.on('afterload', forceRender);
-                        //store.on('afteradd', forceRender);
+                        store.on('afteradd', forceRender);
                         store.on('afteredit', forceRender);
                         store.on('afterremove', forceRender);
                     }
