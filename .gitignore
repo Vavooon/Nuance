@@ -6,5 +6,6 @@
 .doc/
 .locale-src/
 .other/
+.idea/
 db.sql
 config.php
