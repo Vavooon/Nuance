@@ -4,7 +4,7 @@ message = function()
 	{
     var messageStore=new Nuance.Store(
     {
-      target: 'message',
+      name: 'message',
       autoLoad: true
     });
     tables.tabs.message=

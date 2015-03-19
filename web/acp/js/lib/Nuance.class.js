@@ -4654,17 +4654,14 @@ var Nuance =
             MemoryStore: function (o)
             {
                 var self = this,
-                        callbacks = [],
-                        target = o.target;
+                        callbacks = [];
                 this.readOnly = true;
                 this.getState = function ()
                 {
                     return 'loaded';
                 };
                 Nuance.EventMixin.call(this, o);
-                this.owner = o.owner;
-                this.name = o.name || o.target;
-                Nuance.stores[this.name] = this;
+                this.name = o.name;
                 this.header = o.header;
                 this.errors = o.errors || [];
                 this.data = o.data || {};
@@ -4739,7 +4736,6 @@ var Nuance =
                     if (!Nuance.stores[this.name])
                     {
                         Nuance.stores[this.name] = this;
-                        console.log(this.name)
                     }
                     else
                     {
@@ -4755,8 +4751,7 @@ var Nuance =
                         lastLoadTime,
                         callbacks = [],
                         filterStr = '*',
-                        firstLoad = true,
-                        target = o.target;
+                        firstLoad = true;
                 Nuance.EventMixin.call(this, o);
                 this.setState = function (newState)
                 {
@@ -4775,8 +4770,7 @@ var Nuance =
                     return filterStr;
                 };
                 this.readOnly = o.readOnly;
-                this.owner = o.owner;
-                this.name = o.name || o.target;
+                this.name = o.name;
                 this.data = {};
                 this.sortOrder = {};
                 this.length = null;
@@ -4869,7 +4863,7 @@ var Nuance =
                     }
                     else
                     {
-                        loadData(response.db[o.target]);
+                        loadData(response.db[self.name]);
                     }
                     state = 'loaded';
                     self.trigger('afterload');
@@ -4882,7 +4876,7 @@ var Nuance =
                     state = 'loading';
                     self.trigger('beforeload');
 
-                    var path = o.path ? o.path : "db/" + o.target + '/get?filter=' + filterStr;
+                    var path = o.path ? o.path : "db/" + self.name + '/get?filter=' + filterStr;
                     Nuance.AjaxRequest("GET", path, null, onSuccess);
                 };
 
@@ -4906,16 +4900,16 @@ var Nuance =
                     {
                         loadData(response);
                         var afterEvent = new Nuance.Event({type: "after" + action});
-                        c(response)
                         if ( action === 'add' ) {
-                          for ( var id in response.db[o.target].data ) {
+                          // Get last added ID
+                          for ( var id in response.db[self.name].data ) {
                           }
                         }
                         self.trigger('after' + action, afterEvent, id, postData);
                         callback(response, postData);
                     };
 
-                    ajaxProxy.post("/db/" + target + "/" + action, (postData ? postData.toString() : null), onsuccess);
+                    ajaxProxy.post("/db/" + self.name + "/" + action, (postData ? postData.toString() : null), onsuccess);
                 };
 
                 this.add = function (values, callback)
@@ -4985,23 +4979,18 @@ var Nuance =
 
                 this.setFilter(o.filter);
                 o.forceLoad && this.load();
-                ajaxProxy.on(o.subscribePath || ['db', o.target], onSuccess, false);
+                ajaxProxy.on(o.subscribePath || ['db', o.name], onSuccess, false);
                 // Add self to the global stores list
                 if (this.name)
                 {
                     if (!Nuance.stores[this.name])
                     {
-                        console.log(this.name)
                         Nuance.stores[this.name] = this;
                     }
                     else
                     {
                         throw new Error("Store with name '" + this.name + "' already exists");
                     }
-                }
-                else
-                {
-                  throw new Error("Store should have a name");
                 }
             },
             WidgetPanel: function (o)
@@ -5012,7 +5001,7 @@ var Nuance =
                             enabledWidgets: []
                         };
                 var o = mergeProps(defaultOptions, o, true);
-                this.body = ce('div', {className: 'widget-panel-wrap'}, o.target);
+                this.body = ce('div', {className: 'widget-panel-wrap'}, o.name);
                 this.el = ce('div', {className: 'widget-panel'}, this.body);
 
                 this.availableWidget = {};
@@ -5523,8 +5512,7 @@ var Nuance =
                 Nuance.EventMixin.call(this, opts);
                 var storeDefaultProps =
                         {
-                            owner: this,
-                            target: name
+                            name: name
                         };
 
                 var proxyParams = mergeProps(storeDefaultProps, opts.proxyParams, true);
@@ -5544,8 +5532,6 @@ var Nuance =
                     this.store = new Nuance.Store(proxyParams);
                 }
 
-                if (opts.store)
-                    this.store.owner = this;
                 this.onAdd = function ()
                 {
                     var maxEntries = licenseManager.checkPermission(name) || Infinity;

@@ -16,7 +16,7 @@ function grouprestrict()
         {
           autoLoad: true,
           mainStore: true,
-          target: 'usergroup'
+          name: 'usergroup'
         }),
         configProxy: configProxy, 
         name: 'usergroup',

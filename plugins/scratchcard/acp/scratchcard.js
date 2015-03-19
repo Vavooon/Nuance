@@ -22,7 +22,7 @@ scratchcard=function(o)
 
     var scStore=new Nuance.Store(
       {
-        target: 'scratchcard',
+        name: 'scratchcard',
         filter: location.hash.indexOf('scratchcard')!==1 ? 'id=0' : false,
         autoLoad: true
       }

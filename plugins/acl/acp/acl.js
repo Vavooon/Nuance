@@ -16,7 +16,7 @@ acl = function()
         {
           autoLoad: true,
           mainStore: true,
-          target: 'group'
+          name: 'group'
         }),
         configProxy: configProxy, 
         name: 'group',

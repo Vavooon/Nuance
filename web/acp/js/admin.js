@@ -103,7 +103,6 @@ function refund(id, callback)
 userExcludedFields = ['paymentdate', 'editdate', 'cash'];
 window.onConfigLoad = function ()
 {
-  c('onconfigload')
     configProxy.off('afterload', onConfigLoad);
 
     var fractionalPart = configProxy.getValue('system', 'cash', 'fractionalPart');
@@ -320,10 +319,9 @@ window.onConfigLoad = function ()
             });
 
     pluginsTabs = {};
-    Nuance.stores['user-idrenderer'] = {};
     /*var pppServiceStore = new Nuance.MemoryStore(
             {
-                target: 'pppservice',
+                name: 'pppservice',
                 header: [
                     ["id", "id"],
                     ["name", "varchar"]
@@ -340,7 +338,7 @@ window.onConfigLoad = function ()
             });
     var routerTypeStore = new Nuance.MemoryStore(
             {
-                target: 'routertype',
+                name: 'routertype',
                 header: [
                     ["id", "id"],
                     ["name", "varchar"]
@@ -354,56 +352,52 @@ window.onConfigLoad = function ()
     var acpLocaleStore = new Nuance.Store(
             {
                 subscribePath: ['runtime', 'acplocale'],
-                owner: this,
-                target: 'acpLocale',
+                name: 'acpLocale',
                 readOnly: true,
                 autoLoad: false
             });
     var ucpLocaleStore = new Nuance.Store(
             {
                 subscribePath: ['runtime', 'ucplocale'],
-                owner: this,
-                target: 'ucpLocale',
+                name: 'ucpLocale',
                 readOnly: true,
                 autoLoad: false
             });
     var acpThemeStore = new Nuance.Store(
             {
                 subscribePath: ['runtime', 'acptheme'],
-                owner: this,
-                target: 'acpTheme', readOnly: true,
+                name: 'acpTheme', readOnly: true,
                 autoLoad: false
             });
     var ucpThemeStore = new Nuance.Store(
             {
                 subscribePath: ['runtime', 'ucptheme'],
-                owner: this,
-                target: 'ucpTheme', readOnly: true,
+                name: 'ucpTheme', 
+                readOnly: true,
                 autoLoad: false
             });
     var timezoneStore = new Nuance.Store(
             {
                 subscribePath: ['runtime', 'timezone'],
-                target: 'timezone'
+                name: 'timezone'
             });
 
     var activeOrderStore = new Nuance.Store(
             {
-                target: 'activeorder',
                 name: 'activeorder',
                 filter: "enddate>" + date.toString(dbDateTimeFormat)
             });
     var orderStore = new Nuance.Store(
             {
-                target: 'order'
+                name: 'order'
             });
     var pppStore = new Nuance.Store(
             {
-                target: 'ppp'
+                name: 'ppp'
             });
     var ipStore = new Nuance.Store(
             {
-                target: 'ip'
+                name: 'ip'
             });
 
     function loadActiveOrders()
@@ -467,8 +461,7 @@ window.onConfigLoad = function ()
             });
     var filterTypeStore = new Nuance.MemoryStore(
             {
-                owner: this,
-                target: 'router-filtertype',
+                name: 'router-filtertype',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -484,8 +477,7 @@ window.onConfigLoad = function ()
 
     new Nuance.MemoryStore(
             {
-                owner: this,
-                target: "typeOfCalculation",
+                name: "typeOfCalculation",
                 header: [
                     ["id", "id"],
                     ["name", "varchar"]
@@ -499,8 +491,7 @@ window.onConfigLoad = function ()
 
     new Nuance.MemoryStore(
             {
-                owner: this,
-                target: 'newOrdersWithdrawalType',
+                name: 'newOrdersWithdrawalType',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -514,8 +505,7 @@ window.onConfigLoad = function ()
 
     new Nuance.MemoryStore(
             {
-                owner: this,
-                target: 'newUsersWithdrawalType',
+                name: 'newUsersWithdrawalType',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -530,8 +520,7 @@ window.onConfigLoad = function ()
 
     new Nuance.MemoryStore(
             {
-                owner: this,
-                target: 'swapOrdersWithdrawalType',
+                name: 'swapOrdersWithdrawalType',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -545,8 +534,7 @@ window.onConfigLoad = function ()
 
     discountTypeStore = new Nuance.MemoryStore(
             {
-                owner: this,
-                target: 'discountType',
+                name: 'discountType',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -559,8 +547,7 @@ window.onConfigLoad = function ()
 
     prefixStore = new Nuance.MemoryStore(
             {
-                owner: this,
-                target: 'prefix',
+                name: 'prefix',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -576,8 +563,7 @@ window.onConfigLoad = function ()
 
     var userRendererStore = new Nuance.MemoryStore(
             {
-                owner: this,
-                target: 'user-idrenderer',
+                name: 'user-idrenderer',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -592,7 +578,7 @@ window.onConfigLoad = function ()
             });
     var refundTypeStore = new Nuance.MemoryStore(
             {
-                target: 'refundOrdersType',
+                name: 'refundOrdersType',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -606,8 +592,7 @@ window.onConfigLoad = function ()
             });
     var scratchcardRendererStore = new Nuance.MemoryStore(
             {
-                owner: this,
-                target: 'scratchcard-idrenderer',
+                name: 'scratchcard-idrenderer',
                 header: [
                     ['id', 'id'],
                     ['name', 'varchar']
@@ -739,6 +724,7 @@ window.onConfigLoad = function ()
                                                                     },
                                                                     store: new Nuance.MemoryStore(
                                                                             {
+                                                                                name: 'filter-options',
                                                                                 header: [
                                                                                     ['id', 'text'],
                                                                                     ['name', 'text']
@@ -755,7 +741,7 @@ window.onConfigLoad = function ()
                                                     },
                                             store: new Nuance.Store(
                                                     {
-                                                        target: 'user',
+                                                        name: 'user',
                                                         getNameByIdFn: function (id)
                                                         {
                                                             var row = this.getById(id);
@@ -820,7 +806,7 @@ window.onConfigLoad = function ()
                                             ],
                                             store: new Nuance.Store(
                                                     {
-                                                        target: 'moneyflow',
+                                                        name: 'moneyflow',
                                                         filter: location.hash.indexOf('moneyflow') !== 1 ? 'id=0' : false,
                                                         autoLoad: true
                                                     }),
@@ -849,7 +835,7 @@ window.onConfigLoad = function ()
                                             store: new Nuance.Store(
                                                     {
                                                         autoLoad: true,
-                                                        target: 'tariff'
+                                                        name: 'tariff'
                                                     }),
                                             filters:
                                                     {
@@ -872,7 +858,7 @@ window.onConfigLoad = function ()
                                             store: new Nuance.Store(
                                                     {
                                                         autoLoad: true,
-                                                        target: 'city'
+                                                        name: 'city'
                                                     }),
                                             configProxy: configProxy,
                                             name: 'city'
@@ -889,7 +875,7 @@ window.onConfigLoad = function ()
                                             store: new Nuance.Store(
                                                     {
                                                         autoLoad: true,
-                                                        target: 'street'
+                                                        name: 'street'
                                                     }),
                                             waitForStores: [
                                                 'city'
@@ -908,7 +894,7 @@ window.onConfigLoad = function ()
                                             store: new Nuance.Store(
                                                     {
                                                         autoLoad: true,
-                                                        target: 'router'
+                                                        name: 'router'
                                                     }),
                                             virtualFields:
                                                     {
@@ -991,7 +977,7 @@ window.onConfigLoad = function ()
                                                         var routerId = grid.getSelectedItems()[0];
                                                         var ifacesStore = Nuance.stores['routerinterfaces' + routerId] || new Nuance.Store(
                                                                 {
-                                                                    target: 'routerinterfaces' + routerId, path: '/interface/' + routerId + '/get',
+                                                                    name: 'routerinterfaces' + routerId, path: '/interface/' + routerId + '/get',
                                                                     forceLoad: true
                                                                 });
                                                         new Nuance.PreferencesPopup(
@@ -1039,7 +1025,7 @@ window.onConfigLoad = function ()
                                             store: new Nuance.Store(
                                                     {
                                                         autoLoad: true,
-                                                        target: 'master',
+                                                        name: 'master',
                                                         getNameByIdFn: function (id)
                                                         {
                                                             var row = this.getById(id);
@@ -1077,7 +1063,7 @@ window.onConfigLoad = function ()
                                                     {
                                                         autoLoad: true,
                                                         filter: location.hash.indexOf('scratchcard') !== 1 ? 'id=0' : false,
-                                                        target: 'log'
+                                                        name: 'log'
                                                     }),
                                             virtualFields:
                                                     {
@@ -1544,6 +1530,7 @@ window.onConfigLoad = function ()
 
     if (Nuance.grids.user)
     {
+      var ipStore, pppStore;
         function extendUserForm(form)
         {
             var isAdding = form.constructor == Nuance.AddPopup;
@@ -1606,14 +1593,12 @@ window.onConfigLoad = function ()
             var ipStore = new Nuance.MemoryStore(
               {
                 header: ipStoreHeader,
-                name: 'ipmemorystore',
                 data: ipStoreData
               }
             );
             var pppStore = new Nuance.MemoryStore(
               {
                 header: pppStoreHeader,
-                name: 'pppmemorystore',
                 data: pppStoreData
               }
             );
@@ -1621,7 +1606,7 @@ window.onConfigLoad = function ()
             var ipTable = new Nuance.Grid(
               {
                 store: ipStore,
-                target: ipDataEl,
+                name: ipDataEl,
                 hiddenCols: ['id', 'user', 'dirt'],
                 name: 'ip',
                 onlyIncludedFields: true,
@@ -1630,7 +1615,7 @@ window.onConfigLoad = function ()
             var pppTable = new Nuance.Grid(
               {
                 store: pppStore,
-                target: pppDataEl,
+                name: pppDataEl,
                 hiddenCols: ['id', 'user', 'dirt'],
                 name: 'ppp',
                 onlyIncludedFields: true,
@@ -1682,21 +1667,6 @@ window.onConfigLoad = function ()
               }
             });
 
-            var filterTypeStore = new Nuance.MemoryStore(
-                    {
-                        target: 'router-filtertype',
-                        header: [
-                            ['id', 'id'],
-                            ['name', 'varchar']
-                        ],
-                        data:
-                                {
-                                    0: [0, _('Do not filter')],
-                                    1: [1, _('Filter by ARP')],
-                                    2: [2, _('Filter by filter rule')],
-                                    3: [3, _('Filter by mangle')]
-                                }
-                    });
 
             var preferencesPopup = new Nuance.RouterUserPreferencesActivity(
                     {
@@ -1753,8 +1723,8 @@ window.onConfigLoad = function ()
 
 
         Nuance.stores.user.on('afteradd', function( event, id ) {
-          for ( var i in Nuance.stores.ipmemorystore.data ) {
-            var record = Nuance.stores.ipmemorystore.getById( i, true );
+          for ( var i in ipStore.data ) {
+            var record = ipStore.getById( i, true );
             delete record.id;
             delete record.dirt;
             record.user = id;
@@ -1786,26 +1756,11 @@ window.onConfigLoad = function ()
                 dataEl.appendChild(children);
             }
 
-            var filterTypeStore = new Nuance.MemoryStore(
-                    {
-                        target: 'router-filtertype',
-                        header: [
-                            ['id', 'id'],
-                            ['name', 'varchar']
-                        ],
-                        data:
-                                {
-                                    0: [0, _('Do not filter')],
-                                    1: [1, _('Filter by ARP')],
-                                    2: [2, _('Filter by filter rule')],
-                                    3: [3, _('Filter by mangle')]
-                                }
-                    });
 
 
             var ifacesStore = Nuance.stores['routerinterfaces' + form.recordId] || new Nuance.Store(
                     {
-                        target: 'routerinterfaces' + form.recordId,
+                        name: 'routerinterfaces' + form.recordId,
                         subscribePath: ['interface', form.recordId],
                         path: 'interface/' + form.recordId + '/get',
                         forceLoad: true
