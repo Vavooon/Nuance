@@ -1590,13 +1590,13 @@ window.onConfigLoad = function ()
             ipStoreHeader.push( dirtColumn );
             var pppStoreHeader = cloneArray(Nuance.stores.ppp.header);
             pppStoreHeader.push( dirtColumn );
-            var ipStore = new Nuance.MemoryStore(
+            ipStore = new Nuance.MemoryStore(
               {
                 header: ipStoreHeader,
                 data: ipStoreData
               }
             );
-            var pppStore = new Nuance.MemoryStore(
+            pppStore = new Nuance.MemoryStore(
               {
                 header: pppStoreHeader,
                 data: pppStoreData
@@ -1606,7 +1606,7 @@ window.onConfigLoad = function ()
             var ipTable = new Nuance.Grid(
               {
                 store: ipStore,
-                name: ipDataEl,
+                target: ipDataEl,
                 hiddenCols: ['id', 'user', 'dirt'],
                 name: 'ip',
                 onlyIncludedFields: true,
@@ -1615,7 +1615,7 @@ window.onConfigLoad = function ()
             var pppTable = new Nuance.Grid(
               {
                 store: pppStore,
-                name: pppDataEl,
+                target: pppDataEl,
                 hiddenCols: ['id', 'user', 'dirt'],
                 name: 'ppp',
                 onlyIncludedFields: true,

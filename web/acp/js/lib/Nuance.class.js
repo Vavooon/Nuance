@@ -6822,7 +6822,7 @@ var Nuance =
                 self.store.on('beforeremove', beforeAction);
 
                 // Check if all helper stores are loaded
-                waitForStores.push(self.store.name);
+                waitForStores.push(self.store);
 
                 self.onDataChange = function ()
                 {
@@ -6862,7 +6862,22 @@ var Nuance =
                 {
                     for (var i = 0; i < waitForStores.length; i++)
                     {
-                        var store = Nuance.stores[waitForStores[i]];
+                        switch (typeof waitForStores[i] ) {
+                            case 'object':
+                            {
+                                var store = waitForStores[i];
+                                break;
+                            }
+                            case 'string':
+                            {
+                                var store = Nuance.stores[waitForStores[i]];
+                                break;
+                            }
+                            default: {
+                                throw new Error( "Incorrect store value" );
+                            }
+                        }
+
                         store.on('afterload', forceRender);
                         store.on('afteradd', forceRender);
                         store.on('afteredit', forceRender);
