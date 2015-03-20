@@ -1,0 +1,250 @@
+@media only screen and (min-width: 1024px) {
+
+
+.header,
+.table,
+.checkbox,
+.statusbar-wrap
+{
+  font-size: 80%;
+}
+.button
+{
+  font-size: 70%;
+}
+#login-logo
+{
+  width: 100%;
+}
+#logo
+{
+  text-align: center;
+}
+#tabpanel-switch {
+  overflow: hidden;
+  height: 31px;
+  padding: 0;
+  display: flex;
+  display: -webkit-box;
+
+  & > li.stretch {
+    -webkit-box-flex: 1;
+    flex: 1;
+    display: block;
+    padding: 0;
+  }
+}
+#tabpanel-switch.overflow>li.stretch
+{
+  display: none;
+}
+#tabpanel-switch.overflow>li.spoiler,
+#tabpanel-switch.overflow>li.spoiler-stretch
+{
+  display: block;
+}
+#tabpanel-switch.overflow>li.spoiler-stretch
+{
+  -webkit-box-flex: 1;
+  flex: 1;
+  padding: 0;
+  height: 0;
+  border: 0 none;
+}
+#tabpanel-switch.overflow>li.spoiler
+{
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0 none;
+  overflow: hidden;
+  &:before {
+    width: 36px;
+    height: 33px;
+    display: block;
+  }
+}
+#tabpanel-switch.overflow>li.spoiler:hover:before
+{
+	background-color: #09f;
+}
+#tabpanel-switch.overflow>li.spoiler:hover
+{
+  height: auto;
+}
+#tabpanel-switch.overflow>li.spoiler:hover ul
+{
+  position: absolute;
+  right: 0;
+  z-index: 90;
+  background-color: #F8F8F8;
+}
+#tabpanel-switch>li.group:hover ul
+{
+  position: absolute;
+  padding: 5px 18px 0px;
+  margin-left: -18px;
+  z-index: 29;
+}
+#tabpanel-switch li.group:hover
+{
+	border-bottom: 0 none;
+  padding-bottom: 0;
+}
+.toolbar
+{
+  height: 42px;
+}
+
+
+#tabpanel-switch>li.group
+{
+  max-width: 400px;
+}
+#tabpanel-switch li:hover
+{
+	border-bottom-color: rgba(0, 153, 255, 0.25);
+}
+#tabpanel-switch li.selected
+{
+	border-bottom-color: #09f;
+}
+#tabpanel-switch li ul li:first-child
+{
+  padding-top: 4px;
+}
+
+
+
+.opts-tab>div
+{
+  display: table;
+}
+
+
+
+
+.button.document
+{
+  width: 300px;
+}
+
+.grid .header
+{
+	height: 25px;
+
+}
+.header-cell
+{
+	line-height: 24px!important;
+}
+.header .header-cell.icon:before
+{
+  line-height: 1.5rem;
+}
+
+.popup-window
+{
+	margin:  0 auto;
+}
+.popup-window.messagebox
+{
+  width: auto;
+  min-width: 200px;
+}
+.popup-window>.buttons-wrap
+{
+  margin-top: 0.5em;
+}
+
+.popup-caption
+{
+  height: 40px;
+}
+
+.search-wrap
+{
+  height: 30px;
+}
+.flex-wrap>*
+{
+  height: 30px;
+}
+
+.checkbox
+{
+  padding: 1px;
+}
+.checkbox em
+{
+	line-height: 24px;
+}
+.popup-body>.field-wrap
+{
+  min-height: 30px;
+  padding: 8px 0;
+}
+.field-wrap .title
+{
+  white-space: nowrap;
+}
+.field-wrap.combobox-field-wrap
+{
+  height: 28px;
+}
+#preferences-tabpanel-content .field-wrap.combobox-field-wrap
+{
+  height: 50px;
+}
+
+.combobox .option
+{
+}
+.flex-wrap
+{
+  height: 30px;
+}
+.field.text
+{
+  min-height: 30px;
+}
+.button
+{
+  height: 30px;
+  min-width: 30px;
+  line-height: 16px;
+}
+
+.button.onlyicon
+{
+  width: 30px;
+}
+
+
+.statusbar-wrap
+{
+  height: 0;
+  line-height: 42px;
+  position: absolute;
+  width: 100%;
+}
+#preferences-tabpanel-content .text.field, 
+#preferences-tabpanel-content .combobox.field
+{
+  width: 250px;
+}
+
+.login-window .button
+{
+  height: 30px;
+  line-height: 34px;
+}
+#about-body-wrap
+{
+  width: 400px;
+}
+.context-option .icon:before
+{
+  font-size: 0.8rem;
+}
+}

@@ -1,0 +1,271 @@
+@media only screen and (min-width: 1024px) {
+  /* line 4, ../sass/style-desktop.scss */
+  .header,
+  .table,
+  .checkbox,
+  .statusbar-wrap {
+    font-size: 80%;
+  }
+
+  /* line 11, ../sass/style-desktop.scss */
+  .button {
+    font-size: 70%;
+  }
+
+  /* line 15, ../sass/style-desktop.scss */
+  #login-logo {
+    width: 100%;
+  }
+
+  /* line 19, ../sass/style-desktop.scss */
+  #logo {
+    text-align: center;
+  }
+
+  /* line 23, ../sass/style-desktop.scss */
+  #tabpanel-switch {
+    overflow: hidden;
+    height: 31px;
+    padding: 0;
+    display: flex;
+    display: -webkit-box;
+  }
+  /* line 30, ../sass/style-desktop.scss */
+  #tabpanel-switch > li.stretch {
+    -webkit-box-flex: 1;
+    flex: 1;
+    display: block;
+    padding: 0;
+  }
+
+  /* line 37, ../sass/style-desktop.scss */
+  #tabpanel-switch.overflow > li.stretch {
+    display: none;
+  }
+
+  /* line 41, ../sass/style-desktop.scss */
+  #tabpanel-switch.overflow > li.spoiler,
+  #tabpanel-switch.overflow > li.spoiler-stretch {
+    display: block;
+  }
+
+  /* line 46, ../sass/style-desktop.scss */
+  #tabpanel-switch.overflow > li.spoiler-stretch {
+    -webkit-box-flex: 1;
+    flex: 1;
+    padding: 0;
+    height: 0;
+    border: 0 none;
+  }
+
+  /* line 54, ../sass/style-desktop.scss */
+  #tabpanel-switch.overflow > li.spoiler {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0 none;
+    overflow: hidden;
+  }
+  /* line 61, ../sass/style-desktop.scss */
+  #tabpanel-switch.overflow > li.spoiler:before {
+    width: 36px;
+    height: 33px;
+    display: block;
+  }
+
+  /* line 67, ../sass/style-desktop.scss */
+  #tabpanel-switch.overflow > li.spoiler:hover:before {
+    background-color: #09f;
+  }
+
+  /* line 71, ../sass/style-desktop.scss */
+  #tabpanel-switch.overflow > li.spoiler:hover {
+    height: auto;
+  }
+
+  /* line 75, ../sass/style-desktop.scss */
+  #tabpanel-switch.overflow > li.spoiler:hover ul {
+    position: absolute;
+    right: 0;
+    z-index: 90;
+    background-color: #F8F8F8;
+  }
+
+  /* line 82, ../sass/style-desktop.scss */
+  #tabpanel-switch > li.group:hover ul {
+    position: absolute;
+    padding: 5px 18px 0px;
+    margin-left: -18px;
+    z-index: 29;
+  }
+
+  /* line 89, ../sass/style-desktop.scss */
+  #tabpanel-switch li.group:hover {
+    border-bottom: 0 none;
+    padding-bottom: 0;
+  }
+
+  /* line 94, ../sass/style-desktop.scss */
+  .toolbar {
+    height: 42px;
+  }
+
+  /* line 100, ../sass/style-desktop.scss */
+  #tabpanel-switch > li.group {
+    max-width: 400px;
+  }
+
+  /* line 104, ../sass/style-desktop.scss */
+  #tabpanel-switch li:hover {
+    border-bottom-color: rgba(0, 153, 255, 0.25);
+  }
+
+  /* line 108, ../sass/style-desktop.scss */
+  #tabpanel-switch li.selected {
+    border-bottom-color: #09f;
+  }
+
+  /* line 112, ../sass/style-desktop.scss */
+  #tabpanel-switch li ul li:first-child {
+    padding-top: 4px;
+  }
+
+  /* line 119, ../sass/style-desktop.scss */
+  .opts-tab > div {
+    display: table;
+  }
+
+  /* line 127, ../sass/style-desktop.scss */
+  .button.document {
+    width: 300px;
+  }
+
+  /* line 132, ../sass/style-desktop.scss */
+  .grid .header {
+    height: 25px;
+  }
+
+  /* line 137, ../sass/style-desktop.scss */
+  .header-cell {
+    line-height: 24px !important;
+  }
+
+  /* line 141, ../sass/style-desktop.scss */
+  .header .header-cell.icon:before {
+    line-height: 1.5rem;
+  }
+
+  /* line 146, ../sass/style-desktop.scss */
+  .popup-window {
+    margin: 0 auto;
+  }
+
+  /* line 150, ../sass/style-desktop.scss */
+  .popup-window.messagebox {
+    width: auto;
+    min-width: 200px;
+  }
+
+  /* line 155, ../sass/style-desktop.scss */
+  .popup-window > .buttons-wrap {
+    margin-top: 0.5em;
+  }
+
+  /* line 160, ../sass/style-desktop.scss */
+  .popup-caption {
+    height: 40px;
+  }
+
+  /* line 165, ../sass/style-desktop.scss */
+  .search-wrap {
+    height: 30px;
+  }
+
+  /* line 169, ../sass/style-desktop.scss */
+  .flex-wrap > * {
+    height: 30px;
+  }
+
+  /* line 174, ../sass/style-desktop.scss */
+  .checkbox {
+    padding: 1px;
+  }
+
+  /* line 178, ../sass/style-desktop.scss */
+  .checkbox em {
+    line-height: 24px;
+  }
+
+  /* line 182, ../sass/style-desktop.scss */
+  .popup-body > .field-wrap {
+    min-height: 30px;
+    padding: 8px 0;
+  }
+
+  /* line 187, ../sass/style-desktop.scss */
+  .field-wrap .title {
+    white-space: nowrap;
+  }
+
+  /* line 191, ../sass/style-desktop.scss */
+  .field-wrap.combobox-field-wrap {
+    height: 28px;
+  }
+
+  /* line 195, ../sass/style-desktop.scss */
+  #preferences-tabpanel-content .field-wrap.combobox-field-wrap {
+    height: 50px;
+  }
+
+  /* line 203, ../sass/style-desktop.scss */
+  .flex-wrap {
+    height: 30px;
+  }
+
+  /* line 207, ../sass/style-desktop.scss */
+  .field.text {
+    min-height: 30px;
+  }
+
+  /* line 211, ../sass/style-desktop.scss */
+  .button {
+    height: 30px;
+    min-width: 30px;
+    line-height: 16px;
+  }
+
+  /* line 218, ../sass/style-desktop.scss */
+  .button.onlyicon {
+    width: 30px;
+  }
+
+  /* line 224, ../sass/style-desktop.scss */
+  .statusbar-wrap {
+    height: 0;
+    line-height: 42px;
+    position: absolute;
+    width: 100%;
+  }
+
+  /* line 231, ../sass/style-desktop.scss */
+  #preferences-tabpanel-content .text.field,
+  #preferences-tabpanel-content .combobox.field {
+    width: 250px;
+  }
+
+  /* line 237, ../sass/style-desktop.scss */
+  .login-window .button {
+    height: 30px;
+    line-height: 34px;
+  }
+
+  /* line 242, ../sass/style-desktop.scss */
+  #about-body-wrap {
+    width: 400px;
+  }
+
+  /* line 246, ../sass/style-desktop.scss */
+  .context-option .icon:before {
+    font-size: 0.8rem;
+  }
+}

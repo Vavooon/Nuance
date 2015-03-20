@@ -1,0 +1,356 @@
+@media only screen and (min-width: 0) and (max-width: 1023px) {
+  /* line 4, ../sass/style-mobile.scss */
+  body {
+    font-size: 200%;
+  }
+
+  /* line 8, ../sass/style-mobile.scss */
+  #tabpanel-switch {
+    font-size: 1.5em;
+    max-height: 600px;
+    position: relative;
+  }
+
+  /* line 14, ../sass/style-mobile.scss */
+  #tabpanel-switch:before {
+    content: '\e805';
+    font-family: "Fontello";
+    float: right;
+    margin-top: 10px;
+    right: 30px;
+    margin-bottom: -20px;
+    position: fixed;
+  }
+
+  /* line 24, ../sass/style-mobile.scss */
+  #tabpanel-switch:hover {
+    overflow: auto;
+  }
+
+  /* line 28, ../sass/style-mobile.scss */
+  #logo {
+    width: 100%;
+  }
+
+  /* line 32, ../sass/style-mobile.scss */
+  #logo img {
+    padding-top: 8px;
+  }
+
+  /* line 37, ../sass/style-mobile.scss */
+  #tabpanel-switch > ul {
+    margin-left: 3em;
+  }
+
+  /* line 41, ../sass/style-mobile.scss */
+  #tabpanel-switch span {
+    display: none;
+  }
+
+  /* line 45, ../sass/style-mobile.scss */
+  #tabpanel-switch > ul > li > ul {
+    margin-left: 3em;
+  }
+
+  /* line 50, ../sass/style-mobile.scss */
+  #tabpanel-switch > li.group {
+    height: auto;
+    border-bottom-width: 3px;
+  }
+
+  /* line 55, ../sass/style-mobile.scss */
+  #tabpanel-switch:hover > li.group {
+    border-bottom-width: 0;
+  }
+
+  /* line 59, ../sass/style-mobile.scss */
+  #tabpanel-switch li {
+    width: 100%;
+    display: none;
+    height: 64px;
+  }
+
+  /* line 65, ../sass/style-mobile.scss */
+  #tabpanel-switch:hover li {
+    display: block;
+  }
+
+  /* line 69, ../sass/style-mobile.scss */
+  #tabpanel-switch li.stretch {
+    display: none;
+  }
+
+  /* line 75, ../sass/style-mobile.scss */
+  .document.button .title {
+    padding-top: 20px;
+  }
+
+  /* line 84, ../sass/style-mobile.scss */
+  #tabpanel-switch li.selected {
+    display: block;
+  }
+
+  /* line 88, ../sass/style-mobile.scss */
+  #tabpanel-switch ul li.selected {
+    border-bottom-width: 0;
+  }
+
+  /* line 92, ../sass/style-mobile.scss */
+  #tabpanel-switch:hover ul li.selected {
+    border-bottom-width: 3px;
+  }
+
+  /* line 96, ../sass/style-mobile.scss */
+  .header .width-drag {
+    height: 2em;
+  }
+
+  /* line 101, ../sass/style-mobile.scss */
+  #tabpanel-switch > li.spoiler,
+  #tabpanel-switch > li.spoiler-stretch {
+    display: none;
+  }
+
+  /* line 106, ../sass/style-mobile.scss */
+  .table-cell, .header-cell {
+    height: 1.2em;
+    padding: 0.5em 0.25em;
+  }
+
+  /* line 111, ../sass/style-mobile.scss */
+  .header .header-cell.icon:before {
+    line-height: 2.5rem;
+  }
+
+  /* line 115, ../sass/style-mobile.scss */
+  .popup-window,
+  .popup-window.double,
+  .popup-window.triple {
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    padding: 8px 4px;
+  }
+
+  /* line 125, ../sass/style-mobile.scss */
+  .popup-window > .field-wrap {
+    margin: 0 1%;
+    min-height: 90px;
+  }
+
+  /* line 130, ../sass/style-mobile.scss */
+  .popup-window .buttons-wrap {
+    margin-top: 1em;
+  }
+
+  /* line 135, ../sass/style-mobile.scss */
+  .text.field {
+    min-height: 64px;
+  }
+
+  /* line 139, ../sass/style-mobile.scss */
+  .field-wrap {
+    font-size: 2rem;
+    height: auto;
+  }
+
+  /* line 144, ../sass/style-mobile.scss */
+  .field-wrap .checkbox {
+    height: 64px;
+  }
+
+  /* line 148, ../sass/style-mobile.scss */
+  .field-wrap .field {
+    font-size: 1.5rem;
+  }
+
+  /* line 152, ../sass/style-mobile.scss */
+  .combobox .option {
+    padding-left: 8px;
+    min-height: 62px;
+    line-height: 62px;
+  }
+
+  /* line 158, ../sass/style-mobile.scss */
+  .field-wrap .combobox {
+    font-size: 1em !important;
+  }
+
+  /* line 162, ../sass/style-mobile.scss */
+  .combobox .arrow {
+    min-height: 25px;
+    margin-top: -40px;
+    margin-right: 8px;
+  }
+
+  /* line 168, ../sass/style-mobile.scss */
+  .date.field .field-wrap:nth-child(2) {
+    width: 400px;
+  }
+
+  /* line 173, ../sass/style-mobile.scss */
+  .field-wrap .checkbox {
+    width: 128px;
+  }
+
+  /* line 177, ../sass/style-mobile.scss */
+  .field-wrap .checkbox em {
+    line-height: 58px;
+  }
+
+  /* line 181, ../sass/style-mobile.scss */
+  .field-wrap .checkbox.checked em {
+    margin-left: 1px;
+  }
+
+  /* line 185, ../sass/style-mobile.scss */
+  .field-wrap.double {
+    width: 98%;
+  }
+
+  /* line 190, ../sass/style-mobile.scss */
+  .button {
+    height: 64px;
+    min-width: 64px;
+    line-height: 42px;
+    text-indent: 8px;
+    padding: 10px;
+  }
+
+  /* line 198, ../sass/style-mobile.scss */
+  .button.icon:before {
+    top: 15px;
+    margin-left: 0;
+    margin-right: 10px;
+  }
+
+  /* line 206, ../sass/style-mobile.scss */
+  .search-wrap .field {
+    text-indent: 8px;
+  }
+
+  /* line 210, ../sass/style-mobile.scss */
+  .search-wrap .search-button, .search-wrap .clear-button {
+    width: 64px;
+    height: 64px;
+  }
+
+  /* line 215, ../sass/style-mobile.scss */
+  .search-wrap .search-button:before, .search-wrap .clear-button:before {
+    line-height: 2em;
+    width: 3rem;
+  }
+
+  /* line 220, ../sass/style-mobile.scss */
+  .popup-caption {
+    font-size: 1.8em;
+    height: 120px;
+  }
+
+  /* line 226, ../sass/style-mobile.scss */
+  .statusbar-wrap {
+    height: 0;
+    line-height: 84px;
+    display: none;
+  }
+
+  /* line 233, ../sass/style-mobile.scss */
+  .stat-window .popup-body > * {
+    width: 100%;
+  }
+
+  /* line 237, ../sass/style-mobile.scss */
+  .stat-window .popup-body img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* line 244, ../sass/style-mobile.scss */
+  .header .header-context-menu-button {
+    height: 71px;
+    width: 72px;
+    margin-top: -70px;
+    line-height: 70px;
+  }
+
+  /* line 252, ../sass/style-mobile.scss */
+  .context-option {
+    padding: 0.2em 0.8em;
+    white-space: nowrap;
+  }
+
+  /* line 257, ../sass/style-mobile.scss */
+  .context-option span {
+    margin-left: -0.4em;
+  }
+
+  /* line 260, ../sass/style-mobile.scss */
+  .context-option .icon:before {
+    vertical-align: baseline;
+  }
+
+  /* line 265, ../sass/style-mobile.scss */
+  #preferences-tabpanel-switch {
+    max-width: 33%;
+  }
+
+  /* line 269, ../sass/style-mobile.scss */
+  #preferences-tabpanel-switch li {
+    white-space: normal;
+  }
+
+  /* line 274, ../sass/style-mobile.scss */
+  #preferences-tabpanel-content .save-message {
+    display: block;
+    padding-left: 6px;
+  }
+
+  /* line 280, ../sass/style-mobile.scss */
+  #preferences-tabpanel-content .save-message > *,
+  #preferences-tabpanel-content .save-message .button {
+    width: 100%;
+    margin: 0;
+    margin-top: 10px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
+
+  /* ============================== NEW ============================== */
+  /* line 292, ../sass/style-mobile.scss */
+  .flex-wrap {
+    height: 64px;
+  }
+
+  /* line 297, ../sass/style-mobile.scss */
+  .flex-wrap > * {
+    height: 64px;
+  }
+
+  /* line 301, ../sass/style-mobile.scss */
+  .popup-body > .field-wrap {
+    min-height: 110px;
+  }
+
+  /* line 305, ../sass/style-mobile.scss */
+  .date-time-field-wrap,
+  .combobox-field-wrap {
+    height: 110px;
+  }
+
+  /* line 312, ../sass/style-mobile.scss */
+  .icon:before {
+    font-size: 2rem;
+  }
+
+  /* line 318, ../sass/style-mobile.scss */
+  .table-cell p.state {
+    width: 32px;
+    height: 32px;
+    line-height: 56px;
+  }
+
+  /* line 324, ../sass/style-mobile.scss */
+  .icon.list:before {
+    font-size: 2rem;
+  }
+}

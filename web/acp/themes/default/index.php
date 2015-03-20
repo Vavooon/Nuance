@@ -10,15 +10,16 @@
         {
             ?>
             <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/gh-buttons.css" />
-            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/style.css" />
-            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/style-mobile.css" />
-            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/style-desktop.css" />
+            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/reset.css" />
+            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style.css" />
+            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style-mobile.css" />
+            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style-desktop.css" />
             <?php
         }
         else
         {
             ?>
-            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/style.css" />
+            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style.css" />
             <?php
         }
         ?>
