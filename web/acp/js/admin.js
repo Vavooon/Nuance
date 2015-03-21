@@ -116,7 +116,6 @@ window.onConfigLoad = function ()
         return round(parseFloat(cash), fractionalPart);
     };
 
-    licenseManager = new Nuance.LicenseManager;
 
     function showAbout()
     {
@@ -171,112 +170,6 @@ window.onConfigLoad = function ()
             configProxy.load();
         }
 
-        function updateLicenseInfo()
-        {
-            licenseInfoWrap.removeChilds();
-            ce('span',
-                    {
-                        innerHTML: _("Please wait...")
-                    }, licenseInfoWrap);
-            Nuance.AjaxRequest("GET", "../../ajax.php?action=updatelicenseinfo", null, onsuccess);
-        }
-
-        var licenseInfoHeader = ce('div', {
-            id: 'license-info-header'
-        }, body);
-        ce('div',
-                {
-                    innerHTML: _("License info"),
-                    className: 'sub-title'}, licenseInfoHeader);
-        ce('div',
-                {
-                    innerHTML: _("Update"),
-                    id: 'license-update-button',
-                    className: "icon reload",
-                    onclick: updateLicenseInfo
-                }, licenseInfoHeader);
-
-        var licenseInfoWrap = ce('div', {
-            id: 'license-info-wrap'
-        }, body);
-
-        function showLicenseInfo()
-        {
-            licenseInfoWrap.removeChilds();
-            var licenseData = configProxy.getValue('var', 'main', 'licenseData');
-            if (typeof licenseData === 'object')
-            {
-                if (licenseData.registered)
-                {
-                    var levels = ['Unregistered', 'Standart', 'Pro'];
-                    var expireDate = (Date.parse(licenseData.info.expires)).toString(dateFormat);
-                    ce('p',
-                            {
-                                innerHTML: _('Owner') + ": " + licenseData.info.owner
-                            }, licenseInfoWrap);
-                    ce('p',
-                            {
-                                innerHTML: _('Level') + ": " + _(levels[licenseData.info.level])
-                            }, licenseInfoWrap);
-                    ce('p',
-                            {
-                                innerHTML: _('Update permission expires') + ": " + expireDate
-                            }, licenseInfoWrap);
-                    ce('br', null, licenseInfoWrap);
-                    ce('p',
-                            {
-                                innerHTML: _('Allowed plugins') + ":"
-                            }, licenseInfoWrap);
-                    var list = ce('ul', null, licenseInfoWrap);
-                    for (var i = 0; i < licenseData.restrictions.allowedPlugins.length; i++)
-                    {
-                        ce('li',
-                                {
-                                    innerHTML: _('plugin-' + licenseData.restrictions.allowedPlugins[i])
-                                }, list);
-                    }
-                }
-                else
-                {
-                    ce('span',
-                            {
-                                className: 'red',
-                                innerHTML: _('Unregistered version') + '&nbsp;&nbsp;'
-                            }, licenseInfoWrap);
-                    ce('a',
-                            {
-                                innerHTML: _("Register"),
-                                target: '_blank',
-                                href: 'http://nuance-bs.com/buy',
-                                id: 'register-link'
-                            }, licenseInfoWrap);
-                    ce('br', null, licenseInfoWrap);
-                    ce('br', null, licenseInfoWrap);
-                    ce('p',
-                            {
-                                innerHTML: _('Restrictions') + ":"
-                            }, licenseInfoWrap);
-                    var restrictedTables = ['user', 'router', 'master'];
-                    var list = ce('ul', null, licenseInfoWrap);
-                    for (var i = 0; i < restrictedTables.length; i++)
-                    {
-                        var tableName = restrictedTables[i];
-                        ce('li',
-                                {
-                                    innerHTML: _('table-' + restrictedTables[i]) + ": " + licenseData.restrictions[restrictedTables[i]]
-                                }, list);
-                    }
-                }
-            }
-            else
-            {
-                ce('p',
-                        {
-                            innerHTML: _('Cannot obtain license data')
-                        }, licenseInfoWrap);
-            }
-        }
-        showLicenseInfo();
     }
     var topContainer = ce('div', {
         id: 'top-container'
@@ -1151,14 +1044,11 @@ window.onConfigLoad = function ()
     window.trigger('afterpluginsload');
 
     // Add documents tab
-    if (licenseManager.checkPermission('ucp'))
-    {
-        pluginsTabs.documents = {
-            title: _("Documents"),
-            name: 'documents',
-            content: (new Nuance.input.Documents).body
-        };
-    }
+    pluginsTabs.documents = {
+        title: _("Documents"),
+        name: 'documents',
+        content: (new Nuance.input.Documents).body
+    };
 
     if (checkPermission(['table', 'user', 'edit', 'disabled']))
     {
