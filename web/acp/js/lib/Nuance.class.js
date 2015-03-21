@@ -854,6 +854,14 @@ var Nuance =
 
                             Nuance.EventMixin.call(this, o);
                         },
+                        NamedField: function( o ) {
+                            this.body = ce( 'div', {className: 'named-field'}, o.target );
+                            ce( 'div', {className: 'title', innerHTML: o.title}, this.body );
+                            if (o.field ) {
+                                this.field = o.field;
+                                this.body.appendChild( o.field.body );
+                            }
+                        },
                         StretchField: function (o)
                         {
                             this.body = ce('div', {className: 'stretch-wrap'}, o.target);
@@ -3303,7 +3311,7 @@ var Nuance =
                     for (var i = 0; i < fields.length; i++)
                     {
                         this.body.appendChild(fields[i].body);
-                        fieldsByName[fields[i].getName()] = fields[i];
+                        fieldsByName[fields[i].field.getName()] = fields[i];
                     }
                 }
                 this.getFields = function () {
@@ -3993,9 +4001,6 @@ var Nuance =
                     }
                     var field;
 
-                    //create an element for title and field
-                    var namedField = ce( 'div', {className: 'named-field'}, self.body );
-                    ce( 'div', {className: 'title', innerHTML: _(o.store.header[i][0])}, namedField );
                     var fieldOpts = {
                         name: hname,
                         form: self,
@@ -4004,7 +4009,6 @@ var Nuance =
                         //title: ,
                         allowView: true,
                         selectOnlyItem: true,
-                        target: namedField,
                         value: (typeof o.store.data[o.recordId] !== 'undefined') ? o.store.data[o.recordId][i] : null
                     };
                     if (customFields[hname])
@@ -4019,7 +4023,7 @@ var Nuance =
                             continue;
                         case 'multitext' :
                             field = new Nuance.input.TextArea(fieldOpts);
-                            namedField.classList.add( 'full-width' );
+                            //namedField.classList.add( 'full-width' );
                             break;
                         case 'speed' :
                             field = new Nuance.input.SpeedField(fieldOpts);
@@ -4098,6 +4102,13 @@ var Nuance =
                             field = new Nuance.input.TextField(fieldOpts);
                             break;
                     }
+                    var namedField = new Nuance.input.NamedField(
+                        {
+                            title: _(o.store.header[i][0]),
+                            field: field,
+                            target: self.body
+                        }
+                    );
                     fieldsByName[hname] = field;
                     field.index = i;
                     fields.push(field);

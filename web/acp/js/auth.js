@@ -27,16 +27,26 @@ if (!isIE)
                 }, form);
         loginField = new Nuance.input.TextField(
                 {
-                    title: _('Login'),
                     name: 'login',
                     onkeypress: onEnterKeyPress
                 });
         passwordField = new Nuance.input.PasswordField(
                 {
-                    title: _('Password'),
                     name: 'password',
                     onkeypress: onEnterKeyPress
-                });
+                }),
+        namedLoginField = new Nuance.input.NamedField(
+            {
+                title: _('Login'),
+                field: loginField
+            }
+        ),
+        namedPasswordField = new Nuance.input.NamedField(
+            {
+                title: _('Password'),
+                field:passwordField
+            }
+        );
         var submitButton = new Nuance.input.Button(
                 {
                     value: _("Authorize"),
@@ -79,7 +89,7 @@ if (!isIE)
                     title: popupTitle,
                     closable: false,
                     body: form,
-                    fields: [loginField, passwordField],
+                    fields: [namedLoginField, namedPasswordField],
                     buttons: [submitButton]
                 });
         b._popupWraps.classList.add('login-wraps');

@@ -14,7 +14,6 @@ class Config
     public function set($params)
     {
         global $sessionId, $response;
-        d($params);
         $type = $_POST['type'];
         if (checkPermission($sessionId, array('preference', $type)) ||
                 $type === 'user')
@@ -31,7 +30,7 @@ class Config
 
                 case 'router':
                 case 'subscriber':
-                    $ownerid = $_GET['ownerid'];
+                    $ownerid = $_POST['ownerid'];
                     break;
             }
             $vartype = isset($_POST['vartype']) ? $_POST['vartype'] : 'string';

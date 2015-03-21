@@ -1164,7 +1164,10 @@ $addRenderers = array(
                                     break;
                             }
                             $configTable = new Table('config');
-                            $res = $configTable->load("WHERE type=$type AND ownerid=$ownerid AND path='$path' AND name='$name'");
+                            $name = mysql_real_escape_string( $name );
+                            $name = mysql_real_escape_string( $name );
+                            $res = $configTable->load("WHERE `type`=$type AND `ownerid`=$ownerid AND `path`='$path' AND `name` LIKE '$name'");
+
                             foreach ($res as $row)
                             {
                                 $value = $row['value'];
@@ -1200,7 +1203,7 @@ $addRenderers = array(
                                     $ownerId = 0;
                                     break;
                             }
-                            $selStr = "SELECT * FROM `" . DB_TABLE_PREFIX . "config` WHERE type='$type' AND path='$path' AND name='$name' AND ownerid=$ownerId";
+                            $selStr = "SELECT * FROM `" . DB_TABLE_PREFIX . "config` WHERE type='$type' AND path='$path' AND name LIKE '".mysql_real_escape_string(mysql_real_escape_string($name))."' AND ownerid=$ownerId";
                             $resp = $db->query($selStr);
                             $oldValue = NULL;
                             if ($resp)
@@ -1701,9 +1704,6 @@ $addRenderers = array(
 
                         class StatisticsCache extends Cache
                         {
-
-                            public $month;
-
                             public function expireCheck()
                             {
                                 global $mysqlTimeDateFormat;
