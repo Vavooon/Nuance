@@ -7,5 +7,6 @@
 .locale-src/
 .other/
 .idea/
+.sass-cache/
 db.sql
 config.php
