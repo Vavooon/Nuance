@@ -22,8 +22,6 @@ $router->map('GET', '/', function () use ($usertheme, $sessionId, $sessionName)
     $browserVersion = intval($browser['majorVersion']);
     $browserFullName = ($browser['name'] == "Unknown") ? '' : $browser['fullName'];
     checkUpdate();
-    $licenseManager = new LicenseManager;
-    $allowedPlugins = $licenseManager->checkPermission('allowedPlugins');
     loadLocale('acp');
     if (!array_key_exists($browser['name'], $supportedBrowsers))
     {
@@ -200,7 +198,7 @@ $router->map('GET', '/all/get', function ($params)
     $db->get(array('name' => '*'));
 
     $skipTables = array(
-        'moneyflow', 'order', 'log'
+        'moneyflow', 'order', 'log', 'scratchcard'
     );
     for ($i = 0; $i < count($skipTables); $i++)
     {

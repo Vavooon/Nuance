@@ -855,7 +855,7 @@ var Nuance =
                             Nuance.EventMixin.call(this, o);
                         },
                         NamedField: function( o ) {
-                            this.body = ce( 'div', {className: 'named-field'}, o.target );
+                            this.body = ce( 'div', { className: 'named-field ' + o.width }, o.target );
                             ce( 'div', {className: 'title', innerHTML: o.title}, this.body );
                             if (o.field ) {
                                 this.field = o.field;
@@ -2985,7 +2985,13 @@ var Nuance =
                                         {
                                             title = i[0].toUpperCase();
                                         }
-                                        var checkbox = new Nuance.input.CheckBox({target: newChild, title: title, offText: ' ', onText: " ", partialText: " ", value: nextChapter, onchange: onCheckboxChange});
+                                        var checkbox = new Nuance.input.CheckBox({ offText: ' ', onText: " ", partialText: " ", value: nextChapter, onchange: onCheckboxChange});
+                                        var namedField = new Nuance.input.NamedField( {
+                                            title: title,
+                                            width: 'normal',
+                                            field: checkbox,
+                                            target: newChild
+                                        });
 
                                         checkboxTree[i] = checkbox;
                                         checkbox.parentNode = checkboxTree;
@@ -3035,13 +3041,19 @@ var Nuance =
                                         }
 
                                         var checkbox = new Nuance.input.CheckBox({target: child, title: title, offText: ' ', onText: " ", partialText: " ", value: value, onchange: onCheckboxChange});
+                                        var namedField = new Nuance.input.NamedField( {
+                                            title: title,
+                                            width: 'normal',
+                                            field: checkbox,
+                                            target: child
+                                        });
                                         checkbox.parentNode = checkboxTree;
                                         checkbox.body.classList.add('checkbox-' + level);
                                     }
                                     checkboxTree[i] = checkbox;
                                     if (['read', 'edit', 'add', 'remove', 'show'].indexOf(i) !== -1)
                                     {
-                                        checkbox.title.title = _(i);
+                                        //checkbox.title.title = _(i);
                                     }
                                 }
                             }
@@ -3997,7 +4009,7 @@ var Nuance =
                             continue;
                         }
                     }
-                    var field;
+                    var field, fieldWidth = "normal";
 
                     var fieldOpts = {
                         name: hname,
@@ -4021,7 +4033,7 @@ var Nuance =
                             continue;
                         case 'multitext' :
                             field = new Nuance.input.TextArea(fieldOpts);
-                            //namedField.classList.add( 'full-width' );
+                            fieldWidth = "full";
                             break;
                         case 'speed' :
                             field = new Nuance.input.SpeedField(fieldOpts);
@@ -4035,6 +4047,7 @@ var Nuance =
                             break;
                         case 'acl':
                             field = new Nuance.input.PermissionList(fieldOpts);
+                            fieldWidth = "full";
                             break;
                             //case 'iplist': field=new Nuance.input.IpList(fieldOpts); break;
                         case 'tarifflist':
@@ -4104,6 +4117,7 @@ var Nuance =
                         {
                             title: _(o.store.header[i][0]),
                             field: field,
+                            width: fieldWidth,
                             target: self.body
                         }
                     );
