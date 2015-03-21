@@ -3469,7 +3469,6 @@ var Nuance =
                             }
                         }
 
-                        c(2)
                         var namedField = ce( 'div', {className: 'named-field'}, tabPanel.tabs[i] );
                         ce( 'div', { className: 'title', innerHTML: _([configType, i, name].join('-')) }, namedField );
                         var field;
@@ -3622,7 +3621,6 @@ var Nuance =
                 };
                 var fields = [];
                 var fieldsTree = {};
-                c(1)
                 this.fields = fields;
                 /*
                  this.getValues=function()
@@ -5479,7 +5477,6 @@ var Nuance =
 
                             function onRouterStoreLoad()
                             {
-                                c(routerStateChecker)
                                 routerStateChecker.on('afterload', onRouterStatesLoad, true);
                             }
 
