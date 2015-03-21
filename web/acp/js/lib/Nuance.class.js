@@ -851,6 +851,7 @@ var Nuance =
                                     }
                                 }
                             }
+
                             Nuance.EventMixin.call(this, o);
                         },
                         StretchField: function (o)
@@ -1000,11 +1001,12 @@ var Nuance =
                         TextField: function (o)
                         {
                             this.body = ce('div', {className: 'text-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+                            var flexWrap = ce( 'div', {className: 'flex-wrap'}, this.body );
+                            //var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
+                            //this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
                             var self = this,
                                     disabled = o.disabled;
-                            self.el = ce('input', {className: 'text field'}, this.body);
+                            self.el = ce( 'input', {className: 'text field'}, flexWrap );
                             if (o.name)
                                 self.el.name = o.name;
                             var valueType = 'string';
@@ -1043,10 +1045,9 @@ var Nuance =
                         DiscountField: function (o)
                         {
                             this.body = ce('div', {className: 'discount-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
-                            var flexWrap = ce('div', {className: 'flex-helper-wrap'}, this.body);
-                            this.wrap = ce('div', {className: 'flex-wrap'}, flexWrap);
+                            //var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
+                            //this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+                            this.wrap = ce('div', {className: 'flex-wrap'}, this.body );
                             var self = this,
                                     disabled = o.disabled;
                             self.el = ce('input', {className: 'text field discount'}, this.wrap);
@@ -1148,8 +1149,8 @@ var Nuance =
                         SpeedField: function (o)
                         {
                             this.body = ce('div', {className: 'speed-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+                            //var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
+                            //this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
                             this.wrap = ce('div', {className: 'flex-wrap'}, this.body);
                             var self = this,
                                     disabled = o.disabled;
@@ -1318,14 +1319,13 @@ var Nuance =
                              */
 
                             this.body = ce('div', {className: 'date-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+                            //var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
+                            this.wrap = ce( 'div', {className: 'flex-wrap' }, this.body );
                             var self = this,
                                     yearsCount = o.yearsCount || 10,
                                     yearsOffset = o.yearsOffset || -9,
                                     disabled = false;
-                            var flexWrap = ce('div', {className: 'flex-helper-wrap'}, this.body);
-                            self.el = ce('div', {className: 'flex-wrap date field'}, flexWrap);
+                            self.el = ce('div', {className: 'flex-wrap date field'}, this.wrap );
                             var dayField = new Nuance.input.ComboBox({
                                 selectPlaceholder: _('Day'),
                                 store: dayStore,
@@ -1462,13 +1462,14 @@ var Nuance =
                         PhoneNumberField: function (o)
                         {
                             this.body = ce('div', {className: 'phone-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+                            //var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
+                            //this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+                            this.wrap = ce('div', {className: 'flex-wrap'}, this.body);
                             var self = this,
                                     realValue,
                                     disabled = false,
                                     countryCode = configProxy.getValue('system', 'grid', 'countryCode');
-                            self.el = ce('input', {type: 'tel', className: 'text field', value: countryCode}, this.body);
+                            self.el = ce('input', {type: 'tel', className: 'text field', value: countryCode}, this.wrap);
                             if (o.name)
                                 self.el.name = o.name;
                             this.setValue = function (value)
@@ -1494,10 +1495,8 @@ var Nuance =
                         PasswordField: function (o)
                         {
                             this.body = ce('div', {className: 'password-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
-                            var flexWrap = ce('div', {className: 'field'}, this.body);
-                            this.wrap = ce('div', {className: 'flex-wrap'}, flexWrap);
+                            this.wrap = ce('div', {className: 'flex-wrap'}, this.body);
+                            //this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
                             var self = this,
                                     disabled = false,
                                     realValue;
@@ -1533,10 +1532,9 @@ var Nuance =
                         ViewPasswordField: function (o)
                         {
                             this.body = ce('div', {className: 'view-password-field-wrap password-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
-                            var flexWrap = ce('div', {className: 'flex-helper-wrap'}, this.body);
-                            this.wrap = ce('div', {className: 'flex-wrap'}, flexWrap);
+                            //var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
+                            //this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+                            this.wrap = ce('div', {className: 'flex-wrap'}, this.body);
                             var self = this,
                                     disabled = false,
                                     realValue;
@@ -1641,8 +1639,7 @@ var Nuance =
                         CheckBox: function (o)
                         {
                             this.body = ce('div', {className: 'checkbox-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
+                            this.wrap = ce( 'div', {className: 'flex-wrap'}, this.body );
                             var self = this,
                                     checked = false,
                                     partial = false,
@@ -1652,7 +1649,7 @@ var Nuance =
                                     offText = o.offText || _('off'),
                                     partialText = o.onText || '',
                                     valueType = 'boolean',
-                                    el = ce('div', {className: 'checkbox field', tabIndex: 0}, this.body),
+                                    el = ce('div', {className: 'checkbox field', tabIndex: 0}, this.wrap),
                                     switchEl = ce('em', {innerHTML: _("off")}, el);
                             Nuance.EventMixin.call(this, o);
                             Nuance.input.__Field.call(this, o);
@@ -1733,9 +1730,8 @@ var Nuance =
                         ComboBox: function (o)
                         {
                             this.body = ce('div', {className: 'combobox-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
-                            var el = ce('div', {className: 'combobox field'}, this.body);
+                            this.wrap = ce( 'div', { className: 'flex-wrap' }, this.body );
+                            var el = ce('div', {className: 'combobox field'}, this.wrap);
                             var activeVal = ce('input', {className: 'top-option option', onselectstart: falsefunc, onsmousedrag: falsefunc}, el);
                             var arrowEl = ce('div', {className: 'arrow'}, el);
                             var optionsContainer = ce('div', {className: 'options-list'}, el);
@@ -2244,10 +2240,7 @@ var Nuance =
                             var self = this;
                             this.form = o.form;
                             this.body = ce('div', {className: 'tariff-field-wrap field-wrap'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
-                            var flexWrap = ce('div', {className: 'flex-helper-wrap'}, this.body);
-                            this.wrap = ce('div', {className: 'flex-wrap'}, flexWrap);
+                            this.wrap = ce('div', {className: 'flex-wrap'}, this.body );
                             var tariffCombobox = new Nuance.input.ComboBox({name: 'tariff', store: o.store, value: o.value, parentList: o.parentList, target: this.wrap});
                             var changeButton = ce('div', {className: 'change-tariff-button button icon onlyicon arrowright', onclick: changeButtonClick}, this.wrap);
 
@@ -2463,9 +2456,8 @@ var Nuance =
                         TextArea: function (o)
                         {
                             this.body = ce('div', {className: 'textarea-field-wrap field-wrap double'}, o.target);
-                            var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-                            this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
-                            var el = ce('textarea', {className: 'multitext field'}, this.body),
+                            this.wrap = ce( 'div', { className: 'flex-wrap' }, this.body );
+                            var el = ce('textarea', {className: 'multitext field'}, this.wrap ),
                                     self = this,
                                     disabled = false;
                             this.el = el;
@@ -3469,12 +3461,14 @@ var Nuance =
                             }
                         }
 
+                        c(2)
+                        var namedField = ce( 'div', {className: 'named-field'}, tabPanel.tabs[i] );
+                        ce( 'div', { className: 'title', innerHTML: _([configType, i, name].join('-')) }, namedField );
                         var field;
                         var fieldOpts =
                                 {
                                     name: name,
-                                    title: _([configType, i, name].join('-')),
-                                    target: tabPanel.tabs[i],
+                                    target: namedField,
                                     value: value,
                                     type: typeof value
                                 };
@@ -3602,6 +3596,8 @@ var Nuance =
                         config = configProxy.getConfigTree(type, owner),
                         defaults = configProxy.getDefaults(type, owner),
                         currentOwnerConfig = mergeProps(defaults, config, true);
+
+                this.body = ce('div', {className: "preferences-body"}, o.target);
                 this.save = function ()
                 {
                     for (var d = 0; d < fields.length; d++)
@@ -3618,6 +3614,7 @@ var Nuance =
                 };
                 var fields = [];
                 var fieldsTree = {};
+                c(1)
                 this.fields = fields;
                 /*
                  this.getValues=function()
@@ -3672,12 +3669,13 @@ var Nuance =
                             }
                         }
 
+                        var namedField = ce( 'div', {className: 'named-field'}, self.body );
+                        ce( 'div', { className: 'title', innerHTML: _([configType, i, name].join('-')) }, namedField );
                         var field;
                         var fieldOpts =
                                 {
                                     name: name,
-                                    title: _([configType, i, name].join('-')),
-                                    target: self.body,
+                                    target: namedField,
                                     value: value,
                                     type: typeof value
                                 };
@@ -3949,7 +3947,7 @@ var Nuance =
                 {
                     throw new Error('includedFields option must be specified wnen using onlyIncludedFields');
                 }
-                o.winLayout = o.winLayout || 'triple';
+                o.winLayout = 'double';
                 o.bodyLayout = 'double';
                 o.btnLayout = 'double';
                 Nuance.Popup.call(this, o);
@@ -3994,18 +3992,21 @@ var Nuance =
                         }
                     }
                     var field;
-                    var fieldOpts =
-                            {
-                                name: hname,
-                                form: self,
-                                recordId: o.recordId,
-                                index: i,
-                                title: _(o.store.header[i][0]),
-                                allowView: true,
-                                selectOnlyItem: true,
-                                target: self.body,
-                                value: (typeof o.store.data[o.recordId] !== 'undefined') ? o.store.data[o.recordId][i] : null
-                            };
+
+                    //create an element for title and field
+                    var namedField = ce( 'div', {className: 'named-field'}, self.body );
+                    ce( 'div', {className: 'title', innerHTML: _(o.store.header[i][0])}, namedField );
+                    var fieldOpts = {
+                        name: hname,
+                        form: self,
+                        recordId: o.recordId,
+                        index: i,
+                        //title: ,
+                        allowView: true,
+                        selectOnlyItem: true,
+                        target: namedField,
+                        value: (typeof o.store.data[o.recordId] !== 'undefined') ? o.store.data[o.recordId][i] : null
+                    };
                     if (customFields[hname])
                     {
                         fieldOpts = mergeProps(fieldOpts, customFields[hname], true);
@@ -4018,6 +4019,7 @@ var Nuance =
                             continue;
                         case 'multitext' :
                             field = new Nuance.input.TextArea(fieldOpts);
+                            namedField.classList.add( 'full-width' );
                             break;
                         case 'speed' :
                             field = new Nuance.input.SpeedField(fieldOpts);
@@ -6460,7 +6462,7 @@ var Nuance =
                                 document.onmouseup = document.onmousemove = self.onmouseup = null;
                                 document.body.className = '';
                                 gridTable.classList.remove('resizing');
-                                configProxy.setValue('user', "width", name + ":" + targetRow.classList[0], targetRow.offsetWidth - 8, userId);
+                                configProxy.setValue('user', "width", name + ":" + targetRow.classList[0], targetRow.offsetWidth, userId);
                                 targetRow.removeChild(cover);
                             };
                             e.preventDefault();

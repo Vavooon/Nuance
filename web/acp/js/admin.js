@@ -1561,9 +1561,9 @@ window.onConfigLoad = function ()
         function extendUserForm(form)
         {
             var isAdding = form.constructor == Nuance.AddPopup;
-            form._popupWin.classList.remove('double');
-            form._popupWin.classList.add('triple');
-            form.body.classList.add('flex');
+            //form._popupWin.classList.remove('double');
+            //form._popupWin.classList.add('triple');
+            //form.body.classList.add('flex');
 
             var dataEl = ce('div',
                     {
@@ -1591,10 +1591,8 @@ window.onConfigLoad = function ()
                         type: 'subscriber'
                     });
             var fields = preferencesPopup.fields;
-            for (var i = 0; i < fields.length; i++)
-            {
-                preferencesEl.appendChild(fields[i].body);
-            }
+            preferencesEl.appendChild(preferencesPopup.body);
+
             var popupTabs = {
                 data:
                         {

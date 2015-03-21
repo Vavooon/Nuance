@@ -105,141 +105,116 @@
     padding-bottom: 0;
   }
 
-  /* line 94, ../sass/style-desktop.scss */
-  .toolbar {
-    height: 42px;
-  }
-
-  /* line 100, ../sass/style-desktop.scss */
+  /* line 95, ../sass/style-desktop.scss */
   #tabpanel-switch > li.group {
     max-width: 400px;
   }
 
-  /* line 104, ../sass/style-desktop.scss */
+  /* line 99, ../sass/style-desktop.scss */
   #tabpanel-switch li:hover {
     border-bottom-color: rgba(0, 153, 255, 0.25);
   }
 
-  /* line 108, ../sass/style-desktop.scss */
+  /* line 103, ../sass/style-desktop.scss */
   #tabpanel-switch li.selected {
     border-bottom-color: #09f;
   }
 
-  /* line 112, ../sass/style-desktop.scss */
+  /* line 107, ../sass/style-desktop.scss */
   #tabpanel-switch li ul li:first-child {
     padding-top: 4px;
   }
 
-  /* line 119, ../sass/style-desktop.scss */
+  /* line 114, ../sass/style-desktop.scss */
   .opts-tab > div {
     display: table;
   }
 
-  /* line 127, ../sass/style-desktop.scss */
+  /* line 122, ../sass/style-desktop.scss */
   .button.document {
     width: 300px;
   }
 
-  /* line 132, ../sass/style-desktop.scss */
+  /* line 127, ../sass/style-desktop.scss */
   .grid .header {
     height: 25px;
   }
 
-  /* line 137, ../sass/style-desktop.scss */
+  /* line 132, ../sass/style-desktop.scss */
   .header-cell {
     line-height: 24px !important;
   }
 
-  /* line 141, ../sass/style-desktop.scss */
+  /* line 136, ../sass/style-desktop.scss */
   .header .header-cell.icon:before {
     line-height: 1.5rem;
   }
 
-  /* line 146, ../sass/style-desktop.scss */
+  /* line 141, ../sass/style-desktop.scss */
   .popup-window {
     margin: 0 auto;
   }
 
-  /* line 150, ../sass/style-desktop.scss */
+  /* line 145, ../sass/style-desktop.scss */
   .popup-window.messagebox {
     width: auto;
     min-width: 200px;
   }
 
-  /* line 155, ../sass/style-desktop.scss */
+  /* line 150, ../sass/style-desktop.scss */
   .popup-window > .buttons-wrap {
     margin-top: 0.5em;
   }
 
-  /* line 160, ../sass/style-desktop.scss */
+  /* line 155, ../sass/style-desktop.scss */
   .popup-caption {
     height: 40px;
   }
 
-  /* line 165, ../sass/style-desktop.scss */
+  /* line 160, ../sass/style-desktop.scss */
   .search-wrap {
     height: 30px;
   }
 
-  /* line 169, ../sass/style-desktop.scss */
-  .flex-wrap > * {
-    height: 30px;
-  }
-
-  /* line 174, ../sass/style-desktop.scss */
+  /* line 165, ../sass/style-desktop.scss */
   .checkbox {
     padding: 1px;
   }
 
-  /* line 178, ../sass/style-desktop.scss */
+  /* line 169, ../sass/style-desktop.scss */
   .checkbox em {
     line-height: 24px;
   }
 
-  /* line 182, ../sass/style-desktop.scss */
+  /* line 173, ../sass/style-desktop.scss */
   .popup-body > .field-wrap {
     min-height: 30px;
     padding: 8px 0;
   }
 
-  /* line 187, ../sass/style-desktop.scss */
+  /* line 178, ../sass/style-desktop.scss */
   .field-wrap .title {
     white-space: nowrap;
   }
 
-  /* line 191, ../sass/style-desktop.scss */
-  .field-wrap.combobox-field-wrap {
-    height: 28px;
-  }
-
-  /* line 195, ../sass/style-desktop.scss */
-  #preferences-tabpanel-content .field-wrap.combobox-field-wrap {
-    height: 50px;
-  }
-
-  /* line 203, ../sass/style-desktop.scss */
-  .flex-wrap {
-    height: 30px;
-  }
-
-  /* line 207, ../sass/style-desktop.scss */
+  /* line 186, ../sass/style-desktop.scss */
   .field.text {
     min-height: 30px;
   }
 
-  /* line 211, ../sass/style-desktop.scss */
+  /* line 190, ../sass/style-desktop.scss */
   .button {
     height: 30px;
     min-width: 30px;
     line-height: 16px;
   }
 
-  /* line 218, ../sass/style-desktop.scss */
+  /* line 197, ../sass/style-desktop.scss */
   .button.onlyicon {
     width: 30px;
   }
 
-  /* line 224, ../sass/style-desktop.scss */
+  /* line 203, ../sass/style-desktop.scss */
   .statusbar-wrap {
     height: 0;
     line-height: 42px;
@@ -247,24 +222,24 @@
     width: 100%;
   }
 
-  /* line 231, ../sass/style-desktop.scss */
+  /* line 210, ../sass/style-desktop.scss */
   #preferences-tabpanel-content .text.field,
   #preferences-tabpanel-content .combobox.field {
     width: 250px;
   }
 
-  /* line 237, ../sass/style-desktop.scss */
+  /* line 216, ../sass/style-desktop.scss */
   .login-window .button {
     height: 30px;
     line-height: 34px;
   }
 
-  /* line 242, ../sass/style-desktop.scss */
+  /* line 221, ../sass/style-desktop.scss */
   #about-body-wrap {
     width: 400px;
   }
 
-  /* line 246, ../sass/style-desktop.scss */
+  /* line 225, ../sass/style-desktop.scss */
   .context-option .icon:before {
     font-size: 0.8rem;
   }
