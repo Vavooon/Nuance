@@ -5479,6 +5479,7 @@ var Nuance =
 
                             function onRouterStoreLoad()
                             {
+                                c(routerStateChecker)
                                 routerStateChecker.on('afterload', onRouterStatesLoad, true);
                             }
 

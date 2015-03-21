@@ -12,8 +12,6 @@ $type = $_GET['type'];
 $target = $_GET['target'];
 if ($target == 'plugin' && preg_match("%^js|css$%", $type))
 {
-    $licenseManager = new LicenseManager;
-    $allowedPlugins = $licenseManager->checkPermission('allowedPlugins');
     if ($type == 'js')
     {
         header("Content-type: application/javascript");
@@ -25,14 +23,11 @@ if ($target == 'plugin' && preg_match("%^js|css$%", $type))
 
     foreach (getPlugins() as $name)
     {
-        if (in_array($name, $allowedPlugins))
-        {
-            $path = "../../plugins/$name/acp/$name.$type";
-            if (file_exists($path))
-            {
-                readfile($path);
-            }
-        }
+          $path = "../../plugins/$name/acp/$name.$type";
+          if (file_exists($path))
+          {
+              readfile($path);
+          }
     }
 }
 else if ($target == 'locale' && preg_match("%^[a-z]{2}_[A-Z]{2}$%", $name) && preg_match("%^mo|po$%", $type))
