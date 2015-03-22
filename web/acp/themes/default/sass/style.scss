@@ -933,8 +933,11 @@ body
     }
 
   }
+  .left-title,
+  &>.named-field>.title,
   .acl-0>.named-field>.title,
   .acl-1>.named-field>.title {
+    padding: 8px;
     position: absolute;
     left: 0;
   }
@@ -1023,12 +1026,6 @@ body
 	padding-top: 8px;
 }
 
-.acl .left-title
-{
-  position: absolute;
-  left: 0;
-  padding: 8px;
-}
 .permissionlist-field-wrap {
   position: relative;
   border-top: 1px solid lightgray;
