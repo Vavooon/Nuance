@@ -86,6 +86,14 @@ $default = '{
       "outInterface" : "wan",
       "inInterface" : "lan",
       "statPort" : 8080
+    },
+    "ip" :
+    {
+      "filterType": 0
+    },
+    "ppp" :
+    {
+      "disablePPPSecretsOfBlockedUsers": false
     }
   },
   "var":

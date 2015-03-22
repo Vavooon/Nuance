@@ -413,7 +413,7 @@ function tableExists($table)
     return $db->query("SHOW TABLES like '" . DB_TABLE_PREFIX . $table . "'")->rowCount();
 }
 
-function controllerRouter($routerId, $mode, $userId = false)
+function controllerRouter($routerId, $mode, $id = false)
 {
     global $path, $routerObj, $response;
 
@@ -426,7 +426,7 @@ function controllerRouter($routerId, $mode, $userId = false)
     {
         $devrow = $devres[0];
         $type = $devrow['routertype'];
-        $libPath = "$path/../modules/$type/$type.php";
+        $libPath = "$path/modules/$type/$type.php";
         if (!file_exists($libPath))
             return true;
         require_once $libPath;
@@ -441,7 +441,7 @@ function controllerRouter($routerId, $mode, $userId = false)
         }
         if (method_exists($module, $mode))
         {
-            $returnValue = $module->$mode($userId);
+            $returnValue = $module->$mode($id);
         }
     }
     return $returnValue;
@@ -515,7 +515,7 @@ function fork($scriptName, $arguments, $sync = true)
     }
 }
 
-function controllerRouterQueue($routerId, $mode, $userId = false)
+function controllerRouterQueue($routerId, $mode, $id = false)
 {
     if (!$routerId)
         return;
@@ -524,22 +524,22 @@ function controllerRouterQueue($routerId, $mode, $userId = false)
     $updqueueTable->setLogging(false);
     // Check for the same action records
     $req = "WHERE router=$routerId AND mode='$mode'";
-    if ($userId)
+    if ($id)
     {
-        $req.=" AND user=$userId";
+        $req.=" AND targetid=$id";
     }
     $similarRes = $updqueueTable->load($req);
     if (!count($similarRes))
     {
-        $updqueueTable->add(array('router' => $routerId, 'mode' => $mode, 'user' => $userId));
+        $updqueueTable->add(array('router' => $routerId, 'mode' => $mode, 'targetid' => $id));
     }
 
     $unavailableRouters = array();
     $queRes = $updqueueTable->load("WHERE `router`=$routerId");
     foreach ($queRes as $queRow)
     {
-        if (controllerRouter($queRow['router'], $queRow['mode'], $queRow['user']) ||
-                controllerRouter($queRow['router'], 'checkConnection', $queRow['user'])
+        if (controllerRouter($queRow['router'], $queRow['mode'], $queRow['targetid']) ||
+                controllerRouter($queRow['router'], 'checkConnection', $queRow['targetid'])
         )
         {
             $updqueueTable->delete(array('id' => $queRow['id']));
@@ -700,95 +700,101 @@ $addRenderers = array(
         }
         return $newFields;
     }
+);
+
+$afterAddRenderers = array(
+    'user' => function($id, $fields)
+    {
+        global $sessionId;
+        if (configgetvalue('system', 'cash', NULL, 'newUsersAutoFund'))
+        {
+            $moneyflowTable = new Table('moneyflow');
+            $moneyflowTable->add(
+                    array(
+                        "user" => $id,
+                        "sum" => getCashToPay($id),
+                        "detailsname" => "adminpay",
+                        "detailsid" => $sessionId
+                    )
+            );
+        }
+        payment(0, $id);
+    },
+    'ip' => function( $id, $fields ) {
+      controllerRouterQueue( $fields['router'], "update", $fields[ 'user' ] );
+    },
+    'ppp' => function( $id, $fields ) {
+      controllerRouterQueue( $fields['router'], "update", $fields[ 'user' ] );
+    },
+    'order' => function ($id, $fields)
+    {
+        $usersTable = new Table('user');
+        $row = $usersTable->loadById($fields['user']);
+        controllerRouterQueue($row['router'], "update", $fields['user']);
+    },
+    'message' => function($id, $fields)
+    {
+        $usersTable = new Table('user');
+        $row = $usersTable->loadById($fields['recipient']);
+        controllerRouterQueue($row['router'], "showmessage", $fields['recipient']);
+    },
+    'moneyflow' => function ($id, $newFields)
+    {
+        $sum = money($newFields['sum']);
+        $userId = $newFields['user'];
+        $userTable = new Table('user');
+        $user = $userTable->loadById($userId);
+        $newCash = money($user['cash']) + $sum;
+
+        $userTable->edit(
+                array(
+                    "id" => $userId,
+                    "cash" => $newCash
+                )
         );
 
-        $afterAddRenderers = array(
-            'user' => function($id, $fields)
-            {
-                global $sessionId;
-                if (configgetvalue('system', 'cash', NULL, 'newUsersAutoFund'))
-                {
-                    $moneyflowTable = new Table('moneyflow');
-                    $moneyflowTable->add(
-                            array(
-                                "user" => $id,
-                                "sum" => getCashToPay($id),
-                                "detailsname" => "adminpay",
-                                "detailsid" => $sessionId
-                            )
-                    );
-                }
-                payment(0, $id);
-            },
-                    'order' => function ($id, $fields)
-            {
-                $usersTable = new Table('user');
-                $row = $usersTable->loadById($fields['user']);
-                controllerRouterQueue($row['router'], "update", $fields['user']);
-            },
-                    'message' => function($id, $fields)
-            {
-                $usersTable = new Table('user');
-                $row = $usersTable->loadById($fields['recipient']);
-                controllerRouterQueue($row['router'], "showmessage", $fields['recipient']);
-            },
-                    'moneyflow' => function ($id, $newFields)
-            {
-                $sum = money($newFields['sum']);
-                $userId = $newFields['user'];
-                $userTable = new Table('user');
-                $user = $userTable->loadById($userId);
-                $newCash = money($user['cash']) + $sum;
+        if ($sum > 0 && in_array($newFields['detailsname'], array('adminpay', 'scratchcard')))
+        {
+            $percentage = floatval(configgetvalue('system', 'cash', NULL, 'referrerPercentage')) / 100;
+            $referrerSum = money($sum * $percentage);
+            // Load referrer from current user
+            $refsRow = $userTable->loadById($user['referrer']);
 
-                $userTable->edit(
+            // Add money to referrer
+            if ($refsRow)
+            {
+                $moneyflowTable = new Table('moneyflow');
+                $moneyflowTable->add(
                         array(
-                            "id" => $userId,
-                            "cash" => $newCash
+                            "user" => $refsRow['id'],
+                            "sum" => $referrerSum,
+                            "detailsname" => "referrerpay",
+                            "detailsid" => $userId
                         )
                 );
-
-                if ($sum > 0 && in_array($newFields['detailsname'], array('adminpay', 'scratchcard')))
-                {
-                    $percentage = floatval(configgetvalue('system', 'cash', NULL, 'referrerPercentage')) / 100;
-                    $referrerSum = money($sum * $percentage);
-                    // Load referrer from current user
-                    $refsRow = $userTable->loadById($user['referrer']);
-
-                    // Add money to referrer
-                    if ($refsRow)
-                    {
-                        $moneyflowTable = new Table('moneyflow');
-                        $moneyflowTable->add(
-                                array(
-                                    "user" => $refsRow['id'],
-                                    "sum" => $referrerSum,
-                                    "detailsname" => "referrerpay",
-                                    "detailsid" => $userId
-                                )
-                        );
-                    }
-                }
-
-                // Check if notification is shown and disabled it if user has enought cash
-                // Calculate amounts
-                $cash = $newCash;
-
-                $sum = -getCashToPay($user['id']);
-                $newCash = $cash + $sum;
-                $creditMonths = configgetvalue('system', 'cash', NULL, 'creditMonths');
-                $minimumCash = $sum * intval($creditMonths);
-
-                if (
-                        configgetvalue('system', 'cash', null, 'showNotifications') &&
-                        $user['disabled'] == '0' &&
-                        $newCash >= $minimumCash &&
-                        $user['credit'] == '0'
-                )
-                {
-                    controllerRouterQueue($user['router'], "clearnotification", $user['id']);
-                }
             }
-                );
+        }
+
+        // Check if notification is shown and disable it if user has enought cash
+        // Calculate amounts
+        $cash = $newCash;
+
+        $sum = -getCashToPay($user['id']);
+        $newCash = $cash + $sum;
+        $creditMonths = configgetvalue('system', 'cash', NULL, 'creditMonths');
+        $minimumCash = $sum * intval($creditMonths);
+
+        if (
+                configgetvalue('system', 'cash', null, 'showNotifications') &&
+                $user['disabled'] == '0' &&
+                $newCash >= $minimumCash &&
+                $user['credit'] == '0'
+        )
+        {
+            controllerRouterQueue($user['router'], "clearnotification", $user['id']);
+        }
+    }
+);
 
                 $editRenderers = array(
                     'user' => function($id, $newFields, $oldFields)
@@ -864,7 +870,7 @@ $addRenderers = array(
                         }
                         return $newFields;
                     },
-                            'master' => function ($id, $newFields)
+                    'master' => function ($id, $newFields)
                     {
                         if (isset($newFields['password']))
                         {
@@ -872,28 +878,35 @@ $addRenderers = array(
                         }
                         return $newFields;
                     }
-                        );
+                );
+
+
                         $afterEditRenderers = array(
                             'user' => function($id, $newFields, $oldFields)
                             {
-                                // Router migration 
-                                if (isset($newFields['router']))
-                                {
-                                    if (intval($oldFields['router']))
-                                    {
-                                        controllerRouterQueue($oldFields['router'], "delete", $id);
-                                    }
-                                    controllerRouterQueue($newFields['router'], "update", $id);
-                                }//Check these conditions only if false because all this fields will be updated during router migration
-                                else if (isset($newFields['login']) || isset($newFields['password']) || isset($newFields['disabled']) || isset($newFields['iplist']))
-                                {
+                              // Router migration 
+                              //Check these conditions only if false because all this fields will be updated during router migration
+                              $currentOrder = getCurrentTariff($id);
+                              if (!$currentOrder || $currentOrder['temp'] === 1)
+                              {
+                                  payment(0, $id);
+                              }
+                            },
+                            'ip' => function( $id, $newFields, $oldFields ) {
+                              if (isset($newFields['router'])) {
+                                if (intval($oldFields['router'])) {
                                     controllerRouterQueue($oldFields['router'], "update", $id);
                                 }
-                                $currentOrder = getCurrentTariff($id);
-                                if (!$currentOrder || $currentOrder['temp'] === 1)
-                                {
-                                    payment(0, $id);
+                              }
+                              controllerRouterQueue($newFields['router'], "update", $id);
+                            },
+                            'ppp' => function( $id, $newFields, $oldFields ) {
+                              if (isset($newFields['router'])) {
+                                if (intval($oldFields['router'])) {
+                                    controllerRouterQueue($oldFields['router'], "update", $id);
                                 }
+                              }
+                              controllerRouterQueue($newFields['router'], "update", $id);
                             },
                             'tariff' => function($id, $newFields)
                             {
@@ -913,7 +926,7 @@ $addRenderers = array(
                                     $users = $usersTable->load("WHERE tariff=$id");
                                     foreach ($users as $row)
                                     {
-                                        controllerRouterQueue($row['router'], "update", $row['id']);
+                                        controllerRouterQueue($row['router'], "updateQueue", $row['id']);
                                     }
                                 }
                             },
@@ -921,7 +934,7 @@ $addRenderers = array(
                             {
                                 $usersTable = new Table('user');
                                 $row = $usersTable->loadById($oldFields['user']);
-                                controllerRouterQueue($row['router'], "update", $oldFields['user']);
+                                controllerRouterQueue($row['router'], "updateAddressList", $oldFields['user']);
                                 return $newFields;
                             }
                         );
@@ -934,7 +947,14 @@ $addRenderers = array(
 
                                 $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "order` WHERE `user`=" . $id);
                                 $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "moneyflow` WHERE `user`=" . $id);
+                            },
+                            'ip' => function( $id, $fields) {
+                              controllerRouterQueue($fields['router'], "deleteIp", $id);
+                            },
+                            'ppp' => function( $id, $newFields, $oldFields ) { 
+                              controllerRouterQueue($fields['router'], "deleteIp", $id);
                             }
+
                         );
 
                         function getFields($table)

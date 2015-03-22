@@ -245,7 +245,11 @@ function state()
                 {
                     Nuance.grids.router.setDisplayValue(id, 'state', formatRouterState('loading'));
                 }
-                ajaxProxy.get('/state/get');
+                var requestString = '/state/get';
+                if ( force ) {
+                  requestString += '?force=true';
+                }
+                ajaxProxy.get( requestString );
             };
             this.destroy = function ()
             {

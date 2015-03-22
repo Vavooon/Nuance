@@ -4919,6 +4919,7 @@ var Nuance =
 
                     var beforeEvent = new Nuance.Event({type: "before" + action});
                     self.trigger('before' + action, beforeEvent, id, postData);
+                    c(action)
                     function onerror()
                     {
                         var errorEvent = new Nuance.Event({type: action + 'error'});
@@ -5562,39 +5563,26 @@ var Nuance =
 
                 this.onAdd = function ()
                 {
-                    var maxEntries = licenseManager.checkPermission(name) || Infinity;
-                    if (dataOrder.length < maxEntries)
+                    function onAdd()
                     {
-                        function onAdd()
-                        {
-                            var values = form.getValues();
-                            self.trigger('beforeadd', values);
-                            form.close();
-                            self.store.add(values, function (data) {
-                                self.trigger('afteradd', data);
-                            });
-                            self.trigger('save');
-                        }
-                        var form = new Nuance.AddPopup(
-                                {store: self.store,
-                                    customFields: opts.customFields,
-                                    onlyIncludedFields: opts.onlyIncludedFields, excludedFields: self.excludedFields,
-                                    includedFields: opts.includedFields,
-                                    recordId: 0,
-                                    onAdd: onAdd
-                                }
-                        );
-                        self.trigger('addform', form);
+                        var values = form.getValues();
+                        self.trigger('beforeadd', values);
+                        form.close();
+                        self.store.add(values, function (data) {
+                            self.trigger('afteradd', data);
+                        });
+                        self.trigger('save');
                     }
-                    else
-                    {
-                        new Nuance.MessageBox(
-                                {
-                                    title: _("License restriction"),
-                                    text: '&nbsp;' + _('You have been reached maximum table entries permitted by your license.<br>Please <a target="_blank" href="http://nuance-bs.com/">upgrade your license</a>.')
-                                }
-                        );
-                    }
+                    var form = new Nuance.AddPopup(
+                            {store: self.store,
+                                customFields: opts.customFields,
+                                onlyIncludedFields: opts.onlyIncludedFields, excludedFields: self.excludedFields,
+                                includedFields: opts.includedFields,
+                                recordId: 0,
+                                onAdd: onAdd
+                            }
+                    );
+                    self.trigger('addform', form);
                 };
                 this.onEdit = function ()
                 {

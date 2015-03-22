@@ -229,7 +229,6 @@ window.onConfigLoad = function ()
                             sstp: ["sstp", "SSTP"]
                         }
             });
-    /*
     var routerTypeStore = new Nuance.MemoryStore(
             {
                 name: 'routertype',
@@ -237,12 +236,10 @@ window.onConfigLoad = function ()
                     ["id", "id"],
                     ["name", "varchar"]
                 ],
-                data:
-                        {
-                            mikrotik: ["mikrotik", "Mikrotik IP/MAC"],
-                            mikrotikppp: ["mikrotikppp", "Mikrotik PPP"]
-                        }
-            });*/
+                data: {
+                    mikrotik: ["mikrotik", "Mikrotik"]
+                }
+            });
     var acpLocaleStore = new Nuance.Store(
             {
                 subscribePath: ['runtime', 'acplocale'],
@@ -1004,6 +1001,15 @@ window.onConfigLoad = function ()
                 }
     };
 
+    function formatMac( beforeEvent, id, postData ) {
+       if (postData.mac ) {
+           postData.mac = postData.mac.toLowerCase().replace( /[^0-9a-f]/g, '' );
+       }
+    }
+    Nuance.stores.ip.on('beforeadd', formatMac );
+    Nuance.stores.ip.on('beforeset', formatMac );
+
+
     tables.tabs.tariff.grid.filters.city = {
         name: "city",
         column: 'city',
@@ -1422,29 +1428,6 @@ window.onConfigLoad = function ()
 
     window.addEventListener('resize', onResize);
     onResize();
-
-    configProxy.on('beforeconfigdefaultsread', function (type, owner, config)
-    {
-        switch (type)
-        {
-            case 'router':
-                var router = Nuance.stores.router.getById(owner, true);
-                switch (router.routertype)
-                {
-                    case 'mikrotik':
-                        config.main.filterType = 0;
-                        break;
-                    case 'mikrotikppp':
-                        if (!config.ppp)
-                        {
-                            config.ppp = {};
-                        }
-                        config.ppp.disablePPPSecretsOfBlockedUsers = false;
-                        break;
-                }
-                break;
-        }
-    });
 
     if (Nuance.grids.user)
     {

@@ -509,7 +509,7 @@ body {
   background-color: lightgray;
 }
 /* line 509, ../sass/style.scss */
-.grid .table-cell p.state.allow, .grid .table-cell p.stateonline {
+.grid .table-cell p.state.allow, .grid .table-cell p.state.online {
   background-color: green;
 }
 /* line 514, ../sass/style.scss */
