@@ -517,8 +517,16 @@ function fork($scriptName, $arguments, $sync = true)
 
 function controllerRouterQueue($routerId, $mode, $id = false)
 {
-    if (!$routerId)
-        return;
+  $routerTable = new Table( 'router' );
+  if ( $routerId ) {
+    $requestString = "WHERE `id`=$routerId";
+  }
+  else {
+    $requestString = '';
+  }
+  $routerRes = $routerTable->load( $requestString );
+  foreach( $routerRes as $routerRow ) {
+    $routerId = $routerRow[ 'id' ];
     //Add entry to updqueue table
     $updqueueTable = new Table('routerupdatequeue');
     $updqueueTable->setLogging(false);
@@ -549,6 +557,7 @@ function controllerRouterQueue($routerId, $mode, $id = false)
             break;
         }
     }
+  }
 }
 
 function getDirs($path)
@@ -884,8 +893,6 @@ $afterAddRenderers = array(
                         $afterEditRenderers = array(
                             'user' => function($id, $newFields, $oldFields)
                             {
-                              // Router migration 
-                              //Check these conditions only if false because all this fields will be updated during router migration
                               $currentOrder = getCurrentTariff($id);
                               if (!$currentOrder || $currentOrder['temp'] === 1)
                               {
@@ -893,20 +900,44 @@ $afterAddRenderers = array(
                               }
                             },
                             'ip' => function( $id, $newFields, $oldFields ) {
-                              if (isset($newFields['router'])) {
-                                if (intval($oldFields['router'])) {
-                                    controllerRouterQueue($oldFields['router'], "update", $id);
+
+                              $new = false;
+                              if (isset($newFields['router']) || isset($newFields['user'])) {
+                                $newRouter = $oldFields['router'];
+                                $newUser = $oldFields['user'];
+                                $new = true;
+
+                                if ( isset( $newFields['router'] ) ) {
+                                  $newRouter = $newFields['router'];
+                                }
+                                if ( isset( $newFields['user'] ) ) {
+                                  $newUser = $newFields['user'];
                                 }
                               }
-                              controllerRouterQueue($newFields['router'], "update", $id);
+                              controllerRouterQueue($oldFields['router'], "update", $oldFields['user']);
+                              if ( $new ) {
+                                controllerRouterQueue( $newRouter, "update", $newUser );
+                              }
                             },
                             'ppp' => function( $id, $newFields, $oldFields ) {
-                              if (isset($newFields['router'])) {
-                                if (intval($oldFields['router'])) {
-                                    controllerRouterQueue($oldFields['router'], "update", $id);
+
+                              $new = false;
+                              if (isset($newFields['router']) || isset($newFields['user'])) {
+                                $newRouter = $oldFields['router'];
+                                $newUser = $oldFields['user'];
+                                $new = true;
+
+                                if ( isset( $newFields['router'] ) ) {
+                                  $newRouter = $newFields['router'];
+                                }
+                                if ( isset( $newFields['user'] ) ) {
+                                  $newUser = $newFields['user'];
                                 }
                               }
-                              controllerRouterQueue($newFields['router'], "update", $id);
+                              controllerRouterQueue($oldFields['router'], "update", $oldFields['user']);
+                              if ( $new ) {
+                                controllerRouterQueue( $newRouter, "update", $newUser );
+                              }
                             },
                             'tariff' => function($id, $newFields)
                             {
@@ -949,10 +980,10 @@ $afterAddRenderers = array(
                                 $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "moneyflow` WHERE `user`=" . $id);
                             },
                             'ip' => function( $id, $fields) {
-                              controllerRouterQueue($fields['router'], "deleteIp", $id);
+                              controllerRouterQueue($fields['router'], "update", $id);
                             },
                             'ppp' => function( $id, $newFields, $oldFields ) { 
-                              controllerRouterQueue($fields['router'], "deleteIp", $id);
+                              controllerRouterQueue($fields['router'], "update", $id);
                             }
 
                         );
@@ -1484,7 +1515,7 @@ $afterAddRenderers = array(
                                         }
                                         else
                                         {
-                                            controllerRouterQueue($row['router'], "update", $row['id']);
+                                            controllerRouterQueue( 0, "update", $id );
                                         }
                                     }
                                     else if ($mode == 1)
@@ -1493,7 +1524,7 @@ $afterAddRenderers = array(
                                                 ($newCash < $minimumCash && $row['credit'] == '0')
                                         )
                                         {
-                                            controllerRouterQueue($row['router'], "shownotification", $row['id']);
+                                            controllerRouterQueue( 0, "shownotification", $id );
                                         }
                                     }
                                 }
