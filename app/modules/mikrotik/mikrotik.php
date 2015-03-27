@@ -57,9 +57,9 @@
     {
       foreach ($sectionData as $sectionKey => $sectionValue)
       {
-        foreach ($sectionValue as $ipId => $userData)
+        foreach ($sectionValue as $userId => $userData)
         {
-					$response = $this->API->comm($sectionKey.'/print',array( '?comment' => $ipId));
+					$response = $this->API->comm($sectionKey.'/print',array( '?comment' => $userId));
 
           for ($i=0; $i<count($userData) || $i<count($response); $i++)
           {
@@ -97,7 +97,7 @@
             else // Add new rules
             {
               $newRule=$userData[$i];
-              $newRule['comment'] = $ipId;
+              $newRule['comment'] = $userId;
               $this->API->comm($sectionKey."/add", $newRule);
             }
           }
@@ -218,7 +218,6 @@
       if ( !isset( $this->allIpRes[ $userId ] ) ) {
         $ipTable = new Table( 'ip' );
         $this->allIpRes[ $userId ] = $ipTable->load( "WHERE `router`=$this->id AND `user`=$userId" );
-        d("WHERE `router`=$this->id AND `user`=$userId");
       }
       return $this->allIpRes[ $userId ];
     }
@@ -236,7 +235,6 @@
 
       $allIpRes = $this->getIpRows( $userId );
       $allPppRes = $this->getPppRows( $userId );
-      d($userId);
 
       foreach ($allIpRes as $allIpRow ) 
       {
