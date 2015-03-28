@@ -25,6 +25,14 @@ $responseTemplate = array
     'errors' => array()
 );
 
+function mres($value)
+{
+    $search = array("\\",  "\x00", "\n",  "\r",  "'",  '"', "\x1a");
+    $replace = array("\\\\","\\0","\\n", "\\r", "\'", '\"', "\\Z");
+
+    return str_replace($search, $replace, $value);
+}
+
 set_time_limit(0);
 
 // Include config
@@ -1215,8 +1223,8 @@ $afterAddRenderers = array(
                                     break;
                             }
                             $configTable = new Table('config');
-                            $name = mysql_real_escape_string( $name );
-                            $name = mysql_real_escape_string( $name );
+                            $name = mres( $name );
+                            $name = mres( $name );
                             $res = $configTable->load("WHERE `type`=$type AND `ownerid`=$ownerid AND `path`='$path' AND `name` LIKE '$name'");
 
                             foreach ($res as $row)
@@ -1254,7 +1262,7 @@ $afterAddRenderers = array(
                                     $ownerId = 0;
                                     break;
                             }
-                            $selStr = "SELECT * FROM `" . DB_TABLE_PREFIX . "config` WHERE type='$type' AND path='$path' AND name LIKE '".mysql_real_escape_string(mysql_real_escape_string($name))."' AND ownerid=$ownerId";
+                            $selStr = "SELECT * FROM `" . DB_TABLE_PREFIX . "config` WHERE type='$type' AND path='$path' AND name LIKE '".mres(mres($name))."' AND ownerid=$ownerId";
                             $resp = $db->query($selStr);
                             $oldValue = NULL;
                             if ($resp)
