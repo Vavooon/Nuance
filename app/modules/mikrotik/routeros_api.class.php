@@ -1,7 +1,7 @@
 <?php
 /*****************************
  *
- * RouterOS PHP API class v1.4
+ * RouterOS PHP API class v1.6
  * Author: Denis Basta
  * Contributors:
  *    Nick Barnes
@@ -25,6 +25,17 @@ class routeros_api
     var $port = 8728;        // Port to connect to
     var $timeout = 3;        // Connection attempt timeout and data read timeout
     var $socket;             // Variable for storing socket resource
+
+    /* Check, can be var used in foreach  */
+    function is_iterable($var)
+    {
+        return $var !== null
+                && (is_array($var)
+                || $var instanceof Traversable
+                || $var instanceof Iterator
+                || $var instanceof IteratorAggregate
+                );
+    }
     
     /**
      * Print text for debug purposes
@@ -80,11 +91,13 @@ class routeros_api
         for ($ATTEMPT = 1; $ATTEMPT <= $this->attempts; $ATTEMPT++) {
             $this->connected = false;
             $this->debug('Connection attempt #' . $ATTEMPT . ' to ' . $ip . ':' . $this->port . '...');
-            if ($this->socket = @fsockopen($ip, $this->port, $this->error_no, $this->error_str, $this->timeout)) {
+            $this->socket = @fsockopen($ip, $this->port, $this->error_no, $this->error_str, $this->timeout);
+            if ($this->socket) {
                 socket_set_timeout($this->socket, $this->timeout);
                 $this->write('/login');
                 $RESPONSE = $this->read(false);
                 if ($RESPONSE[0] == '!done') {
+                    $MATCHES = array();
                     if (preg_match_all('/[^=]+/i', $RESPONSE[1], $MATCHES)) {
                         if ($MATCHES[0][0] == 'ret' && strlen($MATCHES[0][1]) == 32) {
                             $this->write('/login', false);
@@ -136,7 +149,6 @@ class routeros_api
             $PARSED      = array();
             $CURRENT     = null;
             $singlevalue = null;
-            $count       = 0;
             foreach ($response as $x) {
                 if (in_array($x, array(
                     '!fatal',
@@ -148,6 +160,7 @@ class routeros_api
                     } else
                         $CURRENT =& $PARSED[$x][];
                 } else if ($x != '!done') {
+                    $MATCHES = array();
                     if (preg_match_all('/[^=]+/i', $x, $MATCHES)) {
                         if ($MATCHES[0][0] == 'ret') {
                             $singlevalue = $MATCHES[0][1];
@@ -189,6 +202,7 @@ class routeros_api
                     else
                         $CURRENT =& $PARSED[$x][];
                 } else if ($x != '!done') {
+                    $MATCHES = array();
                     if (preg_match_all('/[^=]+/i', $x, $MATCHES)) {
                         if ($MATCHES[0][0] == 'ret') {
                             $singlevalue = $MATCHES[0][1];
@@ -246,6 +260,7 @@ class routeros_api
     function read($parse = true)
     {
         $RESPONSE = array();
+        $receiveddone = false;
         while (true) {
             // Read the first byte of input which gives us some or all of the length
             // of the remaining reply.
@@ -350,20 +365,23 @@ class routeros_api
         $count = count($arr);
         $this->write($com, !$arr);
         $i = 0;
-        foreach ($arr as $k => $v) {
-            switch ($k[0]) {
-                case "?":
-                    $el = "$k=$v";
-                    break;
-                case "~":
-                    $el = "$k~$v";
-                    break;
-                default:
-                    $el = "=$k=$v";
-                    break;
+        if ($this->is_iterable($arr)) {
+            foreach ($arr as $k => $v) {
+                switch ($k[0]) {
+                    case "?":
+                        $el = "$k=$v";
+                        break;
+                    case "~":
+                        $el = "$k~$v";
+                        break;
+                    default:
+                        $el = "=$k=$v";
+                        break;
+                }
+
+                $last = ($i++ == $count - 1);
+                $this->write($el, $last);
             }
-            $last = ($i++ == $count - 1);
-            $this->write($el, $last);
         }
         return $this->read();
     }
