@@ -2,7 +2,7 @@
 -- Сервер:                       127.0.0.1
 -- Версія сервера:               5.5.31-MariaDB - mariadb.org binary distribution
 -- ОС сервера:                   Win64
--- HeidiSQL Версія:              9.1.0.4882
+-- HeidiSQL Версія:              9.1.0.4867
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -28,11 +28,11 @@ CREATE TABLE IF NOT EXISTS `city` (
 -- Dumping structure for таблиця nuance_new.config
 CREATE TABLE IF NOT EXISTS `config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` varchar(50) DEFAULT NULL,
+  `type` int(11) DEFAULT NULL,
   `ownerid` int(11) DEFAULT NULL,
   `path` varchar(50) DEFAULT NULL,
   `vartype` varchar(50) DEFAULT NULL,
-  `name` varchar(50) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
   `value` longtext,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `ip` (
   `user` int(10) unsigned NOT NULL COMMENT 'link',
   `router` int(10) unsigned NOT NULL COMMENT 'link',
   `ip` tinytext NOT NULL,
-  `mac` tinytext NOT NULL,
+  `mac` tinytext NOT NULL COMMENT 'mac',
   `port` tinytext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `routerupdatequeue` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `router` int(10) unsigned DEFAULT '0',
   `mode` varchar(50) DEFAULT NULL,
-  `user` int(10) unsigned DEFAULT '0',
+  `targetid` int(10) unsigned DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -257,7 +257,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   `house` varchar(5) DEFAULT NULL,
   `flat` varchar(3) CHARACTER SET latin1 DEFAULT NULL,
   `tariff` int(3) unsigned DEFAULT NULL COMMENT 'tarifflink',
-  `router` int(3) unsigned DEFAULT NULL COMMENT 'link',
   `cash` float(9,2) DEFAULT '0.00' COMMENT 'money',
   `discount` varchar(10) DEFAULT '0' COMMENT 'discount',
   `referrer` int(10) unsigned DEFAULT '0' COMMENT 'link-user',
@@ -265,8 +264,17 @@ CREATE TABLE IF NOT EXISTS `user` (
   `editdate` timestamp NULL DEFAULT NULL,
   `disabled` tinyint(1) DEFAULT '0',
   `credit` tinyint(1) DEFAULT '0',
-  `iplist` longtext COMMENT 'iplist',
   `comment` mediumtext COMMENT 'multitext',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for таблиця nuance_new.usergroup
+CREATE TABLE IF NOT EXISTS `usergroup` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -274,7 +282,3 @@ CREATE TABLE IF NOT EXISTS `user` (
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-
--- Dump completed on 2013-09-25 21:57:19
-INSERT INTO `master` (`id`, `login`, `password`, `group`) VALUES (1, 'demo', 'fe01ce2a7fbac8fafaed7c982a04e229', 1); 
-INSERT INTO `group` (`id`, `name`, `acl`) VALUES (1, 'Administrator', '{"table":true,"preference":true,"statistics":true,"tools":true}'), (2, 'Operator', '{"table":{"order":{"read":true},"scratchcard":{"read":true},"user":true,"moneyflow":true,"tariff":{"read":true},"city":{"read":true,"edit":true,"add":true},"street":{"read":true,"edit":true,"add":true},"router":{"read":true},"master":{"read":{"login":true}}},"statistics":true,"tools":true}'),	(3, 'Installer', '{"table":{"order":{"read":true},"user":{},"moneyflow":{"read":true,"add":true},"tariff":{"read":true},"city":{"read":true},"street":{"read":true},"router":{"read":{"name":true,"routertype":true}},"master":{"read":{"login":true}},"group":{"read":{"name":true}}}}'),	(4, 'Cashier', '{"table":{"order":{"read":true},"scratchcard":{"read":true},"user":{"read":true},"moneyflow":{"read":true,"edit":true,"add":true},"tariff":{"read":true},"city":{"read":true},"street":{"read":true},"router":{"read":{"name":true,"routertype":true}},"master":{"read":{"login":true}}},"statistics":true}');  
