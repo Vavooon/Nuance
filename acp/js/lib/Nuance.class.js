@@ -273,6 +273,9 @@ JSON.parse=function(str)
 
 function ip2long(ip)
 {
+	if (!ip) {
+		return 0;
+	}
   ip=ip.split(".");
   if (ip.length!=4) return 0;
   else 

@@ -1365,7 +1365,7 @@ window.onConfigLoad=function()
         {
           ipList[i]=ipList[i].substr(2, ipList[i].length-4);
         }
-        displayData[id][ipListIndex]= ipList[0];
+        displayData[id][ipListIndex]= ipList[0] || "";
       } 
       else {
         var ipList=data[id][ns.iplist].match(/"([0-9\.]+)":/g) || [];
