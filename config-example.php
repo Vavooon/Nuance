@@ -2,7 +2,7 @@
 
 define('DB_DRIVER','mysql');
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'nuance_new');
+define('DB_NAME', 'nuance');
 define('DB_USER', 'nuance');
 define('DB_PASS', 'password');
 define('DB_TABLE_PREFIX', "");
