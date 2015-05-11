@@ -407,7 +407,7 @@ if ($sessionId)
                 $routerId = $_GET['router'];
                 if ($routerId != '*')
                 {
-                    $response->success = controllerRouter($routerId, "export");
+                  /*$response->success = */controllerRouter($routerId, "export");
                 }
                 else
                 {

@@ -447,7 +447,7 @@
           "/ip/firewall/filter" => array(),
           "/ip/firewall/mangle" => array(),
           "/ip/arp" => array(),
-          "/queue/simple" => array(),
+          //"/queue/simple" => array(),
           "/ip/dhcp-server/lease" => array()
         );
 
@@ -554,7 +554,7 @@
         foreach ($pppRes as $pppRow)
         {
           $syncData=array(
-            "/queue/simple" => array(),
+            //"/queue/simple" => array(),
             "/ppp/secret" => array()
           );
           $id=''.$pppRow['id'];
@@ -633,16 +633,26 @@
 		{
       if ($this->connected)
       {
-        $usersTable=new Table('user');
-        $res=$usersTable->load(" WHERE router=".$this->id);
-        if ($res)
-        {
-          foreach ($res as $row)
-          {
-            $this->update($row['id']);
-          }
-          return $this->checkConnection();
+        global $db;
+        $reqStr = "SELECT DISTINCT(`id`) FROM `" . DB_TABLE_PREFIX . "ip` WHERE `router`=".$this->id;
+        $ipRes = $db->query($reqStr)->fetchAll();
+        $reqStr = "SELECT DISTINCT(`id`) FROM `" . DB_TABLE_PREFIX . "ppp` WHERE `router`=".$this->id;
+        $pppRes = $db->query($reqStr)->fetchAll();
+
+        $relatedUsers = array();
+        foreach ($pppRes as $pppRow) {
+          $relatedUsers[] = $pppRow['id'];
         }
+
+        foreach ($ipRes as $ipRow) {
+          $relatedUsers[] = $ipRow['id'];
+        }
+        d($relatedUsers);
+
+        foreach ($relatedUsers as $userId) {
+          $this->update($userId);
+        }
+        return $this->checkConnection();
       }
 		}
 	}
