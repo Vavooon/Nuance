@@ -3770,18 +3770,22 @@ var Nuance =
                     Nuance.stores.message.add(values, Nuance.stores.message.load);
                     self.close();
                 }
-                o.fields =
-                        [
-                            new Nuance.input.ComboBox(
-                                    {
-                                        title: _("Users"),
-                                        name: 'user',
-                                        multiple: true,
-                                        avoidSort: true,
-                                        value: o.users,
-                                        store: Nuance.stores.user
-                                    }
-                            ),
+                o.fields = [
+                          new Nuance.input.NamedField( {
+                              title: _(o.store.header[i][0]),
+                              field: new Nuance.input.ComboBox( {
+                                  title: _("Users"),
+                                  name: 'user',
+                                  multiple: true,
+                                  avoidSort: true,
+                                  value: o.users,
+                                  store: Nuance.stores.user
+                                }
+                              ),
+                              //width: fieldWidth,
+                              //target: self.body
+                          } ),
+                            
                             new Nuance.input.TextArea(
                                     {
                                         name: 'text',
@@ -4191,22 +4195,27 @@ var Nuance =
                 o.btnLayout = 'double';
                 o.fields =
                         [
-                            new Nuance.input.TextField(
-                                    {
-                                        name: 'duration',
-                                        title: _('Duration')
-                                    }),
-                            new Nuance.input.CheckBox(
-                                    {
-                                        name: 'ispaid',
-                                        title: _('Withdraw funds')
-                                    })
+                          new Nuance.input.NamedField( {
+                              title: _('Duration'),
+                              field: new Nuance.input.TextField(
+                              {
+                                  name: 'duration',
+                              })
+                          }),
+                          new Nuance.input.NamedField( {
+                              title: _('Withdraw funds'),
+                              field: new Nuance.input.CheckBox(
+                              {
+                                  name: 'ispaid',
+                              })
+                          }),
+                            
                         ];
 
                 var okClick = function ()
                 {
                     var fields = self.getFields();
-                    var duration = parseInt(fields.duration.getValue());
+                    var duration = parseInt(fields.duration.field.getValue());
                     if (/^[0-9]{1,3}$/.test(duration))
                     {
                         self.close();
@@ -4219,7 +4228,7 @@ var Nuance =
                                     startdate: Date.today().toString(dbDateTimeFormat),
                                     enddate: Date.today().addDays(duration).addSeconds(-1).toString(dbDateTimeFormat)
                                 };
-                        if (fields.ispaid.getValue())
+                        if (fields.ispaid.field.getValue())
                         {
                             newOrderValues.temp = 0;
                         }
@@ -4245,7 +4254,7 @@ var Nuance =
                                                 date: Date.today().toString(dbDateTimeFormat)
                                             };
 
-                                    if (fields.ispaid.getValue())
+                                    if (fields.ispaid.field.getValue())
                                     {
                                         newMoneyflowValues.detailsname = 'order';
 
@@ -4321,43 +4330,52 @@ var Nuance =
                 a = self;
                 o.fields =
                         [
-                            new Nuance.input.ComboBox(
-                                    {
-                                        name: "user",
-                                        title: _("User"),
-                                        store: Nuance.stores.user,
-                                        value: userId
-                                    }
-                            ),
-                            new Nuance.input.TextField(
-                                    {
-                                        name: "sum",
-                                        title: _("Payment sum")
-                                    }
-                            ),
-                            new Nuance.input.TextField(
-                                    {
-                                        name: "name",
-                                        title: _("name")
-                                    }
-                            ),
-                            new Nuance.input.TextField(
-                                    {
-                                        name: "newcash",
-                                        title: _("New cash")
-                                    }
-                            ),
-                            new Nuance.input.TextArea(
-                                    {
-                                        name: "comment",
-                                        title: _("Comment")
-                                    }
+                          new Nuance.input.NamedField( {
+                              title: _("User"),
+                              field: new Nuance.input.ComboBox(
+                              {
+                                name: "user",
+                                store: Nuance.stores.user,
+                                value: userId
+                              }
                             )
+                          }),
+                         new Nuance.input.NamedField( {
+                              title: _("Payment sum"),
+                              field: new Nuance.input.TextField(
+                              {
+                                name: "sum"
+                              }
+                            )
+                          }),
+                          new Nuance.input.NamedField( {
+                              title: _("name"),
+                              field: new Nuance.input.TextField(
+                              {
+                                name: "name"
+                              }
+                            )
+                          }),
+                          new Nuance.input.NamedField( {
+                              title: _("New cash"),
+                              field: new Nuance.input.TextField(
+                              {
+                                name: "newcash"
+                              }
+                            )
+                          }), new Nuance.input.NamedField( {
+                              title: _("Comment"),
+                              field: new Nuance.input.TextArea(
+                              {
+                                name: "comment"
+                              }
+                            )
+                          })
                         ]
                 var okClick = function ()
                 {
-                    var userId = fields.user.getValue();
-                    var sum = fields.sum.getValue();
+                    var userId = fields.user.field.getValue();
+                    var sum = fields.sum.field.getValue();
                     if (/^-?[0-9]{1,7}(?:\.[0-9]{1,2})?$/.test(sum) && userId)
                     {
                         var values =
@@ -4365,8 +4383,8 @@ var Nuance =
                                     user: userId,
                                     sum: money(sum),
                                     detailsname: 'adminpay',
-                                    name: fields.name.getValue(),
-                                    comment: fields.comment.getValue()
+                                    name: fields.name.field.getValue(),
+                                    comment: fields.comment.field.getValue()
                                 };
                         Nuance.grids.user.setState('loading');
                         store.add(values, Nuance.stores.activeorder.load);
@@ -4385,26 +4403,26 @@ var Nuance =
                 self._popupWin.classList.add('fund-popup');
                 var fields = self.getFields();
 
-                fields.name.el.placeholder = _("Not required");
-                fields.comment.el.placeholder = _("Not required");
+                fields.name.field.el.placeholder = _("Not required");
+                fields.comment.field.el.placeholder = _("Not required");
 
                 function onSumFieldChange()
                 {
-                    var userId = fields.user.getValue();
+                    var userId = fields.user.field.getValue();
                     var currentCash = money(userStore.getById(userId, true).cash);
-                    fields.sum.el.value = smoneyf(fields.sum.el.value);
-                    fields.newcash.el.value = smoneyf(money(fields.sum.getValue()) + currentCash);
+                    fields.sum.field.el.value = smoneyf(fields.sum.field.el.value);
+                    fields.newcash.field.el.value = smoneyf(money(fields.sum.field.getValue()) + currentCash);
                 }
                 function onNewCashFieldChange()
                 {
-                    var userId = fields.user.getValue();
+                    var userId = fields.user.field.getValue();
                     var currentCash = money(userStore.getById(userId, true).cash);
-                    fields.newcash.el.value = smoneyf(fields.newcash.el.value);
-                    fields.sum.el.value = smoneyf(money(fields.newcash.getValue()) - currentCash);
+                    fields.newcash.field.el.value = smoneyf(fields.newcash.field.el.value);
+                    fields.sum.field.el.value = smoneyf(money(fields.newcash.field.getValue()) - currentCash);
                 }
                 function onUserFieldChange()
                 {
-                    var userId = fields.user.getValue();
+                    var userId = fields.user.field.getValue();
                     if (userId)
                     {
                         var tariffID = userStore.getById(userId)[userStore.ns.tariff];
@@ -4431,9 +4449,9 @@ var Nuance =
                                     newSumToPay = response.cashtopay[userId].full;
                                 }
 
-                                fields.sum.setValue(smoneyf(newSumToPay));
-                                fields.newcash.setValue(smoneyf(currentCash + newSumToPay));
-                                fields.sum.el.select();
+                                fields.sum.field.setValue(smoneyf(newSumToPay));
+                                fields.newcash.field.setValue(smoneyf(currentCash + newSumToPay));
+                                fields.sum.field.el.select();
                             }
                             ajaxProxy.on(['cashtopay', userId], onSuccess);
                             ajaxProxy.get('/cashtopay/get?id=' + userId);
@@ -4441,9 +4459,9 @@ var Nuance =
                     }
                 }
 
-                fields.user.on('change', onUserFieldChange, true);
-                fields.newcash.on('change', onNewCashFieldChange);
-                fields.sum.on('change', onSumFieldChange);
+                fields.user.field.on('change', onUserFieldChange, true);
+                fields.newcash.field.on('change', onNewCashFieldChange);
+                fields.sum.field.on('change', onSumFieldChange);
             },
             AddPopup: function (o)
             {
