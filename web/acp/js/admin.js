@@ -2202,6 +2202,17 @@ function checkPermission(path)
 }
 
 ajaxProxy.get('/all/get',
-        {
-            activetab: location.hash.replace('#', '')
-        });
+  {
+    activetab: location.hash.replace('#', '')
+  }
+);
+
+
+ajaxProxy.on(['errors'], function( data )
+  {
+    if (data.errors.length)
+    {
+      new Nuance.LogPopup({text: data.errors.join("\n")});
+    }
+  }
+);

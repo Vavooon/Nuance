@@ -10,7 +10,7 @@ function manualSyncInit()
       lp.close();
       new Nuance.MessageBox({text: successText});
     };
-    Nuance.AjaxRequest("GET", "./ajax.php?action=routerexport&router="+id, null, onsuccess, null, true);
+    ajaxProxy.post("/routersync/" + id, null, onsuccess);
   };
   var loadRouters=function()
   {

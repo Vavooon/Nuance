@@ -83,7 +83,7 @@ class DB
                     }
                     else
                     {
-                        $res = $db->query("SELECT COUNT(*) FROM `" . DB_TABLE_PREFIX . $target . "`" . $filterQuery);
+                        $res = $db->query("SELECT COUNT(*) FROM `" . DB_TABLE_PREFIX . $target . "` " . $filterQuery);
                         $row = $res->fetch();
                         $response['db'][$target]['length'] = intval($row['COUNT(*)']);
                     }

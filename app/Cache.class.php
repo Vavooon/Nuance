@@ -11,7 +11,7 @@ class Cache
 
     function __construct($fileName)
     {
-        $this->fileName = realpath( $this->path . $fileName );
+        $this->fileName = realpath( $this->path  )."/". $fileName;
         $currentTime = new DateTime;
     }
 

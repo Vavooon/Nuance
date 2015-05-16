@@ -126,7 +126,7 @@ class Table
 
     public function load4AJAX($filter = "")
     {
-        global $sessionId, $timeDateFormat, $dateFormat;
+        global $sessionId, $timeDateFormat, $dateFormat, $response;
         $res = $this->load($filter);
         $this->addSchemaToResponse();
         foreach ($res as $row)
@@ -173,7 +173,7 @@ class Table
                 }
                 $i++;
             }
-            $this->tableResponse['data'][$row['id']] = $datarow;
+            $response['db'][$this->name]['data'][$row['id']] = $datarow;
         }
     }
 
@@ -366,7 +366,7 @@ class Table
 
     public function delete($data)
     {
-        global $deleteRenderers;
+        global $removeRenderers, $afterRemoveRenderers;
         $id = $data['id'];
         $row = $this->loadById($id);
         $fields = array();
@@ -377,12 +377,16 @@ class Table
                 $fields[$key] = $value;
             }
         }
-        if (array_key_exists($this->name, $deleteRenderers))
+        if (array_key_exists($this->name, $removeRenderers))
         {
-            $deleteRenderers[$this->name]($id, $fields);
+            $removeRenderers[$this->name]($id, $fields);
         }
         $request = "DELETE FROM `" . DB_TABLE_PREFIX . $this->name . "` WHERE id=$id";
         $this->db->exec($request);
+        if (array_key_exists($this->name, $afterRemoveRenderers))
+        {
+            $afterRemoveRenderers[$this->name]($id, $fields);
+        }
         //$this->response->debug[]=$request;
         if ($this->logging)
         {

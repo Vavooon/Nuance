@@ -4138,7 +4138,7 @@ var Nuance =
                     }
                 }
             },
-            LogPopup: function (opts)
+            CodesPopup: function (opts)
             {
                 var self = this;
                 var defopts =
@@ -4462,6 +4462,42 @@ var Nuance =
                 fields.user.field.on('change', onUserFieldChange, true);
                 fields.newcash.field.on('change', onNewCashFieldChange);
                 fields.sum.field.on('change', onSumFieldChange);
+            },
+            LogPopup: function (o)
+            {
+              var self = this;
+              o.title = _("Debug text");
+              o.winLayout= "triple";
+              o.bodyLayout= "double";
+              o.fields =
+              [
+                new Nuance.input.NamedField( {
+                    title: _("Debug text"),
+                    width: 'full',
+                    field: new Nuance.input.TextArea(
+                    {
+                      name: "text",
+                      value: o.text,
+                      height: 400
+                    }
+                  )
+                })
+              ];
+              o.buttons = 
+              [
+                {
+                  onclick: function () 
+                  {
+                    self.close();
+                  }, 
+                  value: _("Close"),
+                  iconClass: 'remove'
+                }
+              ];
+              Nuance.Popup.call( this, o);
+
+
+                         
             },
             AddPopup: function (o)
             {

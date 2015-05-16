@@ -184,6 +184,26 @@ $router->map('GET', '/cashtopay/get', function ($params)
 }
 );
 
+
+$router->map('POST', '/routersync/[a:name]', function ($params)
+  {
+      $routerId = $params['name'];
+      if ($routerId != 'all')
+      {
+        /*$response->success = */controllerRouter($routerId, "export");
+      }
+      else
+      {
+          // Sync all routers
+          $routersTable = new Table('router');
+          $rows = $routersTable->load();
+          foreach ($rows as $row)
+          {
+              controllerRouter($row['id'], 'export', false);
+          }
+      }
+  }
+);
 /*  Get all data */
 $router->map('GET', '/all/get', function ($params)
 {
@@ -213,6 +233,7 @@ $router->map('GET', '/all/get', function ($params)
     }
 
     $db->get(array('name' => 'order', 'filter' => 'enddate>' . date($mysqlTimeDateFormat)));
+    //d($response['db']['order']);
     $response['db']['activeorder'] = $response['db']['order'];
     unset($response['db']['order']);
 

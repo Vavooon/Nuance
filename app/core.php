@@ -133,12 +133,15 @@ $logTable->setLogging(false);
 $columnCache = array();
 $columnCacheAssoc = array();
 
-function d($a)
+function d()
 {
     if (defined('DEBUG') && DEBUG === true)
     {
         echo "<pre>";
-        var_dump($a);
+        foreach(func_get_args() as $arg)
+        {
+          var_dump($arg);
+        }
         echo "</pre>";
     }
 }
@@ -977,7 +980,7 @@ $afterAddRenderers = array(
                                 return $newFields;
                             }
                         );
-                        $deleteRenderers = array(
+                        $removeRenderers = array(
                             'user' => function($id, $fields)
                             {
                                 global $db;
@@ -988,7 +991,17 @@ $afterAddRenderers = array(
                                 $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "moneyflow` WHERE `user`=" . $id);
                             },
                             'ip' => function( $id, $fields) {
+                              controllerRouterQueue($fields['router'], "removeIp", $id);
+                            },
+                            'ppp' => function( $id, $newFields, $oldFields ) { 
                               controllerRouterQueue($fields['router'], "update", $id);
+                            }
+
+                        );
+
+                        $afterRemoveRenderers = array(
+                            'ip' => function( $id, $fields) {
+                              controllerRouterQueue($fields['router'], "update", $fields['user']);
                             },
                             'ppp' => function( $id, $newFields, $oldFields ) { 
                               controllerRouterQueue($fields['router'], "update", $id);

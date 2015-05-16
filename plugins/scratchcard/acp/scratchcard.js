@@ -51,7 +51,7 @@ scratchcard=function(o)
               var valueField=new Nuance.input.TextField({name: 'value', title: _("Values of codes"), value: ""});
               var showCodes=function(r)
               {
-                new Nuance.LogPopup({title: _("Generated scratchcards"), text: r.data.join('\n')});
+                new Nuance.CodesPopup({title: _("Generated scratchcards"), text: r.data.join('\n')});
                 scStore.load();
               }
               var sendRequest=function()
