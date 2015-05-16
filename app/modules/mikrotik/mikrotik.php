@@ -22,6 +22,9 @@
       $this->API->delay=2;
       $this->API->port=$port;
       $this->db=$db;
+      $this->uniqueIdentifier = array(
+        "/ip/firewall/address-list" => "address"
+      );
 		  if ($this->API->connect($ip, $login, $pass))
 		  {
 		    $this->connected=true;
@@ -53,54 +56,113 @@
       }
     }
 
+    private function apiProxy($path, $data)
+    {
+        $result = $this->API->comm($path, $data);
+        //if (count($result))
+        {
+          //d($path, $data, $result);
+          //d($path);
+        }
+    }
+
+    private function groupByField($array, $fieldName)
+    {
+      global $response;
+        $groupedArray = array();
+        for ($i=0; $i<count($array); $i++)
+        {
+          if (isset($groupedArray[ $array[$i][$fieldName] ]))
+          {
+            $response['errors'][] = 'Duplicate ids was found';
+          }
+          else 
+          {
+            $groupedArray[ $array[$i][$fieldName] ] = $array[$i];
+          }
+
+        }
+        return $groupedArray;
+    }
+
+    private function checkRule($sectionKey, $billingRule, $routerRule, $i, $userId)
+    {
+      if (array_key_exists($i, $billingRule) && array_key_exists($i, $routerRule)) // Check and modify existing rules
+      {
+        $newRule=$billingRule[$i];
+        $currentRule=$routerRule[$i];
+
+        $ruleNeedsUpdate=false;
+        $newProperties=array();
+
+        // Compare every property in rule
+        foreach ($newRule as $propertyKey => $propertyValue)
+        {
+          if ($newRule[$propertyKey]!==$currentRule[$propertyKey])
+          {
+            //d('diffrerent props', $newRule[$propertyKey], $currentRule[$propertyKey]);
+            $ruleNeedsUpdate=true;
+            $newProperties[$propertyKey]=$propertyValue;
+          }
+        }
+
+        if ($ruleNeedsUpdate)
+        {
+          $newProperties['.id']=$currentRule['.id'];
+          $this->apiProxy($sectionKey."/set", $newProperties);
+        }
+
+      }
+      else if (array_key_exists($i, $routerRule)) // remove other rules
+      {
+        $currentRule=$routerRule[$i];
+        $this->apiProxy($sectionKey."/remove", array('.id' => $currentRule['.id']));
+      }
+      else // Add new rules
+      {
+        $newRule=$billingRule[$i];
+        $newRule['comment'] = $userId;
+        $this->apiProxy($sectionKey."/add", $newRule);
+      }
+    }
+
     private function sync($sectionData)
     {
+      d($sectionData,"==============");
       foreach ($sectionData as $sectionKey => $sectionValue)
       {
         foreach ($sectionValue as $userId => $userData)
         {
 					$response = $this->API->comm($sectionKey.'/print',array( '?comment' => $userId));
 
-          for ($i=0; $i<count($userData) || $i<count($response); $i++)
+          if (isset($this->uniqueIdentifier[$sectionKey]))
           {
-            if (array_key_exists($i, $userData) && array_key_exists($i, $response)) // Check and modify existing rules
+            $userData = $this->groupByField($userData, $this->uniqueIdentifier[$sectionKey]);
+            $response = $this->groupByField($response, $this->uniqueIdentifier[$sectionKey]);
+
+            $keys =  array_unique( array_merge( array_keys($userData), array_keys($response) ) );
+            foreach ($keys as $i)
             {
-
-              $newRule=$userData[$i];
-              $currentRule=$response[$i];
-
-              $ruleNeedsUpdate=false;
-              $newProperties=array();
-
-              // Compare every property in rule
-              foreach ($newRule as $propertyKey => $propertyValue)
-              {
-                if ($newRule[$propertyKey]!==$currentRule[$propertyKey])
-                {
-                  $ruleNeedsUpdate=true;
-                  $newProperties[$propertyKey]=$propertyValue;
-                }
-              }
-
-              if ($ruleNeedsUpdate)
-              {
-                $newProperties['.id']=$currentRule['.id'];
-                $this->API->comm($sectionKey."/set", $newProperties);
-              }
-
-            }
-            else if (array_key_exists($i, $response)) // remove other rules
-            {
-              $currentRule=$response[$i];
-              $this->API->comm($sectionKey."/remove", array('.id' => $currentRule['.id']));
-            }
-            else // Add new rules
-            {
-              $newRule=$userData[$i];
-              $newRule['comment'] = $userId;
-              $this->API->comm($sectionKey."/add", $newRule);
+              $this->checkRule( $sectionKey, $userData, $response, $i, $userId);
             }
           }
+          else 
+          {
+            if ($sectionKey=="/ip/hcp-server/lease")
+            {
+              d("-----------------------------");
+              d( count($userData), count($response));
+              //d($userData, count($userData), $response, count($response));
+              d("=============================");
+            }
+            for ($i=0; ($i<count($userData) || $i<count($response)); $i++)
+            {
+              //d('!!!!!!!!!!!', $i);
+              $this->checkRule( $sectionKey, $userData, $response, $i, $userId);
+            }
+          }
+
+
         }
       }
     }
@@ -295,8 +357,6 @@
         );
       }
 
-      d($syncData);
-
       $this->sync($syncData);
 
       return $this->checkConnection();
@@ -304,6 +364,8 @@
 
     public function updateQueue ( $userId ) {
 
+      $resource=$this->checkConnection();
+      $majorVersion=intval($resource['version'][0]);
       $allIpRes = $this->getIpRows( $userId );
       $allPppRes = $this->getPppRows( $userId );
       $ipList=array();
@@ -384,11 +446,12 @@
           $dbadrr=implode(',', $ipList);
           if (count($allIpRes))
           {
+            $speed = toBytes($utariffrow['upspeed'], 1000)."/".toBytes($utariffrow['downspeed'], 1000);
             $syncData["/queue/simple"][$userId][] = array(
-              "limit-at" => $utariffrow['upspeed']."/".$utariffrow['downspeed'],
-              "max-limit" => $utariffrow['upspeed']."/".$utariffrow['downspeed'],
+              "limit-at" => $speed,
+              "max-limit" => $speed,
               $addressIndex => $dbadrr,
-              "name" => $userIdId,
+              "name" => $userId,
               "time" => $dayTime,
               "burst-limit"=> $burstLimit,
               "burst-threshold"=> $burstThreshold,
@@ -402,8 +465,7 @@
 
           if (pluginExists('night') &&( $utariffrow['nightupspeed']  || $utariffrow['nightdownspeed'] ) )
           {
-            $nightSpeed= $utariffrow['nightupspeed']."/".$utariffrow['nightdownspeed'];
-
+            $nightSpeed = toBytes($utariffrow['nightupspeed'], 1000)."/".toBytes($utariffrow['nightdownspeed'], 1000);
             //$time  = $this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourStart') );
             $time  = '0s';
             $time .= '-'.$this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourEnd') );
@@ -415,7 +477,7 @@
                 "limit-at" => $nightSpeed,
                 "max-limit" => $nightSpeed,
                 $addressIndex => $dbadrr,
-                "name" => $userIdId.'-night',
+                "name" => $userId.'-night',
                 "time" => $time,
                 "burst-limit"=> $burstLimit,
                 "burst-threshold"=> $burstThreshold,
@@ -571,13 +633,17 @@
           $remoteIp = $pppRow[ 'remoteip' ];
 
           $pppService = $pppRow[ 'pppservice' ];
+          if (!$pppService)
+          {
+            $pppService = 'any';
+          }
 
           //	PPP section
           //	
           $disableSecretsForDisabledUsers=configgetvalue('router', 'ppp', $this->id, 'disablePPPSecretsOfBlockedUsers'); 
           $usersTable = new Table( 'user' );
           $user = $usersTable->loadById( $pppRow['user'] );
-          $disabledState=( $user['disabled']=='1' && $disableSecretsForDisabledUsers) ? 'yes' : 'no';
+          $disabledState=( $user['disabled']=='1' && $disableSecretsForDisabledUsers) ? 'true' : 'false';
           
           $syncData["/ppp/secret"][$userId][] = array(
             "service" => $pppService,
@@ -634,20 +700,20 @@
       if ($this->connected)
       {
         global $db;
-        $reqStr = "SELECT DISTINCT(`id`) FROM `" . DB_TABLE_PREFIX . "ip` WHERE `router`=".$this->id;
+        $reqStr = "SELECT DISTINCT(`user`) FROM `" . DB_TABLE_PREFIX . "ip` WHERE `router`=".$this->id;
         $ipRes = $db->query($reqStr)->fetchAll();
-        $reqStr = "SELECT DISTINCT(`id`) FROM `" . DB_TABLE_PREFIX . "ppp` WHERE `router`=".$this->id;
+        $reqStr = "SELECT DISTINCT(`user`) FROM `" . DB_TABLE_PREFIX . "ppp` WHERE `router`=".$this->id;
         $pppRes = $db->query($reqStr)->fetchAll();
 
         $relatedUsers = array();
         foreach ($pppRes as $pppRow) {
-          $relatedUsers[] = $pppRow['id'];
+          $relatedUsers[] = $pppRow['user'];
         }
 
         foreach ($ipRes as $ipRow) {
-          $relatedUsers[] = $ipRow['id'];
+          $relatedUsers[] = $ipRow['user'];
         }
-        d($relatedUsers);
+        $relatedUsers = array_unique($relatedUsers);
 
         foreach ($relatedUsers as $userId) {
           $this->update($userId);

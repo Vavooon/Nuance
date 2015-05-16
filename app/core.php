@@ -991,17 +991,17 @@ $afterAddRenderers = array(
                                 $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "moneyflow` WHERE `user`=" . $id);
                             },
                             'ip' => function( $id, $fields) {
-                              controllerRouterQueue($fields['router'], "removeIp", $id);
+                              controllerRouterQueue($fields['router'], "update", $fields['user']);
                             },
                             'ppp' => function( $id, $newFields, $oldFields ) { 
-                              controllerRouterQueue($fields['router'], "update", $id);
+                              controllerRouterQueue($fields['router'], "update", $fields['user']);
                             }
 
                         );
 
                         $afterRemoveRenderers = array(
                             'ip' => function( $id, $fields) {
-                              controllerRouterQueue($fields['router'], "update", $fields['user']);
+                              //controllerRouterQueue($fields['router'], "update", $fields['user']);
                             },
                             'ppp' => function( $id, $newFields, $oldFields ) { 
                               controllerRouterQueue($fields['router'], "update", $id);
@@ -1603,13 +1603,13 @@ $afterAddRenderers = array(
 
                         $postfixes = array('K', 'M', 'G', 'T', 'P');
 
-                        function toBytes($size)
+                        function toBytes($size, $multiplier = 1024)
                         {
                             global $postfixes;
                             if (!preg_match("%(\d+)(\w*)%", strtoupper($size), $tmp))
                                 return false;
                             $valuePart = intval($tmp[1]);
-                            $postPart = strlen($tmp[2]) ? pow(1024, (array_search($tmp[2][0], $postfixes) + 1)) : 1;
+                            $postPart = strlen($tmp[2]) ? pow($multiplier, (array_search($tmp[2][0], $postfixes) + 1)) : 1;
                             return ($valuePart) ? $valuePart * $postPart : false;
                         }
 
