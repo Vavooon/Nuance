@@ -883,12 +883,12 @@ body
     &:disabled {
       background-color: #F7F7F7;
     }
-    padding: 4px 2px;
+    padding: 4px;
   }
 
   &.multitext {
     width: 100%;
-    padding: 4px 2px;
+    padding: 4px;
   }
 }
 
@@ -1480,10 +1480,11 @@ div.button.icon.loading:after
 {
 	display: inline-block;
 	border: 0 none;
-	width: 26px;
-	height: 26px;
+	width: 30px;
+	height: 30px;
 	vertical-align: top;
 	opacity: 0.5;
+  text-align: center;
 	-o-transition-duration: 0.3s, 0.5s;
 	-o-transition-delay: 0.1s, 0;
 	-o-transition-timing-function: linear;
@@ -1499,7 +1500,7 @@ div.button.icon.loading:after
 }
 .search-wrap .search-button:before, .search-wrap .clear-button:before
 {
-	line-height: 24px;
+	line-height: 30px;
 }
 .search-wrap .clear-button.disabled
 {
