@@ -9,7 +9,7 @@
         if (file_exists($cssPath . "/gh-buttons.css"))
         {
             ?>
-            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/gh-buttons.css" />
+            <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/gh-buttons.css" />
             <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/reset.css" />
             <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style.css" />
             <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style-mobile.css" />
