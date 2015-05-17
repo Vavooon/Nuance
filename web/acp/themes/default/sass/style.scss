@@ -806,7 +806,6 @@ body
 .field
 {
 	display: inline-block;
-	border: 1px #ddd solid;
 	color: #555;
 	@box-sizing( border-box );
 	background-color: white;
@@ -819,6 +818,9 @@ body
 	-webkit-transition-duration: 1s;
 	-webkit-transition-timing-function: ease;
 	-webkit-transition-property: background-color;
+}
+.flex-wrap>.field {
+	border: 1px #ddd solid;
 }
 
 .field:focus, .combobox.focus
