@@ -925,8 +925,13 @@ $afterAddRenderers = array(
                                   $newUser = $newFields['user'];
                                 }
                               }
-                              controllerRouterQueue($oldFields['router'], "update", $oldFields['user']);
+                              d("OLD:");
+                              if (array_key_exists('router', $oldFields) && array_key_exists('user', $oldFields) )
+                              {
+                                controllerRouterQueue($oldFields['router'], "update", $oldFields['user']);
+                              }
                               if ( $new ) {
+                                d("NEW:");
                                 controllerRouterQueue( $newRouter, "update", $newUser );
                               }
                             },
@@ -945,7 +950,10 @@ $afterAddRenderers = array(
                                   $newUser = $newFields['user'];
                                 }
                               }
-                              controllerRouterQueue($oldFields['router'], "update", $oldFields['user']);
+                              if (array_key_exists('router', $oldFields) && array_key_exists('user', $oldFields) )
+                              {
+                                controllerRouterQueue($oldFields['router'], "update", $oldFields['user']);
+                              }
                               if ( $new ) {
                                 controllerRouterQueue( $newRouter, "update", $newUser );
                               }
@@ -989,22 +997,16 @@ $afterAddRenderers = array(
 
                                 $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "order` WHERE `user`=" . $id);
                                 $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "moneyflow` WHERE `user`=" . $id);
-                            },
-                            'ip' => function( $id, $fields) {
-                              controllerRouterQueue($fields['router'], "update", $fields['user']);
-                            },
-                            'ppp' => function( $id, $newFields, $oldFields ) { 
-                              controllerRouterQueue($fields['router'], "update", $fields['user']);
                             }
 
                         );
 
                         $afterRemoveRenderers = array(
                             'ip' => function( $id, $fields) {
-                              //controllerRouterQueue($fields['router'], "update", $fields['user']);
+                              controllerRouterQueue($fields['router'], "update", $fields['user']);
                             },
-                            'ppp' => function( $id, $newFields, $oldFields ) { 
-                              controllerRouterQueue($fields['router'], "update", $id);
+                            'ppp' => function( $id, $fields ) { 
+                              controllerRouterQueue($fields['router'], "update", $fields['user']);
                             }
 
                         );

@@ -23,7 +23,9 @@
       $this->API->port=$port;
       $this->db=$db;
       $this->uniqueIdentifier = array(
-        "/ip/firewall/address-list" => "address"
+        "/ip/firewall/address-list" => "address",
+        "/ip/dhcp-server/lease" => "address",
+        "/ip/arp" => "address"
       );
 		  if ($this->API->connect($ip, $login, $pass))
 		  {
@@ -61,7 +63,7 @@
         $result = $this->API->comm($path, $data);
         //if (count($result))
         {
-          //d($path, $data, $result);
+          d($path, $data, $result);
           //d($path);
         }
     }
@@ -100,7 +102,6 @@
         {
           if ($newRule[$propertyKey]!==$currentRule[$propertyKey])
           {
-            //d('diffrerent props', $newRule[$propertyKey], $currentRule[$propertyKey]);
             $ruleNeedsUpdate=true;
             $newProperties[$propertyKey]=$propertyValue;
           }
@@ -128,7 +129,7 @@
 
     private function sync($sectionData)
     {
-      d($sectionData,"==============");
+      d('SECTION:',$sectionData);
       foreach ($sectionData as $sectionKey => $sectionValue)
       {
         foreach ($sectionValue as $userId => $userData)
@@ -148,16 +149,8 @@
           }
           else 
           {
-            if ($sectionKey=="/ip/hcp-server/lease")
-            {
-              d("-----------------------------");
-              d( count($userData), count($response));
-              //d($userData, count($userData), $response, count($response));
-              d("=============================");
-            }
             for ($i=0; ($i<count($userData) || $i<count($response)); $i++)
             {
-              //d('!!!!!!!!!!!', $i);
               $this->checkRule( $sectionKey, $userData, $response, $i, $userId);
             }
           }
@@ -293,21 +286,8 @@
     }
 
     public function update( $userId ) {
-      $usersTable = new Table( 'user' );
-
-      $allIpRes = $this->getIpRows( $userId );
-      $allPppRes = $this->getPppRows( $userId );
-
-      foreach ($allIpRes as $allIpRow ) 
-      {
-        $this->updateIp( $allIpRow[ 'id' ], $userId );
-      }
-
-      foreach ($allPppRes as $allPppRow ) 
-      {
-        $this->updatePpp( $allPppRow[ 'id' ], $userId );
-      }
-
+      $this->updateIp( $userId );
+      $this->updatePpp( $userId );
       $this->updateAddressList( $userId );
       return $this->updateQueue( $userId ); //Return connection state
 
@@ -369,28 +349,27 @@
       $allIpRes = $this->getIpRows( $userId );
       $allPppRes = $this->getPppRows( $userId );
       $ipList=array();
-        foreach ($allIpRes as $allIpRow ) 
-        {
-          $ipList[]=$allIpRow['ip']."/32";
-        }
+      foreach ($allIpRes as $allIpRow ) 
+      {
+        $ipList[]=$allIpRow['ip']."/32";
+      }
 
-        foreach ($allPppRes as $allPppRow ) 
-        {
-          $ipList[]=$allPppRow['remoteip']."/32";
-        }
+      foreach ($allPppRes as $allPppRow ) 
+      {
+        $ipList[]=$allPppRow['remoteip']."/32";
+      }
 
       $syncData=array(
-        "/queue/simple" => array()
+        "/queue/simple" => array(
+          $userId => array()
+        )
       );
 
+      d("WUEUQ:", $userId);
       $currentTariff= getCurrentTariff( $userId );
       if ($currentTariff)
       {
         $currentTariff= $currentTariff['detailsid'];
-      }
-      
-      if ($currentTariff)
-      {
         $tariffTable=new Table('tariff');
         $utariffres=$tariffTable->load("WHERE id=$currentTariff");
         $utariffrow = $utariffres[0];
@@ -444,7 +423,7 @@
           }
 
           $dbadrr=implode(',', $ipList);
-          if (count($allIpRes))
+          if (count($ipList))
           {
             $speed = toBytes($utariffrow['upspeed'], 1000)."/".toBytes($utariffrow['downspeed'], 1000);
             $syncData["/queue/simple"][$userId][] = array(
@@ -471,7 +450,7 @@
             $time .= '-'.$this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourEnd') );
             $time .= ',sun,mon,tue,wed,thu,fri,sat';
 
-            if (count($allIpRes))
+            if (count($ipList))
             {
               $syncData["/queue/simple"][$userId][] = array(
                 "limit-at" => $nightSpeed,
@@ -485,8 +464,6 @@
               );
             }
           }
-
-
         }
       }
       $this->sync($syncData);
@@ -494,16 +471,13 @@
       return $this->checkConnection();
     }
 
-		public function updateIp( $id, $userId )
+		public function updateIp( $userId )
 		{
 			if ($this->connected)
 			{
         $resource=$this->checkConnection();
         $majorVersion=intval($resource['version'][0]);
-        $ipTable=new Table('ip');
-        $ipRes=$ipTable->load(" WHERE id=$id");
-				if (!$ipRes) return;
-
+        $ipRes = $this->getIpRows( $userId );
 
         $syncData=array(
           "/ip/firewall/filter" => array(),
@@ -513,36 +487,29 @@
           "/ip/dhcp-server/lease" => array()
         );
 
+        foreach ($syncData as $key => $value)
+        {
+          $syncData[$key][$userId] = array();
+        }
+
         foreach ($ipRes as $ipRow)
 				{
-          $ipId=''.$ipRow['id'];
-
-          foreach ($syncData as $key => $value)
-          {
-            $syncData[$key][$userId] = array();
-          }
 
           $ip = $ipRow[ 'ip' ];
           $mac = preg_replace('/..(?!$)/', '$0:', strtoupper($ipRow[ 'mac' ]));
-          
-      
         
 					//	MAC-filter	section
-
-
           $macFilterType=configgetvalue('router', 'main', $this->id, 'filterType');
           switch ($macFilterType)
           {
             case 1: //Block by ARP
             {
-              $inInterface=configgetvalue('router', 'main', $this->id, 'inInterface');
-
               if (strlen($mac))
               {
                 $syncData["/ip/arp"][$userId][] = array(
                   "mac-address" => $mac,
                   "address" => $ip,
-                  "interface" => $inInterface
+                  "interface" => $ipRow['interface']
                 );
               }
             }
@@ -582,8 +549,6 @@
           
 					//	DHCP section
 
-        
-
           if (strlen($mac))
           {
             $syncData["/ip/dhcp-server/lease"][$userId][] = array(
@@ -592,39 +557,34 @@
             );
           }
 
-          $this->sync($syncData);
-
-					return $this->checkConnection();
-
 				}
+        $this->sync($syncData);
+        return $this->checkConnection();
 			}
 		}
 	
-    public function updatePpp( $id, $userId )
+    public function updatePpp( $userId )
 		{
 			if ($this->connected)
 			{
         $resource=$this->checkConnection();
         $majorVersion=intval($resource['version'][0]);
 
-        $pppTable=new Table('ppp');
-        $pppRes=$pppTable->load("WHERE id=$id");
-				if (!$pppRes) return;
+        $pppRes = $this->getPppRows( $userId );
 
+        $syncData=array(
+          "/ppp/secret" => array()
+        );
         
+        foreach ($syncData as $key => $value)
+        {
+          $syncData[$key][$userId] = array();
+        }
 
         foreach ($pppRes as $pppRow)
         {
-          $syncData=array(
-            //"/queue/simple" => array(),
-            "/ppp/secret" => array()
-          );
           $id=''.$pppRow['id'];
           
-          foreach ($syncData as $key => $value)
-          {
-            $syncData[$key][$userId] = array();
-          }
 
           $login = $pppRow[ 'login' ];
           $password = $pppRow[ 'password' ];
