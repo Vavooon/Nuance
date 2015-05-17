@@ -2,6 +2,7 @@
 *.log
 *.swp
 *.txt
+*.komodoproject
 .build/
 .doc/
 .locale-src/
