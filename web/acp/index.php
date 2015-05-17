@@ -303,6 +303,49 @@ $router->map('GET', '/all/get', function ($params)
 }
 );
 
+
+
+$router->map('GET', '/plugins.[css|js:type]', function ($params)
+{
+
+  //d($params);
+
+  $type = $params['type'];
+  if ($type == 'js')
+  {
+      header("Content-type: application/javascript");
+  }
+  else
+  {
+      header("Content-type: text/css");
+  }
+
+  foreach (getPlugins() as $name)
+  {
+        $path = "../../plugins/$name/acp/$name.$type";
+        if (file_exists($path))
+        {
+            readfile($path);
+        }
+  }
+  die(); // Prevent response object displaying
+});
+
+
+$router->map('GET', '/[*:name].[po|mo:type]', function ($params)
+{ 
+  $path = "locale/".$params['name']."/LC_MESSAGES/acp.".$params['type'];
+  if (file_exists($path))
+  {
+      header("Content-type: text/plain");
+      readfile($path);
+  }
+  else
+  {
+      http_response_code(404);
+  }
+});
+
 $match = $router->match();
 
 // Run matched route controller

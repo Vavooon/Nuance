@@ -12,7 +12,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style-mobile.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style-desktop.css" />
-        <link rel="gettext" type="application/x-po" href="loadplugin.php?target=locale&name=<?php echo configgetvalue('system', 'main', NULL, 'acpLocale') ?>&type=po" />
+        <link rel="gettext" type="application/x-po" href="locale/<?php echo configgetvalue('system', 'main', NULL, 'acpLocale') ?>/LC_MESSAGES/acp.po" />
         <script>
             <?php
             echo "\nvar pluginsLoaders = [];\n";
@@ -31,8 +31,8 @@
         if (isset($_SESSION['user_id']))
         {
         ?>
-        <script src="loadplugin.php?target=plugin&type=js"></script>
-        <link rel="stylesheet" type="text/css" href="loadplugin.php?target=plugin&type=css" />
+        <script src="plugins.js"></script>
+        <link rel="stylesheet" type="text/css" href="plugins.css" />
         <script src="js/admin.js"></script>
         <?php
         }

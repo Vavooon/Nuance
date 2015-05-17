@@ -33,8 +33,9 @@ var dbDateFormat = 'yyyy-MM-dd';
 var dbDateTimeFormat = 'yyyy-MM-dd HH:mm:ss';
 var dateFormat = 'dd.MM.yyyy';
 var dateTimeFormat = 'HH:mm dd.MM.yyyy';
-if (!document.body)
+if (!document.body) {
 	htmlEl.appendChild(document.createElement('body'));
+};
 window.addEventListener('load', function() {
 	if (htmlEl.children[2])
 		htmlEl.removeChild(htmlEl.children[2]);
@@ -512,7 +513,6 @@ window.onConfigLoad = function() {
 									case 'allow':
 										return activeOrder.hasOwnProperty(id) && !store.data[id][store.ns.disabled];
 								}
-
 							},
 							store: new Nuance.MemoryStore({
 								name: 'filter-options',
@@ -623,7 +623,34 @@ window.onConfigLoad = function() {
 					hiddenCols: ['detailsname', 'detailsid'],
 					excludedFields: ['detailsid', 'detailsname', 'user', 'sum', 'date', 'refund', 'name', 'comment'],
 					toolbarButtons: [],
-					filters: {
+          filters: {
+						/*month: {
+							name: "state",
+							column: 'state',
+							filterFunction: function(id, selectedValue) {
+								var store = Nuance.stores.user;
+								switch (selectedValue) {
+									case 'disabled':
+										return store.data[id][store.ns.disabled];
+									case 'deny':
+										return !activeOrder.hasOwnProperty(id) && !store.data[id][store.ns.disabled];
+									case 'allow':
+										return activeOrder.hasOwnProperty(id) && !store.data[id][store.ns.disabled];
+								}
+							},
+							store: new Nuance.MemoryStore({
+								name: 'filter-options',
+								header: [
+									['id', 'text'],
+									['name', 'text']
+								],
+								data: {
+									allow: ['allow', _("allow")],
+									deny: ['deny', _("deny")],
+									disabled: ['disabled', _("disabled")]
+								}
+							})
+						},*/
 						refund: false
 					},
 					contextMenuItems: []
