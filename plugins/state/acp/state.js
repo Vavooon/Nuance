@@ -1,7 +1,7 @@
 function state() {
 	function init() {
 		/* Routers online */
-		var supportedTypes = ['mikrotik', 'mikrotikppp'];
+		var supportedTypes = ['mikrotik'];
 		var routerData = {};
 		userData = {};
 
@@ -198,7 +198,6 @@ function state() {
 					Nuance.grids.router.setDisplayValue(id, 'version', '');
 				}
 			};
-			this.load();
 		}
 
 		var routerStateChecker = new RouterStateChecker;

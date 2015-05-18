@@ -29,7 +29,7 @@ else
     $currentDate = new DateTime('midnight');
     $startDate = new DateTime('first day of this month midnight');
     $endDate = new DateTime('first day of next month midnight');
-    $withdrawalDay = configgetvalue('system', 'cash', NULL, 'withdrawalDay');
+    $withdrawalDay = $config->getValue('system', 'cash', NULL, 'withdrawalDay');
     $withdrawalDay-=1;
     if ($withdrawalDay)
     {
@@ -42,7 +42,7 @@ else
         $endDate->modify("-1 month");
     }
 
-    $currency = configgetvalue('system', 'main', NULL, 'currency');
+    $currency = $config->getValue('system', 'main', NULL, 'currency');
     $tariffPrice = smoneyf($user->calculateTariffPrice());
     $formattedTariffPrice = sprintf(_ngettext("%s $currency", "%s $currency", $tariffPrice), $tariffPrice);
 
@@ -52,7 +52,7 @@ else
         $paySum = $sc->pay($_POST['code'], $user->getId());
         if ($paySum)
         {
-            $currency = configgetvalue('system', 'main', NULL, 'currency');
+            $currency = $config->getValue('system', 'main', NULL, 'currency');
             $formattedFundSum = sprintf(ngettext("%s $currency", "%s $currency", $paySum), $paySum);
             $tpl = array(
                 "formattedFundSum" => $formattedFundSum

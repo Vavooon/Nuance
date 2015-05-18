@@ -62,7 +62,7 @@ foreach ($tariffs as $tariff)
 }
 
 
-if ($user->isValid() && $user->getField('city') && configgetvalue('system', 'ucp', NULL, 'showTariffsOnlyFromUsersCity'))
+if ($user->isValid() && $user->getField('city') && $config->getValue('system', 'ucp', NULL, 'showTariffsOnlyFromUsersCity'))
 {
     $checkCity = true;
 }
@@ -71,7 +71,7 @@ else
     $checkCity = false;
 }
 $speedRows = array('upspeed', 'downspeed', 'nightupspeed', 'nightdownspeed');
-if (configgetvalue('system', 'ucp', NULL, 'groupTariffsByCities'))
+if ($config->getValue('system', 'ucp', NULL, 'groupTariffsByCities'))
 {
     foreach ($tariffs as $tariff)
     {
@@ -142,7 +142,7 @@ if (pluginExists('night'))
 {
     $fenom->display($theme->getTemplateLocation('notification.tpl'), array(
         "className" => "tip",
-        "errorText" => sprintf(__("Night rates are valid from %s to %s"), configgetvalue('system', 'tariff', NULL, 'nightHourStart'), configgetvalue('system', 'tariff', NULL, 'nightHourEnd'))
+        "errorText" => sprintf(__("Night rates are valid from %s to %s"), $config->getValue('system', 'tariff', NULL, 'nightHourStart'), $config->getValue('system', 'tariff', NULL, 'nightHourEnd'))
             )
     );
 }

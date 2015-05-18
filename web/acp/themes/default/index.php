@@ -1,7 +1,10 @@
+<?php
+global $config;
+?>
 <!DOCTYPE html>
 <html>
     <head>
-        <title><?php printf(__("%s - Nuance - Admin panel"), configgetvalue('system', 'main', NULL, 'companyName')) ?></title>
+        <title><?php printf(__("%s - Nuance - Admin panel"), $config->getValue('system', 'main', NULL, 'companyName')) ?></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta content='width=device-width, initial-scale=0.4, maximum-scale=1.0, user-scalable=0' name='viewport' />
         <?php
@@ -12,7 +15,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style-mobile.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo $usertheme ?>/css/style-desktop.css" />
-        <link rel="gettext" type="application/x-po" href="locale/<?php echo configgetvalue('system', 'main', NULL, 'acpLocale') ?>/LC_MESSAGES/acp.po" />
+        <link rel="gettext" type="application/x-po" href="locale/<?php echo $config->getValue('system', 'main', NULL, 'acpLocale') ?>/LC_MESSAGES/acp.po" />
         <script>
             <?php
             echo "\nvar pluginsLoaders = [];\n";

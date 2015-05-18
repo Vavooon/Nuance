@@ -25,6 +25,7 @@ class Table
         }
         $this->db = $db;
         $this->fields = getFieldsAssoc($this->name);
+        //$this->addSchemaToResponse();
     }
 
     public function addSchemaToResponse()

@@ -295,9 +295,9 @@
               // Normal / day
               if (pluginExists('night') && ($utariffrow['nightupspeed']  || $utariffrow['nightdownspeed'] ) )
               {
-                $dayTime  = $this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourEnd') );
+                $dayTime  = $this->calculateMikrotikTime ( $config->getValue('system', 'tariff', NULL, 'nightHourEnd') );
                 $dayTime .= '-1d';
-                //$dayTime .= '-'.$this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourStart') );
+                //$dayTime .= '-'.$this->calculateMikrotikTime ( $config->getValue('system', 'tariff', NULL, 'nightHourStart') );
                 $dayTime .= ',sun,mon,tue,wed,thu,fri,sat';
               }
               else
@@ -364,9 +364,9 @@
                   $ipList[]=$ip."/32";
                 }
 
-                //$time  = $this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourStart') );
+                //$time  = $this->calculateMikrotikTime ( $config->getValue('system', 'tariff', NULL, 'nightHourStart') );
                 $time  = '0s';
-                $time .= '-'.$this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourEnd') );
+                $time .= '-'.$this->calculateMikrotikTime ( $config->getValue('system', 'tariff', NULL, 'nightHourEnd') );
                 $time .= ',sun,mon,tue,wed,thu,fri,sat';
 
               
@@ -400,7 +400,7 @@
           $useraddr=json_decode($devuserrow['iplist'],true);
           $response = $this->API->comm('/ppp/secret/print',array( '?comment' => $userid ));
           $ipList=array();
-          $disableSecretsForDisabledUsers=configgetvalue('router', 'ppp', $this->id, 'disablePPPSecretsOfBlockedUsers'); 
+          $disableSecretsForDisabledUsers=$config->getValue('router', 'ppp', $this->id, 'disablePPPSecretsOfBlockedUsers'); 
           $disabledState=( $devuserrow['disabled']=='1' && $disableSecretsForDisabledUsers) ? 'yes' : 'no';
           foreach ($useraddr as $ip => $mac)
           {

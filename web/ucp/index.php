@@ -13,7 +13,7 @@ if (defined('DEBUG'))
     $fenom->setOptions(Fenom::AUTO_RELOAD);
 }
 
-$mainPageText = configgetvalue('system', 'ucp', NULL, 'mainPageText');
+$mainPageText = $config->getValue('system', 'ucp', NULL, 'mainPageText');
 $mainPageText = preg_replace('%\n%', '<br>', $mainPageText);
 
 $tpl = array(

@@ -13,7 +13,7 @@ if (defined('DEBUG'))
     $fenom->setOptions(Fenom::AUTO_RELOAD);
 }
 
-$companyContacts = configgetvalue('system', 'ucp', NULL, 'contactsPageText');
+$companyContacts = $config->getValue('system', 'ucp', NULL, 'contactsPageText');
 $companyContacts = preg_replace('%\n%', '<br>', $companyContacts);
 
 $tpl = array(

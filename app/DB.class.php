@@ -179,6 +179,7 @@ class DB
                 unset($data['cash']);
             }
 
+            $table->addSchemaToResponse();
             switch ($action)
             {
                 case 'dbadd':
@@ -190,34 +191,6 @@ class DB
                 case 'dbremove':
                     $id = $table->delete($data);
                     break;
-            }
-
-            if ($target == 'user' && ($action == 'dbedit' || $action == 'dbadd' ) && isset($_POST['cash']) && checkPermission($sessionId, array('table', $target, 'edit', 'cash')))
-            {
-                if ($action === 'dbedit')
-                {
-                    $user = $table->loadById($id);
-
-                    $sum = money($_POST['cash']) - money($user['cash']);
-                }
-                else
-                {
-                    $sum = money($_POST['cash']);
-                }
-
-                if ($sum)
-                {
-                    $moneyflowTable = new Table('moneyflow');
-                    $moneyflowTable->add(
-                            array(
-                                "user" => $id,
-                                "sum" => $sum,
-                                "detailsname" => "adminpay",
-                                "detailsid" => $sessionId,
-                            )
-                    );
-                }
-                payment(0, $id);
             }
 
             if ($id)

@@ -323,7 +323,7 @@ var gt = new Gettext();
 
 function _(msgid) {
 	var str = gt.gettext(msgid);
-	if (str == msgid && debug) {
+	if (str == msgid && debug && false) {
 		console.warn("Found untranslated line: " + str);
 		str && Nuance.AjaxRequest("GET", "../../ajax.php?action=addtranslationline&line=" + str);
 	}
@@ -4632,10 +4632,6 @@ var Nuance = {
         //throw new Error;
       }
       filter = newFilter;
-      c(this.name, filter);
-      if ( this.name == 'log' && !filter) {
-        throw new Error;
-      }
 		};
 		this.getFilter = function() {
 			return filter;
@@ -4688,9 +4684,10 @@ var Nuance = {
 			self.errors = errors;
 			if (!self.header)
 				self.header = response.header || [];
-			if (!self.ns)
+			if (!self.ns) {
 				self.ns = createNs();
-			self.sortOrder = response.sortOrder;
+      }
+			self.sortOrder = response.sortOrder || {};
       self.firstRowDate = response.firstRowDate;
 			if (!self.data || response.updateMode !== 'merge') {
 				self.data = data;
@@ -4751,7 +4748,15 @@ var Nuance = {
 				self.trigger(action + 'error', errorEvent, id, postData);
 			}
 			var onsuccess = function(response, postDada) {
-				loadData(response);
+				if (o.subscribePath) {
+          var storeData = response;
+          for (var i = 0; i < o.subscribePath.length; i++) {
+            storeData = storeData[o.subscribePath[i]];
+          }
+          loadData(storeData);
+        } else {
+          loadData(response.db[self.name]);
+        }
 				var afterEvent = new Nuance.Event({
 					type: "after" + action
 				});

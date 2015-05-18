@@ -378,9 +378,9 @@
           // Normal / day
           if (pluginExists('night') &&( $utariffrow['nightupspeed']  || $utariffrow['nightdownspeed'] ) )
           {
-            $dayTime  = $this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourEnd') );
+            $dayTime  = $this->calculateMikrotikTime ( $config->getValue('system', 'tariff', NULL, 'nightHourEnd') );
             $dayTime .= '-1d';
-            //$dayTime .= '-'.$this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourStart') );
+            //$dayTime .= '-'.$this->calculateMikrotikTime ( $config->getValue('system', 'tariff', NULL, 'nightHourStart') );
             $dayTime .= ',sun,mon,tue,wed,thu,fri,sat';
           }
           else
@@ -445,9 +445,9 @@
           if (pluginExists('night') &&( $utariffrow['nightupspeed']  || $utariffrow['nightdownspeed'] ) )
           {
             $nightSpeed = toBytes($utariffrow['nightupspeed'], 1000)."/".toBytes($utariffrow['nightdownspeed'], 1000);
-            //$time  = $this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourStart') );
+            //$time  = $this->calculateMikrotikTime ( $config->getValue('system', 'tariff', NULL, 'nightHourStart') );
             $time  = '0s';
-            $time .= '-'.$this->calculateMikrotikTime ( configgetvalue('system', 'tariff', NULL, 'nightHourEnd') );
+            $time .= '-'.$this->calculateMikrotikTime ( $config->getValue('system', 'tariff', NULL, 'nightHourEnd') );
             $time .= ',sun,mon,tue,wed,thu,fri,sat';
 
             if (count($ipList))
@@ -499,7 +499,7 @@
           $mac = preg_replace('/..(?!$)/', '$0:', strtoupper($ipRow[ 'mac' ]));
         
 					//	MAC-filter	section
-          $macFilterType=configgetvalue('router', 'main', $this->id, 'filterType');
+          $macFilterType=$config->getValue('router', 'main', $this->id, 'filterType');
           switch ($macFilterType)
           {
             case 1: //Block by ARP
@@ -600,7 +600,7 @@
 
           //	PPP section
           //	
-          $disableSecretsForDisabledUsers=configgetvalue('router', 'ppp', $this->id, 'disablePPPSecretsOfBlockedUsers'); 
+          $disableSecretsForDisabledUsers=$config->getValue('router', 'ppp', $this->id, 'disablePPPSecretsOfBlockedUsers'); 
           $usersTable = new Table( 'user' );
           $user = $usersTable->loadById( $pppRow['user'] );
           $disabledState=( $user['disabled']=='1' && $disableSecretsForDisabledUsers) ? 'true' : 'false';

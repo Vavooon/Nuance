@@ -13,7 +13,7 @@ else if (isset($_COOKIE['lang']))
 }
 else
 {
-    $currentLanguage = configgetvalue('system', 'main', NULL, 'ucpLocale');
+    $currentLanguage = $config->getValue('system', 'main', NULL, 'ucpLocale');
 }
 loadLocale('ucp', $currentLanguage);
 if (!$licenseManager->checkPermission('ucp'))
@@ -27,7 +27,7 @@ $ipRequest = " WHERE iplist LIKE '%\"" . $_SERVER['REMOTE_ADDR'] . "\"%'";
 
 function formatCash($sum)
 {
-    $currency = configgetvalue('system', 'main', NULL, 'currency');
+    $currency = $config->getValue('system', 'main', NULL, 'currency');
     return sprintf(_ngettext("%s $currency", "%s $currency", $sum), $sum);
 }
 
@@ -38,10 +38,10 @@ if (strpos($_SERVER['REQUEST_URI'], 'auth.php') === false && strpos($_SERVER['RE
     $_SESSION['url'] = substr($_SERVER['REQUEST_URI'], strrpos($_SERVER['REQUEST_URI'], '/'));
 }
 
-if (!isset($_SESSION['id']) && configgetvalue('system', 'ucp', NULL, 'IPautoLogin'))
+if (!isset($_SESSION['id']) && $config->getValue('system', 'ucp', NULL, 'IPautoLogin'))
 {
     $user = new User($ipRequest);
-    if (configgetvalue('system', 'ucp', NULL, 'restrictUsersLoggedByIP'))
+    if ($config->getValue('system', 'ucp', NULL, 'restrictUsersLoggedByIP'))
     {
         $user->isRestricted = true;
         $_SESSION['is_restricted'] = true;
@@ -103,7 +103,7 @@ if ($user->isValid())
     $menu['info.php'] = array(__('My info'), 0);
     if ($user->isEnabled())
     {
-        if (configgetvalue('system', 'ucp', NULL, 'showMoneyflow'))
+        if ($config->getValue('system', 'ucp', NULL, 'showMoneyflow'))
         {
             $menu['moneyflow.php'] = array(__('Moneyflow'), 0);
         }
@@ -113,11 +113,11 @@ if ($user->isValid())
         }
     }
 }
-if (configgetvalue('system', 'ucp', NULL, 'showTariffs'))
+if ($config->getValue('system', 'ucp', NULL, 'showTariffs'))
 {
     $menu['tariffs.php'] = array(__('Tariffs'), 0);
 }
-if (configgetvalue('system', 'ucp', NULL, 'showDocuments'))
+if ($config->getValue('system', 'ucp', NULL, 'showDocuments'))
 {
     $menu['documents.php'] = array(__('Documents'), 0);
 }
@@ -165,7 +165,7 @@ else
 }
 
 $headerData = array(
-        "htmlTitle" => sprintf(__("%s - Nuance - User panel"), configgetvalue('system', 'main', NULL, 'companyName')),
+        "htmlTitle" => sprintf(__("%s - Nuance - User panel"), $config->getValue('system', 'main', NULL, 'companyName')),
         "languages" => $languages,
         "menu" => $menu,
         "user" => $user,

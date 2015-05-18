@@ -80,11 +80,19 @@ $router->map('POST', '/logout', function ()
 /*    Database    */
 $router->map('GET', '/db/[a:name]/get', function ($params)
 {
+  global $response;
     if (isset($_GET['filter'])) {
       $params['filter'] = $_GET['filter'];
     }
+    if ($params['name'] == 'activeorder') {
+      $params['name'] = 'order';
+    }
     $db = new DB();
     $db->get($params);
+    if (isset($response['db']['order']))
+    {
+        $response['db']['activeorder'] = $response['db']['order'];
+    }
 }
 );
 
@@ -123,28 +131,28 @@ $router->map('POST', '/db/[a:name]/del', function ($params)
 /*    Config    */
 $router->map('GET', '/config/get', function ($params)
 {
-    $db = new Config($params);
+    $db = new ConfigProxy($params);
     $db->get($params);
 }
 );
 
 $router->map('POST', '/config/add', function ($params)
 {
-    $db = new Config($params);
+    $db = new ConfigProxy($params);
     $db->add($params);
 }
 );
 
 $router->map('POST', '/config/set', function ($params)
 {
-    $db = new Config($params);
+    $db = new ConfigProxy($params);
     $db->set($params);
 }
 );
 
 $router->map('POST', '/config/del', function ($params)
 {
-    $db = new Config($params);
+    $db = new ConfigProxy($params);
     $db->remove($params);
 }
 );
@@ -211,7 +219,7 @@ $router->map('POST', '/routersync/[a:name]', function ($params)
 $router->map('GET', '/all/get', function ($params)
 {
     global $response, $mysqlDateFormat, $mysqlTimeDateFormat;
-    $db = new Config($params);
+    $db = new ConfigProxy($params);
     $db->get($params);
 
     $db = new Statistics($params);
@@ -221,8 +229,12 @@ $router->map('GET', '/all/get', function ($params)
     $db->get(array('name' => '*'));
 
     $skipTables = array(
-        'moneyflow', 'log', 'scratchcard'
+        'moneyflow', 'log', 'scratchcard', 'order'
     );
+    $db->get(array('name' => 'order', 'filter' => 'enddate^>' . date($mysqlTimeDateFormat)));
+    $response['db']['activeorder'] = $response['db']['order'];
+    unset($response['db']['order']);
+
     for ($i = 0; $i < count($skipTables); $i++)
     {
         $request = array(
@@ -230,7 +242,7 @@ $router->map('GET', '/all/get', function ($params)
         );
         if ($skipTables[$i] === $_GET['activetab'])
         {
-          if ($skipTables[$i] !== 'scratchcard') {
+          if ($skipTables[$i] !== 'scratchcard' || $skipTables[$i] !== 'order') {
           /*
           if (isset($_GET['filter'])) {
             $request['filter'] = $_GET['filter'];
@@ -254,11 +266,6 @@ $router->map('GET', '/all/get', function ($params)
 
         $db->get($request);
     }
-
-    $db->get(array('name' => 'order', 'filter' => 'enddate^>' . date($mysqlTimeDateFormat)));
-    //d($response['db']['order']);
-    $response['db']['activeorder'] = $response['db']['order'];
-    unset($response['db']['order']);
 
     $acl = new ACL();
     $acl->get();
@@ -333,9 +340,6 @@ $router->map('GET', '/all/get', function ($params)
 
 $router->map('GET', '/plugins.[css|js:type]', function ($params)
 {
-
-  //d($params);
-
   $type = $params['type'];
   if ($type == 'js')
   {

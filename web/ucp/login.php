@@ -14,7 +14,7 @@ if (defined('DEBUG'))
 }
 
 $page = 'login';
-if (configgetvalue('system', 'ucp', NULL, 'IPautoLogin'))
+if ($config->getValue('system', 'ucp', NULL, 'IPautoLogin'))
 {
     $ipUser = new User($ipRequest);
     $ipIsFound = $ipUser->isValid();

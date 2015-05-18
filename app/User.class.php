@@ -78,7 +78,7 @@ class User
 
     function getFormattedId()
     {
-        $idrenderer = configgetvalue('system', 'grid', NULL, 'user-idrenderer');
+        $idrenderer = $config->getValue('system', 'grid', NULL, 'user-idrenderer');
         $idfunc = 'formatUserId' . $idrenderer;
         return $idfunc($this->data);
     }
@@ -132,14 +132,14 @@ class User
 
     function getFormattedCash()
     {
-        $currency = configgetvalue('system', 'main', NULL, 'currency');
+        $currency = $config->getValue('system', 'main', NULL, 'currency');
         $cash = smoneyf($this->data['cash']);
         return sprintf(_ngettext("%s $currency", "%s $currency", $cash), $cash);
     }
 
     function getFormattedCashToPay()
     {
-        $currency = configgetvalue('system', 'main', NULL, 'currency');
+        $currency = $config->getValue('system', 'main', NULL, 'currency');
         $cashToPay = $this->getCashToPay();
         return sprintf(_ngettext("%s $currency", "%s $currency", $cashToPay), $cashToPay);
     }

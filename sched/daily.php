@@ -12,14 +12,14 @@ require_once realpath(__DIR__ . "/../include/core.php");
 $currentDay = intval(date('j'));
 
 // Create withdrawal date
-$withdrawalDay = configgetvalue('system', 'cash', NULL, 'withdrawalDay');
+$withdrawalDay = $config->getValue('system', 'cash', NULL, 'withdrawalDay');
 $withdrawalDate = new DateTime('first day of this month midnight');
 $withdrawalDate->modify((intval($withdrawalDay) - 1) . ' days');
 
 // Create notifications start date
 
 
-$notificationsOffset = configgetvalue('system', 'cash', NULL, 'notificationsOffset');
+$notificationsOffset = $config->getValue('system', 'cash', NULL, 'notificationsOffset');
 
 $notificationsStartDate = clone $withdrawalDate;
 $notificationsStartDate->modify(-$notificationsOffset . ' days');
@@ -27,13 +27,13 @@ $notificationsStartDate->modify(-$notificationsOffset . ' days');
 
 // Crete notifications end date
 
-$notificationsDuration = configgetvalue('system', 'cash', NULL, 'notificationsDuration');
+$notificationsDuration = $config->getValue('system', 'cash', NULL, 'notificationsDuration');
 $notificationsEndDate = clone $notificationsStartDate;
 $notificationsEndDate->modify($notificationsDuration . ' days');
 
 // Show notifications
 
-if (configgetvalue('system', 'cash', NULL, 'showNotifications') && intval($notificationsStartDate->format('j')) === $currentDay)
+if ($config->getValue('system', 'cash', NULL, 'showNotifications') && intval($notificationsStartDate->format('j')) === $currentDay)
 {
     echo "Show notifications...";
     payment(1);

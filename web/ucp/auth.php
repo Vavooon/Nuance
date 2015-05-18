@@ -52,7 +52,7 @@ if (isset($_POST["action"]))
                 $ipUser = new User($ipRequest);
                 if ($ipUser->isValid())
                     $_SESSION['id'] = $ipUser->getId();
-                if (configgetvalue('system', 'ucp', NULL, 'restrictUsersLoggedByIP'))
+                if ($config->getValue('system', 'ucp', NULL, 'restrictUsersLoggedByIP'))
                 {
                     $user->isRestricted = true;
                     $_SESSION['is_restricted'] = true;

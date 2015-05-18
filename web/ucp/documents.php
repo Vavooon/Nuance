@@ -13,7 +13,7 @@ if (defined('DEBUG'))
     $fenom->setOptions(Fenom::AUTO_RELOAD);
 }
 
-$documents = configgetvalue('system', 'ucp', NULL, 'documents');
+$documents = $config->getValue('system', 'ucp', NULL, 'documents');
 
 for ($i = 0; $i < count($documents); $i++)
 {

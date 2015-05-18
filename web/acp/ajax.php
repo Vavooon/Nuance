@@ -351,7 +351,7 @@ if ($sessionId)
                     $fileName = '';
                     $fileExists = false;
                 }
-                $documents = configgetvalue('system', 'ucp', NULL, 'documents');
+                $documents = $config->getValue('system', 'ucp', NULL, 'documents');
                 if ($index !== -1) // Edit existing data
                 {
                     if (isset($documents[$index]))
@@ -383,7 +383,7 @@ if ($sessionId)
                     }
                 }
 
-                configsetvalue('system', 'ucp', NULL, 'json', 'documents', json_encode($documents));
+                $config->setValue('system', 'ucp', NULL, 'json', 'documents', json_encode($documents));
 
                 die();
             }
@@ -440,7 +440,7 @@ if ($sessionId)
                     if ($row = $res[0])
                     {
                         $address = $row['ip'];
-                        $port = configgetvalue('router', 'main', $routerId, 'statPort');
+                        $port = $config->getValue('router', 'main', $routerId, 'statPort');
                         $url = "http://$address:$port/$path.gif";
                         header("Content-Type:image/gif");
                         $img = file_get_contents($url);

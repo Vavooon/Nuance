@@ -54,13 +54,13 @@ else
 
     $permittedActions = array();
 
-    if (configgetvalue('system', 'ucp', NULL, 'permitTariffChange') &&
-            configgetvalue('subscriber', 'main', $user->getId(), 'permitTariffChange'))
+    if ($config->getValue('system', 'ucp', NULL, 'permitTariffChange') &&
+            $config->getValue('subscriber', 'main', $user->getId(), 'permitTariffChange'))
     {
         $permittedActions['changetariff'] = true;
     }
-    if (configgetvalue('system', 'ucp', NULL, 'permitPasswordChange') &&
-            configgetvalue('subscriber', 'main', $user->getId(), 'permitPasswordChange') &&
+    if ($config->getValue('system', 'ucp', NULL, 'permitPasswordChange') &&
+            $config->getValue('subscriber', 'main', $user->getId(), 'permitPasswordChange') &&
             $user->getField('login'))
     {
         $permittedActions['changepassword'] = true;

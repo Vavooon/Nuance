@@ -127,7 +127,8 @@ if (!count($tables))
     die();
 }
 
-$timezone = configgetvalue('system', 'main', NULL, 'timezone');
+$config = new Config;
+$timezone = $config->getValue('system', 'main', NULL, 'timezone');
 date_default_timezone_set($timezone);
 $logTable = new Table('log');
 $logTable->setLogging(false);
@@ -186,7 +187,7 @@ if ($domain !== 'acp' && $domain !== 'ucp')
 else
 {
     $router = new AltoRouter();
-    $selectedTheme = configgetvalue('system', 'main', NULL, $domain . 'Theme');
+    $selectedTheme = $config->getValue('system', 'main', NULL, $domain . 'Theme');
     $theme = new Theme($selectedTheme);
 }
 
@@ -202,7 +203,7 @@ function loadPlugin($part, $name)
     include_once PLUGINS . "$name/$part/$name.php";
 }
 
-for ($i = 2; $i < count($plugins); $i++)
+for ($i = 2; $i < count($plugins); $i++) // First two items refer on . and ..
 {
     $plugin = $plugins[$i];
     if (file_exists(PLUGINS . $plugin . '/' . $plugin . '.php'))
@@ -218,6 +219,7 @@ for ($i = 2; $i < count($plugins); $i++)
 
 function loadLocale($domain, $locale = null)
 {
+    global $config;
     define('PROJECT_DIR', realpath('./'));
     define('LOCALE_DIR', PROJECT_DIR . '/locale');
     require_once('gettext/gettext.inc');
@@ -226,7 +228,7 @@ function loadLocale($domain, $locale = null)
 
     if (!$locale)
     {
-        $locale = configgetvalue('system', 'main', NULL, $domain . 'Locale');
+        $locale = $config->getValue('system', 'main', NULL, $domain . 'Locale');
     }
     T_setlocale(LC_MESSAGES, $locale);
     T_bindtextdomain($domain, LOCALE_DIR);
@@ -357,7 +359,7 @@ function getBrowser()
     );
 }
 
-$fractionalPart = configgetvalue('system', 'cash', NULL, 'fractionalPart');
+$fractionalPart = $config->getValue('system', 'cash', NULL, 'fractionalPart');
 
 function smoneyf($cash)
 {
@@ -423,6 +425,27 @@ function tableExists($table)
 {
     global $db;
     return $db->query("SHOW TABLES like '" . DB_TABLE_PREFIX . $table . "'")->rowCount();
+}
+
+function getUserRelatedRouters($userId)
+{
+  global $db;
+  $reqStr = "SELECT DISTINCT(`router`) FROM `" . DB_TABLE_PREFIX . "ip` WHERE `user`=".$userId;
+  $ipRes = $db->query($reqStr)->fetchAll();
+  $reqStr = "SELECT DISTINCT(`router`) FROM `" . DB_TABLE_PREFIX . "ppp` WHERE `user`=".$userId;
+  $pppRes = $db->query($reqStr)->fetchAll();
+
+  $relatedRouters = array();
+  foreach ($pppRes as $pppRow) {
+    $relatedRouters[] = $pppRow['router'];
+  }
+
+  foreach ($ipRes as $ipRow) {
+    $relatedRouters[] = $ipRow['router'];
+  }
+  $relatedRouters = array_unique($relatedRouters);
+
+  return $relatedRouters;
 }
 
 function controllerRouter($routerId, $mode, $id = false)
@@ -606,13 +629,9 @@ function getDirsAsStore($path, $checkFn)
     return $arr;
 }
 
-$licenseManager = new LicenseManager;
-$allowedPlugins = $licenseManager->checkPermission('allowedPlugins');
-
 function pluginExists($name)
 {
-    global $allowedPlugins;
-    return array_search($name, getPlugins()) !== false && array_search($name, $allowedPlugins) !== false;
+    return array_search($name, getPlugins()) !== false;
 }
 
 $addRenderers = array(
@@ -727,7 +746,7 @@ $afterAddRenderers = array(
     'user' => function($id, $fields)
     {
         global $sessionId;
-        if (configgetvalue('system', 'cash', NULL, 'newUsersAutoFund'))
+        if ($config->getValue('system', 'cash', NULL, 'newUsersAutoFund'))
         {
             $moneyflowTable = new Table('moneyflow');
             $moneyflowTable->add(
@@ -750,8 +769,12 @@ $afterAddRenderers = array(
     'order' => function ($id, $fields)
     {
         $usersTable = new Table('user');
-        $row = $usersTable->loadById($fields['user']);
-        controllerRouterQueue($row['router'], "update", $fields['user']);
+        $userId = $fields['user'];
+        $row = $usersTable->loadById($userId);
+        $relatedRouters=getUserRelatedRouters( $userId);
+        foreach ($relatedRouters as $routerId) {
+          controllerRouterQueue($routerId, "update", $userId);
+        }
     },
     'message' => function($id, $fields)
     {
@@ -761,9 +784,11 @@ $afterAddRenderers = array(
     },
     'moneyflow' => function ($id, $newFields)
     {
+      global $config;
         $sum = money($newFields['sum']);
         $userId = $newFields['user'];
         $userTable = new Table('user');
+        $userTable->addSchemaToResponse();
         $user = $userTable->loadById($userId);
         $newCash = money($user['cash']) + $sum;
 
@@ -776,7 +801,7 @@ $afterAddRenderers = array(
 
         if ($sum > 0 && in_array($newFields['detailsname'], array('adminpay', 'scratchcard')))
         {
-            $percentage = floatval(configgetvalue('system', 'cash', NULL, 'referrerPercentage')) / 100;
+            $percentage = floatval($config->getValue('system', 'cash', NULL, 'referrerPercentage')) / 100;
             $referrerSum = money($sum * $percentage);
             // Load referrer from current user
             $refsRow = $userTable->loadById($user['referrer']);
@@ -785,6 +810,7 @@ $afterAddRenderers = array(
             if ($refsRow)
             {
                 $moneyflowTable = new Table('moneyflow');
+                $moneyflowTable ->addSchemaToResponse();
                 $moneyflowTable->add(
                         array(
                             "user" => $refsRow['id'],
@@ -802,17 +828,21 @@ $afterAddRenderers = array(
 
         $sum = -getCashToPay($user['id']);
         $newCash = $cash + $sum;
-        $creditMonths = configgetvalue('system', 'cash', NULL, 'creditMonths');
+        $creditMonths = $config->getValue('system', 'cash', NULL, 'creditMonths');
         $minimumCash = $sum * intval($creditMonths);
 
         if (
-                configgetvalue('system', 'cash', null, 'showNotifications') &&
+                $config->getValue('system', 'cash', null, 'showNotifications') &&
                 $user['disabled'] == '0' &&
                 $newCash >= $minimumCash &&
                 $user['credit'] == '0'
         )
         {
-            controllerRouterQueue($user['router'], "clearnotification", $user['id']);
+          $userId = $user['id'];
+            $relatedRouters=getUserRelatedRouters( $userId);
+            foreach ($relatedRouters as $routerId) {
+              controllerRouterQueue($routerId, "clearnotification", $userId);
+            }
         }
     }
 );
@@ -838,7 +868,7 @@ $afterAddRenderers = array(
                                 $order = $ordersTable->loadById($oldFields['detailsid']);
                                 $ordersTable->edit(array('id' => $oldFields['detailsid'], 'canceled' => 1));
                                 $remainsPercentage = 1;
-                                $refundType = configgetvalue('system', 'cash', NULL, 'refundOrdersType');
+                                $refundType = $config->getValue('system', 'cash', NULL, 'refundOrdersType');
                                 switch ($refundType)
                                 {
                                     case 1:
@@ -926,13 +956,11 @@ $afterAddRenderers = array(
                                   $newUser = $newFields['user'];
                                 }
                               }
-                              d("OLD:");
                               if (array_key_exists('router', $oldFields) && array_key_exists('user', $oldFields) )
                               {
                                 controllerRouterQueue($oldFields['router'], "update", $oldFields['user']);
                               }
                               if ( $new ) {
-                                d("NEW:");
                                 controllerRouterQueue( $newRouter, "update", $newUser );
                               }
                             },
@@ -977,15 +1005,20 @@ $afterAddRenderers = array(
                                     $users = $usersTable->load("WHERE tariff=$id");
                                     foreach ($users as $row)
                                     {
-                                        controllerRouterQueue($row['router'], "updateQueue", $row['id']);
+
+                                        $relatedRouters=getUserRelatedRouters( $row['id']);
+                                        foreach ($relatedRouters as $routerId) {
+                                          controllerRouterQueue($routerId, "updateQueue", $row['id']);
+                                        }
                                     }
                                 }
                             },
                             'order' => function ($id, $newFields, $oldFields)
                             {
-                                $usersTable = new Table('user');
-                                $row = $usersTable->loadById($oldFields['user']);
-                                controllerRouterQueue($row['router'], "updateAddressList", $oldFields['user']);
+                                $relatedRouters=getUserRelatedRouters( $oldFields['user']);
+                                foreach ($relatedRouters as $routerId) {
+                                  controllerRouterQueue($routerId, "updateAddressList", $oldFields['user']);
+                                }
                                 return $newFields;
                             }
                         );
@@ -993,9 +1026,10 @@ $afterAddRenderers = array(
                             'user' => function($id, $fields)
                             {
                                 global $db;
-                                if ($fields['router'])
-                                    controllerRouterQueue($fields['router'], "delete", $id);
-
+                                $relatedRouters=getUserRelatedRouters( $id);
+                                foreach ($relatedRouters as $routerId) {
+                                  controllerRouterQueue($routerId, "delete", $id);
+                                }
                                 $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "order` WHERE `user`=" . $id);
                                 $db->query("DELETE FROM `" . DB_TABLE_PREFIX . "moneyflow` WHERE `user`=" . $id);
                             }
@@ -1160,7 +1194,7 @@ $afterAddRenderers = array(
                               var_dump($oldDate);
 
                               // Create withdrawal date
-                              $withdrawalDay=configgetvalue('system', 'cash', NULL, 'withdrawalDay');
+                              $withdrawalDay=$config->getValue('system', 'cash', NULL, 'withdrawalDay');
                               $withdrawalDate=new DateTime('first day of this month midnight');
                               $withdrawalDate->modify((intval($withdrawalDay)-1).' day');
 
@@ -1175,170 +1209,19 @@ $afterAddRenderers = array(
                               } */
                         }
 
-                        function configlist()
-                        {
-                            global $db;
-                            $types = array('system', 'user', 'router', 'var', 'subscriber');
-                            $reqStr = "SELECT * FROM `" . DB_TABLE_PREFIX . "config`";
-                            $res = $db->query($reqStr)->fetchAll();
-                            $data = array(
-                                "system" => array(),
-                                "user" => array(),
-                                "router" => array(),
-                                "var" => array(),
-                                "subscriber" => array()
-                            );
-                            foreach ($res as $row)
-                            {
-                                $type = $types[$row['type']];
-                                $path = $row['path'];
-                                $name = $row['name'];
-                                $value = $row['value'];
-                                $owner = $row['ownerid'];
-                                if (!array_key_exists($owner, $data[$type]))
-                                    $data[$type][$owner] = array();
-                                if (!array_key_exists($path, $data[$type][$owner]))
-                                    $data[$type][$owner][$path] = array();
-                                switch ($row['vartype'])
-                                {
-                                    case 'int': $value = intval($value);
-                                        break;
-                                    case 'json': $value = json_decode($value);
-                                        break;
-                                    case 'array': $value = explode(',', $value);
-                                        break;
-                                    case 'bool': $value = ($value == "true") ? true : false;
-                                        break;
-                                }
-                                $data[$type][$owner][$path][$name] = $value;
-                            }
-                            return $data;
-                        }
+                        
+                        
 
-                        function configgetdefaultvalue($typeAsStr, $path, $ownerid, $name)
-                        {
-                            global $default;
-                            if (array_key_exists($typeAsStr, $default) &&
-                                    array_key_exists($path, $default[$typeAsStr]) &&
-                                    array_key_exists($name, $default[$typeAsStr][$path]))
-                                return $default[$typeAsStr][$path][$name];
-                        }
-
-                        function configgetvalue($typeAsStr, $path, $ownerid, $name)
-                        {
-                            global $db;
-                            $types = array('system', 'user', 'router', 'var', 'subscriber');
-                            $type = array_search($typeAsStr, $types);
-                            if ($type === false)
-                                return;
-                            switch ($type)
-                            {
-                                case 0:
-                                case 3:
-                                    $ownerid = 0;
-                                    break;
-                            }
-                            $configTable = new Table('config');
-                            $name = mres( $name );
-                            $name = mres( $name );
-                            $res = $configTable->load("WHERE `type`=$type AND `ownerid`=$ownerid AND `path`='$path' AND `name` LIKE '$name'");
-
-                            foreach ($res as $row)
-                            {
-                                $value = $row['value'];
-                                switch ($row['vartype'])
-                                {
-                                    case 'int': $value = intval($value);
-                                        break;
-                                    case 'json': $value = json_decode($value, true);
-                                        break;
-                                    case 'array': $value = explode(',', $value);
-                                        break;
-                                    case 'bool': $value = ($value === "true") ? true : false;
-                                        break;
-                                }
-                                return $value;
-                            }
-                            return configgetdefaultvalue($typeAsStr, $path, $ownerid, $name);
-                        }
-
-                        function configsetvalue($typeAsStr, $path, $ownerId, $vartype, $name, $value)
-                        {
-                            global $db;
-                            global $mysqli;
-                            $success = false;
-                            $types = array('system', 'user', 'router', 'var', 'subscriber');
-                            $type = array_search($typeAsStr, $types);
-                            if ($type === false)
-                                return;
-                            switch ($type)
-                            {
-                                case 0:
-                                case 3:
-                                    $ownerId = 0;
-                                    break;
-                            }
-                            $selStr = "SELECT * FROM `" . DB_TABLE_PREFIX . "config` WHERE type='$type' AND path='$path' AND name LIKE '".mres(mres($name))."' AND ownerid=$ownerId";
-                            $resp = $db->query($selStr);
-                            $oldValue = NULL;
-                            if ($resp)
-                            {
-                                $sqlResult = $resp->fetchAll();
-                                if (count($sqlResult))
-                                {
-                                    $configId = $sqlResult[0]['id'];
-                                    $oldValue = $sqlResult[0]['value'];
-
-                                    $updStr = "UPDATE `" . DB_TABLE_PREFIX . "config` SET value=?, vartype=? WHERE id=?";
-                                    $stmt = $db->prepare($updStr);
-                                    $stmt->execute(array($value, $vartype, $configId));
-                                    if (count($sqlResult) > 1)
-                                    {
-                                        for ($i = 1; $i < count($sqlResult); $i++)
-                                        {
-                                            $remStr = "DELETE FROM `" . DB_TABLE_PREFIX . "config` WHERE id=" . $sqlResult[$i]['id'];
-                                            $db->query($remStr);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    $insertString = "INSERT INTO `" . DB_TABLE_PREFIX . "config` (type, path, ownerid, vartype, name, value) VALUES (?, ?, ?, ?, ?, ?)";
-                                    $stmt = $db->prepare($insertString);
-                                    $stmt->execute(array($type, $path, $ownerId, $vartype, $name, $value));
-                                }
-                                $success = true;
-                            }
-                            $configTree = array(
-                                $type =>
-                                array(
-                                    $ownerId =>
-                                    array(
-                                        $path =>
-                                        array(
-                                            $name => $value
-                                        )
-                                    )
-                                )
-                            );
-                            if ($oldValue === NULL)
-                            {
-                                $oldValue = configgetdefaultvalue($typeAsStr, $path, $ownerId, $name);
-                            }
-                            $configPath = "$type/$ownerId/$path/$name";
-                            onConfigEdit($configPath, $value, $oldValue);
-                            return $success;
-                        }
-
+                     
                         function checkUpdate()
                         {
-                            global $dateFormat;
+                            global $dateFormat, $config;
                             $currentDate = date($dateFormat);
                             $host = "nuance-bs.com";
                             $port = 80;
                             $timeout = 2;
-                            $lastCheck = configgetvalue('var', 'main', NULL, 'lastupdatecheck');
-                            $lastVersion = configgetvalue('var', 'main', NULL, 'lastversion');
+                            $lastCheck = $config->getValue('var', 'main', NULL, 'lastupdatecheck');
+                            $lastVersion = $config->getValue('var', 'main', NULL, 'lastversion');
                             if ($lastCheck != $currentDate)
                             {
 
@@ -1361,17 +1244,17 @@ $afterAddRenderers = array(
                                         $version = array_pop($resLines);
                                         if ($version && $lastVersion !== $version)
                                         {
-                                            configsetvalue('var', 'main', NULL, 'string', 'lastversion', $version);
+                                            $config->setValue('var', 'main', NULL, 'string', 'lastversion', $version);
                                         }
                                     }
                                 }
                             }
-                            configsetvalue('var', 'main', NULL, 'string', 'lastupdatecheck', $currentDate);
+                            $config->setValue('var', 'main', NULL, 'string', 'lastupdatecheck', $currentDate);
                         }
 
                         function getCashToPay($userId, $userRow = false, $tariffPrice = false, $full = false)
                         {
-                            global $mysqlTimeDateFormat;
+                            global $mysqlTimeDateFormat, $config;
 
                             if ($userRow === false)
                             {
@@ -1385,7 +1268,7 @@ $afterAddRenderers = array(
 
                                 $tariffPrice = money($tariff['price']);
                             }
-                            $typeOfCalculation = configgetvalue('system', 'cash', NULL, 'typeOfCalculation');
+                            $typeOfCalculation = $config->getValue('system', 'cash', NULL, 'typeOfCalculation');
 
                             $discountValue = $userRow['discount'];
                             if ($discountValue !== '0')
@@ -1409,7 +1292,7 @@ $afterAddRenderers = array(
                             $currentDate = new DateTime('midnight');
                             $startDate = new DateTime('first day of this month midnight');
                             $endDate = new DateTime('first day of next month midnight');
-                            $withdrawalDay = configgetvalue('system', 'cash', NULL, 'withdrawalDay');
+                            $withdrawalDay = $config->getValue('system', 'cash', NULL, 'withdrawalDay');
                             $withdrawalDay-=1;
                             if ($withdrawalDay)
                             {
@@ -1429,9 +1312,9 @@ $afterAddRenderers = array(
                             $allOrders = $orderTable->load("WHERE user=$userId");
                             $returnedOrders = $orderTable->load("WHERE user=$userId AND canceled=1 AND startdate<='$currentDateAsText' AND enddate>='$currentDateAsText'");
 
-                            $newUsersWithdrawalType = configgetvalue('system', 'cash', NULL, 'newUsersWithdrawalType');
-                            $newOrdersWithdrawalType = configgetvalue('system', 'cash', NULL, 'newOrdersWithdrawalType');
-                            $swapOrdersWithdrawalType = configgetvalue('system', 'cash', NULL, 'swapOrdersWithdrawalType');
+                            $newUsersWithdrawalType = $config->getValue('system', 'cash', NULL, 'newUsersWithdrawalType');
+                            $newOrdersWithdrawalType = $config->getValue('system', 'cash', NULL, 'newOrdersWithdrawalType');
+                            $swapOrdersWithdrawalType = $config->getValue('system', 'cash', NULL, 'swapOrdersWithdrawalType');
 
                             if (!count($allOrders) && $newUsersWithdrawalType === 'nothing')
                             {
@@ -1458,7 +1341,7 @@ $afterAddRenderers = array(
 
                         function payment($mode, $id = false)
                         {
-                            global $db;
+                            global $db, $config;
                             global $mysqlTimeDateFormat;
                             /*
 
@@ -1478,8 +1361,8 @@ $afterAddRenderers = array(
                                         $price[$row['id']] = $row['price'];
                                     }
                                 }
-                                $typeOfCalculation = configgetvalue('system', 'cash', NULL, 'typeOfCalculation');
-                                $creditMonths = configgetvalue('system', 'cash', NULL, 'creditMonths');
+                                $typeOfCalculation = $config->getValue('system', 'cash', NULL, 'typeOfCalculation');
+                                $creditMonths = $config->getValue('system', 'cash', NULL, 'creditMonths');
 
                                 $routerAction = $mode ? "shownotification" : "update";
                                 $usersTable = new Table('user');
@@ -1517,7 +1400,7 @@ $afterAddRenderers = array(
                                             $startDate = new DateTime('first day of this month midnight');
                                             $endDate = new DateTime('first day of next month midnight');
                                             $endDate->modify("-1 sec");
-                                            $withdrawalDay = configgetvalue('system', 'cash', NULL, 'withdrawalDay');
+                                            $withdrawalDay = $config->getValue('system', 'cash', NULL, 'withdrawalDay');
                                             $withdrawalDay-=1;
                                             if ($withdrawalDay)
                                             {
@@ -1662,7 +1545,7 @@ $afterAddRenderers = array(
                             return $data['id'];
                         }
 
-                        $userIdRendererTpl = configgetvalue('system', 'grid', NULL, 'user-idrenderer-format');
+                        $userIdRendererTpl = $config->getValue('system', 'grid', NULL, 'user-idrenderer-format');
 
                         function formatUserId1($data)
                         {
@@ -1742,7 +1625,8 @@ $afterAddRenderers = array(
 
                             public function expireCheck()
                             {
-                                $timeOfCachingAsString = configgetvalue('var', 'cache', null, $this->fileName);
+                              global $config;
+                                $timeOfCachingAsString = $config->getValue('var', 'cache', null, $this->fileName);
                                 $timeOfCaching = new DateTime($timeOfCachingAsString);
                                 $currentTime = new DateTime;
 
@@ -1753,9 +1637,10 @@ $afterAddRenderers = array(
 
                             public function getData()
                             {
-                                global $mysqlTimeDateFormat;
+                              global $mysqlTimeDateFormat;
+                              global $config;
                                 $currentTime = new DateTime;
-                                configsetvalue('var', 'cache', null, 'string', $this->fileName, $currentTime->format($mysqlTimeDateFormat));
+                                $config->setValue('var', 'cache', null, 'string', $this->fileName, $currentTime->format($mysqlTimeDateFormat));
                                 if (isset($_GET['id']))
                                 {
                                     $id = intval($_GET['id']);
@@ -1781,12 +1666,12 @@ $afterAddRenderers = array(
                         {
                             public function expireCheck()
                             {
-                                global $mysqlTimeDateFormat;
+                                global $mysqlTimeDateFormat, $config;
                                 $moneyflowTable = new Table('moneyflow');
                                 $endDate = clone $this->month;
                                 $endDate->modify('1 month');
                                 $endDate->modify('-1 second');
-                                $lastRecordedId = configgetvalue('var', 'cache', null, $this->fileName);
+                                $lastRecordedId = $config->getValue('var', 'cache', null, $this->fileName);
                                 $condition = "WHERE `date`>='" . $this->month->format($mysqlTimeDateFormat) . "' AND `date`<='" . $endDate->format($mysqlTimeDateFormat) . "' AND (`detailsname`='adminpay' OR `detailsname`='scratchcard') ORDER BY `id` DESC LIMIT 1";
                                 $rows = $moneyflowTable->load($condition);
                                 if (count($rows))
@@ -1802,7 +1687,7 @@ $afterAddRenderers = array(
 
                             public function getData()
                             {
-                                global $mysqlTimeDateFormat;
+                                global $mysqlTimeDateFormat, $config;
                                 $data = array(
                                     "total" => 0,
                                     "scratchcard" => 0,
@@ -1827,7 +1712,7 @@ $afterAddRenderers = array(
                                 $endDate->modify('1 month');
                                 $endDate->modify('-1 second');
 
-                                $offsetDays = configgetvalue('system', 'statistics', null, 'paymentsOffset');
+                                $offsetDays = $config->getValue('system', 'statistics', null, 'paymentsOffset');
                                 $startDate->modify($offsetDays . ' day');
                                 $endDate->modify($offsetDays . ' day');
 
@@ -1853,7 +1738,7 @@ $afterAddRenderers = array(
                                 }
 
                                 $lastRow = end($rows);
-                                configsetvalue('var', 'cache', null, 'int', $this->fileName, $lastRow['id']);
+                                $config->setValue('var', 'cache', null, 'int', $this->fileName, $lastRow['id']);
                                 return json_encode($data);
                             }
 
