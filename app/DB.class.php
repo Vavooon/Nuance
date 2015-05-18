@@ -11,6 +11,13 @@ class DB
             $response['db'] = array();
         }
         $this->response = $response;
+        $this->blockedTables = array(
+          "scratchcard",
+          "moneyflow",
+          "config",
+          "order",
+          "log"
+        );
     }
 
     public function get($params)
@@ -24,86 +31,102 @@ class DB
             $res = $db->query($query);
             if ($res)
             {
-                $tempTables = $res->fetchAll();
-                for ($i = 0; $i < count($tempTables); $i++)
+                $allTables = $res->fetchAll();
+                foreach ($allTables as $tableName)
                 {
-                    if (current($tempTables[$i]) !== 'moneyflow' &&
-                            current($tempTables[$i]) !== 'order' &&
-                            current($tempTables[$i]) !== 'config' &&
-                            current($tempTables[$i]) !== 'scratchcard' &&
-                            current($tempTables[$i]) !== 'log'
-                    )
-                        $tables[] = current($tempTables[$i]);
+                    if (!in_array(current($tableName), $this->blockedTables))
+                    {
+                        $tables[] = current($tableName);
+                    }
                 }
             }
         }
         else
         {
-            $tables = array($name);
+            if (tableExists($name))
+            {
+              $tables = array($name);
+            }
         }
 
-        for ($i = 0; $i < count($tables); $i++)
+        foreach ($tables as $target )
         {
-            $target = $tables[$i];
-            if (tableExists($target))
+            $filter = isset($params['filter']) ? $params['filter'] : '';
+            if (!checkPermission($sessionId, array('table', $target, 'read')))
             {
-                $filter = isset($params['filter']) ? $params['filter'] : '*';
-                if (!checkPermission($sessionId, array('table', $target, 'read')))
-                {
-                    $this->response[$target]['header'] = getFields($target);
-                    $this->response['errors'][] = 'deny';
-                }
-                else
-                {
-                    $table = new Table($target);
-                    $filterQuery = '';
+                $this->response[$target]['header'] = getFields($target);
+                $this->response['errors'][] = 'deny';
+            }
+            else
+            {
+              $table = new Table($target);
+              $filterQuery = '';
 
-                    // Apply filters for users
-                    $masterTable = new Table('master');
-                    $master = $masterTable->loadById($sessionId);
+              // Apply filters for users
+              $masterTable = new Table('master');
+              $master = $masterTable->loadById($sessionId);
 
-                    if ($filter !== '*')
+              $filterQuery = '';
+              $filterObject = array();
+              if ($filter )
+              {
+                  $filters = explode(';', $filter);
+                  for ($i = 0; $i<count($filters); $i++)
+                  {
+                    $currentFilter = explode('^', $filters[$i]);
+                    $filterName = $currentFilter[0];
+                    $filterValues = explode(',', $currentFilter[1]);
+
+                    $filterObject[$filterName] = $currentFilter[1];
+                    for ($j = 0; $j < count($filterValues); $j++)
                     {
-                        if (preg_match('/(\w+)([<>]?=?)([\da-zA-Z0-9\-]+)/', $filter, $filterArray))
+                      if (preg_match('/([<>]?=?)(.*)/', $filterValues[$j], $filterArray))
+                      {
+                        if ($i || $j)
                         {
-                            $filterQuery = "`" . $filterArray[1] . "`" . $filterArray[2] . "'" . $filterArray[3] . "'";
+                          $filterQuery .= " AND ";
                         }
+                        $filterQuery .= "`" . $filterName . "`" . $filterArray[1] . "'" . $filterArray[2] . "'";
+                      }
                     }
+                  }
+              }
 
-                    if (strlen($filterQuery))
-                    {
-                        $filterQuery = "WHERE " . $filterQuery;
-                    }
+              if (strlen($filterQuery))
+              {
+                  $filterQuery = "WHERE " . $filterQuery;
+              }
 
-                    $table->load4AJAX($filterQuery);
+              $table->load4AJAX($filterQuery);
 
-                    if ($filter == '*')
-                    {
-                        $response['db'][$target]['length'] = count($response['db'][$target]['data']);
-                    }
-                    else
-                    {
-                        $res = $db->query("SELECT COUNT(*) FROM `" . DB_TABLE_PREFIX . $target . "` " . $filterQuery);
-                        $row = $res->fetch();
-                        $response['db'][$target]['length'] = intval($row['COUNT(*)']);
-                    }
+              if ($filter)
+              {
+                  $res = $db->query("SELECT COUNT(*) FROM `" . DB_TABLE_PREFIX . $target . "` " . $filterQuery);
+                  $row = $res->fetch();
+                  $response['db'][$target]['length'] = intval($row['COUNT(*)']);
+                  $response['db'][$target]['filter'] = $filterObject;
 
-                    foreach ($response['db'][$target]['header'] as $key => $value)
-                    {
-                        if ($value[1] === 'timestamp')
-                        {
-                            $columnName = $value[0];
-                            $res = $db->query("SELECT `id` FROM `" . DB_TABLE_PREFIX . $target . "` ORDER BY `" . $columnName . "`");
-                            $rows = $res->fetchAll();
-                            $response['db'][$target]['sortOrder'][$columnName] = array();
-                            for ($j = 0; $j < count($rows); $j++)
-                            {
-                                $response['db'][$target]['sortOrder'][$columnName][] = $rows[$j]['id'];
-                            }
-                        }
-                    }
-                    $response['errors'] = array_merge($response['errors']);
-                }
+              }
+              else
+              {
+                  $response['db'][$target]['length'] = count($response['db'][$target]['data']);
+              }
+
+              foreach ($response['db'][$target]['header'] as $key => $value)
+              {
+                  if ($value[1] === 'timestamp')
+                  {
+                      $columnName = $value[0];
+                      $res = $db->query("SELECT `id` FROM `" . DB_TABLE_PREFIX . $target . "` ORDER BY `" . $columnName . "`");
+                      $rows = $res->fetchAll();
+                      $response['db'][$target]['sortOrder'][$columnName] = array();
+                      for ($j = 0; $j < count($rows); $j++)
+                      {
+                          $response['db'][$target]['sortOrder'][$columnName][] = $rows[$j]['id'];
+                      }
+                  }
+              }
+              $response['errors'] = array_merge($response['errors']);
             }
         }
     }
@@ -205,7 +228,7 @@ class DB
             $res = $db->query("SELECT COUNT(*) FROM `" . DB_TABLE_PREFIX . $target . "`");
             $row = $res->fetch();
 
-            foreach ($response['db'][$target]['header'] as $key => $value)
+            foreach ($table->header as $key => $value)
             {
                 if ($value[1] === 'timestamp')
                 {

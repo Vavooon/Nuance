@@ -84,6 +84,7 @@ $dateFormat = 'd.m.Y';
 $routerObj = array();
 $errors = array();
 $timeDateFormat = 'H:i d.m.Y';
+$mysqlDateFormat = 'Y-m-d';
 $mysqlTimeDateFormat = 'Y-m-d H:i:s';
 if (!isset($cash_fractional_part))
     $cash_fractional_part = 2;

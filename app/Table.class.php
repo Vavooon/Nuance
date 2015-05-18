@@ -27,7 +27,7 @@ class Table
         $this->fields = getFieldsAssoc($this->name);
     }
 
-    private function addSchemaToResponse()
+    public function addSchemaToResponse()
     {
         if (!isset($this->response['db'][$this->name]))
         {
@@ -175,6 +175,15 @@ class Table
             }
             $response['db'][$this->name]['data'][$row['id']] = $datarow;
         }
+        if (isset($this->fields['date'])) {
+          if ($filter)
+          {
+            $res = $this->load('LIMIT 1 ');
+          }
+          if (count($res)  ) {
+            $response['db'][$this->name]['firstRowDate'] = $res[0]['date'];
+          }
+        }
     }
 
     private function convert($data)
@@ -260,6 +269,7 @@ class Table
         $res->execute($data);
         $newId = $this->db->lastInsertId();
         $this->response['debug'][] = $request;
+        $this->response['db'][$this->name]['updateMode'] = 'merge';
 
         if ($newId)
         {
@@ -286,7 +296,7 @@ class Table
             //$this->response->success=true;
         }
         $this->addSchemaToResponse();
-        $this->load4Ajax("WHERE `id`=" . $newId);
+        $this->load4AJAX("WHERE `id`=" . $newId);
         return $newId;
     }
 
@@ -331,6 +341,7 @@ class Table
         $request = "UPDATE `" . DB_TABLE_PREFIX . $this->name . "` SET {$query} WHERE id={$id}";
         $res = $this->db->prepare($request);
         $res->execute($newFields);
+        $this->response['db'][$this->name]['updateMode'] = 'merge';
 
         //$this->response->success=true
         if ($this->logging)
@@ -383,6 +394,7 @@ class Table
         }
         $request = "DELETE FROM `" . DB_TABLE_PREFIX . $this->name . "` WHERE id=$id";
         $this->db->exec($request);
+        $this->response['db'][$this->name]['updateMode'] = 'merge';
         if (array_key_exists($this->name, $afterRemoveRenderers))
         {
             $afterRemoveRenderers[$this->name]($id, $fields);

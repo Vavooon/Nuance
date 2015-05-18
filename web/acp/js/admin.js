@@ -81,9 +81,21 @@ function refund(id, callback) {
 	}
 }
 
+function getMonthFilter(date) {
+  var date = new Date(date);
+  date.moveToFirstDayOfMonth();
+  date.clearTime();
+  var filterString = '>=' + date.toString('yyyy-MM-dd');
+  date.addMonths(1);
+  var filterString = filterString + ',<' + date.toString('yyyy-MM-dd');
+  return filterString;
+}
+
 userExcludedFields = ['paymentdate', 'editdate', 'cash'];
-window.onConfigLoad = function() {
+window.onConfigLoad = function(response) {
 	configProxy.off('afterload', onConfigLoad);
+
+
 
 	var fractionalPart = configProxy.getValue('system', 'cash', 'fractionalPart');
 	smoneyf = function(cash) {
@@ -232,7 +244,7 @@ window.onConfigLoad = function() {
 
 	var activeOrderStore = new Nuance.Store({
 		name: 'activeorder',
-		filter: "enddate>" + date.toString(dbDateTimeFormat)
+		filter: {enddate: ">" + date.toString(dbDateTimeFormat)}
 	});
 	var orderStore = new Nuance.Store({
 		name: 'order'
@@ -417,6 +429,47 @@ window.onConfigLoad = function() {
 			1: [1, _('Printf formatted')]
 		}
 	});
+  new Nuance.MemoryStore({
+		name: 'log-months',
+		header: [
+			['id', 'id'],
+			['name', 'varchar']
+		],
+		data: {
+		}
+	});
+  new Nuance.MemoryStore({
+		name: 'moneyflow-months',
+		header: [
+			['id', 'id'],
+			['name', 'varchar']
+		],
+		data: {
+		}
+	});
+
+  var firstRowDate = new Date(response.db.log.firstRowDate).moveToFirstDayOfMonth(),
+    currentDate = (new Date).moveToFirstDayOfMonth();
+  while (currentDate >= firstRowDate) {
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth();
+    var monthName = currentDate.getMonthName();
+    var name = gt.ngettext(monthName, monthName, 1) + ' ' + year;
+    Nuance.stores['log-months'].data[getMonthFilter(currentDate)] = [getMonthFilter(currentDate), name];
+    currentDate.addMonths(-1);
+  }
+
+  var firstRowDate = new Date(response.db.moneyflow.firstRowDate).moveToFirstDayOfMonth(),
+    currentDate = (new Date).moveToFirstDayOfMonth();
+  while (currentDate >= firstRowDate) {
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth();
+    var monthName = currentDate.getMonthName();
+    var name = gt.ngettext(monthName, monthName, 1) + ' ' + year;
+    Nuance.stores['moneyflow-months'].data[getMonthFilter(currentDate)] = [getMonthFilter(currentDate), name];
+    currentDate.addMonths(-1);
+  }
+
 
 	var idRendererValue = configProxy.getValue('system', 'grid', 'user-idrenderer');
 	var idRendererPrintfFormat = configProxy.getValue('system', 'grid', 'user-idrenderer-format');
@@ -614,7 +667,7 @@ window.onConfigLoad = function() {
 					],
 					store: new Nuance.Store({
 						name: 'moneyflow',
-						filter: location.hash.indexOf('moneyflow') !== 1 ? 'id=0' : false,
+						filter: {date: getMonthFilter(date)},
 						autoLoad: true
 					}),
 					configProxy: configProxy,
@@ -624,33 +677,19 @@ window.onConfigLoad = function() {
 					excludedFields: ['detailsid', 'detailsname', 'user', 'sum', 'date', 'refund', 'name', 'comment'],
 					toolbarButtons: [],
           filters: {
-						/*month: {
-							name: "state",
-							column: 'state',
+						date: {
+							name: "date",
+							column: 'date',
+              type: 'remote',
 							filterFunction: function(id, selectedValue) {
-								var store = Nuance.stores.user;
-								switch (selectedValue) {
-									case 'disabled':
-										return store.data[id][store.ns.disabled];
-									case 'deny':
-										return !activeOrder.hasOwnProperty(id) && !store.data[id][store.ns.disabled];
-									case 'allow':
-										return activeOrder.hasOwnProperty(id) && !store.data[id][store.ns.disabled];
-								}
 							},
-							store: new Nuance.MemoryStore({
-								name: 'filter-options',
-								header: [
-									['id', 'text'],
-									['name', 'text']
-								],
-								data: {
-									allow: ['allow', _("allow")],
-									deny: ['deny', _("deny")],
-									disabled: ['disabled', _("disabled")]
-								}
-							})
-						},*/
+              avoidSort: true,
+              changeFunction: function(value) {
+                this.store.setFilter(value);
+                this.store.load();
+              },
+							store: Nuance.stores['moneyflow-months']
+						},
 						refund: false
 					},
 					contextMenuItems: []
@@ -667,7 +706,6 @@ window.onConfigLoad = function() {
 						autoLoad: true,
 						name: 'tariff'
 					}),
-					filters: {},
 					configProxy: configProxy,
 					name: 'tariff',
 					hiddenCols: ['nightupspeed', 'nightdownspeed', 'downburstlimit', 'upburstlimit', 'downburstthreshold', 'upburstthreshold', 'downbursttime', 'upbursttime'],
@@ -849,7 +887,7 @@ window.onConfigLoad = function() {
 					readOnly: true,
 					store: new Nuance.Store({
 						autoLoad: true,
-						filter: location.hash.indexOf('scratchcard') !== 1 ? 'id=0' : false,
+						filter: {date: getMonthFilter(date)},
 						name: 'log'
 					}),
 					virtualFields: {
@@ -863,6 +901,21 @@ window.onConfigLoad = function() {
 						'user',
 						'router'
 					],
+          filters: {
+						date: {
+							name: "date",
+							column: 'date',
+              type: 'remote',
+              avoidSort: true,
+							filterFunction: function(id, selectedValue) {
+							},
+              changeFunction: function(value) {
+                this.store.setFilter(value);
+                this.store.load();
+              },
+							store: Nuance.stores['log-months']
+						},
+          },
 					configProxy: configProxy
 				}
 			},
@@ -879,14 +932,16 @@ window.onConfigLoad = function() {
 	Nuance.stores.ip.on('beforeset', formatMac);
 
 
-	tables.tabs.tariff.grid.filters.city = {
-		name: "city",
-		column: 'city',
-		filterFunction: function(id, selectedValue) {
-			var tariffStore = Nuance.stores.tariff;
-			return tariffStore.data[id][tariffStore.ns.city].indexOf(selectedValue.toString()) !== -1;
-		},
-		store: Nuance.stores.city
+	tables.tabs.tariff.grid.filters = {
+    city: {
+      name: "city",
+      column: 'city',
+      filterFunction: function(id, selectedValue) {
+        var tariffStore = Nuance.stores.tariff;
+        return tariffStore.data[id][tariffStore.ns.city].indexOf(selectedValue.toString()) !== -1;
+      },
+      store: Nuance.stores.city
+    }
 	};
 
 	var fractionalPart = configProxy.getValue('system', 'cash', 'fractionalPart');
@@ -1457,6 +1512,8 @@ window.onConfigLoad = function() {
 		}
 	});
 	Nuance.grids.moneyflow && Nuance.grids.moneyflow.on('beforerender', function(formattingRows, data, ns, displayData, displayNs) {
+    
+
 		var nameIndex = displayNs.name;
 		var userIndex = displayNs.user;
 		var refundTypeIndex = displayNs.refund;
@@ -1518,6 +1575,10 @@ window.onConfigLoad = function() {
 			}
 		}
 	});
+
+  Nuance.stores.log.on('afterload', function() {
+    
+  });
 
 	Nuance.grids.log && Nuance.grids.log.on('beforerender', function(formattingRows, data, ns, displayData, displayNs) {
 		var typeIndex = ns.type,
@@ -1734,8 +1795,8 @@ window.onConfigLoad = function() {
 	function onTabSwitch(tabName) {
 		location.hash = tabName;
 
-		if (loadOnDemandTables.indexOf(tabName) !== -1 && Nuance.grids[tabName].store.getFilter() !== '*') {
-			Nuance.grids[tabName].store.setFilter();
+		if (loadOnDemandTables.indexOf(tabName) !== -1 && Nuance.grids[tabName].store.getFilter() !== {}) {
+			//Nuance.grids[tabName].store.setFilter({});
 			Nuance.grids[tabName].store.load();
 		} else if (tabName === 'about' && !aboutWasLoaded) {
 			showAbout();

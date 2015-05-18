@@ -539,7 +539,7 @@ var Nuance = {
 					}
 				}
 			}
-			self.trigger('afterload');
+			self.trigger('afterload', resp);
 		};
 
 		this.load = function() {
@@ -1643,7 +1643,7 @@ var Nuance = {
 				return name;
 			};
 
-			function updateSelection() {
+			function updateSelection(trigger) {
 				var stringValues = [];
 				var arrayValues = [];
 				for (var i = 0; i < selectedEls.length; i++) {
@@ -1664,9 +1664,9 @@ var Nuance = {
 						prevVal = activeVal.nValue[0];
 						break;
 				}
-				var event = new CustomEvent("change");
-				el.dispatchEvent(event);
-				self.trigger('change');
+        if (trigger) {
+          self.trigger('change', self.getValue());
+        }
 			}
 
 			function selectOption() {
@@ -1699,7 +1699,7 @@ var Nuance = {
 						selectedEls.push(this);
 					}
 				}
-				updateSelection();
+				updateSelection(true);
 			}
 			var values = [];
 			this.values = values;
@@ -1865,7 +1865,7 @@ var Nuance = {
 						activeVal.title = activeVal.placeholder = _("Loading");
 					}
 				}
-				updateSelection();
+				updateSelection(false);
 			};
 			this.getValue = function() {
 				if (!multiple) {
@@ -4610,7 +4610,8 @@ var Nuance = {
 			state = 'idle',
 			lastLoadTime,
 			callbacks = [],
-			filterStr = '*',
+			filterString = '',
+      filter = {},
 			firstLoad = true;
 		Nuance.EventMixin.call(this, o);
 		this.setState = function(newState) {
@@ -4619,11 +4620,25 @@ var Nuance = {
 		this.getState = function() {
 			return state;
 		};
-		this.setFilter = function(value) {
-			filterStr = value ? value : '*';
+		this.setFilter = function(newFilter) {
+      filterString = '';
+      for (var i in newFilter) {
+        if (filterString) {
+          filterString += ';';
+        }
+        filterString += i + '^' + newFilter[i];
+      }
+      if (filterString=='date^0') {
+        //throw new Error;
+      }
+      filter = newFilter;
+      c(this.name, filter);
+      if ( this.name == 'log' && !filter) {
+        throw new Error;
+      }
 		};
 		this.getFilter = function() {
-			return filterStr;
+			return filter;
 		};
 		this.readOnly = o.readOnly;
 		this.name = o.name;
@@ -4676,7 +4691,8 @@ var Nuance = {
 			if (!self.ns)
 				self.ns = createNs();
 			self.sortOrder = response.sortOrder;
-			if (!self.data) {
+      self.firstRowDate = response.firstRowDate;
+			if (!self.data || response.updateMode !== 'merge') {
 				self.data = data;
 			} else {
 				for (var i = 0; i < deleted.length; i++) {
@@ -4686,6 +4702,7 @@ var Nuance = {
 					self.data[id] = data[id];
 				}
 			}
+      filter = response.filter || {};
 		};
 
 		var onSuccess = function(response) {
@@ -4708,7 +4725,10 @@ var Nuance = {
 			state = 'loading';
 			self.trigger('beforeload');
 
-			var path = o.path ? o.path : "db/" + self.name + '/get?filter=' + filterStr;
+			var path = o.path ? o.path : "db/" + self.name + '/get';
+      if (filterString) {
+        path += '?filter=' + filterString;
+      }
 			Nuance.AjaxRequest("GET", path, null, onSuccess);
 		};
 
@@ -4723,7 +4743,6 @@ var Nuance = {
 				type: "before" + action
 			});
 			self.trigger('before' + action, beforeEvent, id, postData);
-			c(action)
 
 			function onerror() {
 				var errorEvent = new Nuance.Event({
@@ -5902,14 +5921,18 @@ var Nuance = {
 
 		var filtersIsLoaded = false,
 			filtersComboboxes = {},
+			remoteFilters = {},
 			filtersIsDisplayed = false;
 
-		function filter() {
+		function localFilter() {
 			var data = self.store.data,
 				displayData = self.displayData,
 				foundRow;
 			for (var i in filtersComboboxes) {
 				var combobox = filtersComboboxes[i];
+        if (combobox.type === 'remote') {
+          continue;
+        }
 				var value = combobox.getValue();
 				var columnName = combobox.getName();
 				var position = self.store.ns[columnName];
@@ -5936,8 +5959,8 @@ var Nuance = {
 				}
 			}
 		}
-
 		function loadFilters() {
+      //Prepare filters
 			for (var i = 0; i < self.store.header.length; i++) {
 				var column = self.store.header[i];
 				if (filters[column[0]] !== false && !filters[column[0]]) {
@@ -5978,24 +6001,44 @@ var Nuance = {
 
 			for (var i in filters) {
 				if (filters[i].name) {
+          var filter = filters[i];
 					var fieldOptions = {
-						name: filters[i].name,
-						store: filters[i].store,
+						name: filter.name,
+						store: filter.store,
 						showNotSelected: true,
-						selectPlaceholder: _(filters[i].name),
+            avoidSort: filter.avoidSort,
+						selectPlaceholder: _(filter.name),
 						target: filtersEl
 					};
+          /*
 					if (!fieldOptions.hasOwnProperty('parentList')) {
 						for (var d = 0; d < fieldOptions.store.header.length; d++) {
 							var field = fieldOptions.store.header[d][0];
 							if (Nuance.stores[field]) {
-								fieldOptions.parentList = filtersComboboxes[field];
+								fieldOptions.parentList = filters[field];
 								break;
 							}
 						}
 					}
-					filtersComboboxes[filters[i].name] = new Nuance.input.ComboBox(fieldOptions);
-					filtersComboboxes[filters[i].name].on('change', self.render);
+          */
+					filtersComboboxes[filter.name] = new Nuance.input.ComboBox(fieldOptions);
+					filtersComboboxes[filter.name].name = filter.name;
+          if (filter.type === 'remote') {
+            filtersComboboxes[filter.name].on('change', function(value){
+              var storeFilter = self.store.getFilter();
+              // CRANCH
+              if (value) {
+                storeFilter[this.name] = value;
+              }
+              self.store.setFilter(storeFilter);
+              self.store.load();
+            });
+            filtersComboboxes[filter.name].type = 'remote';
+          }
+          else {
+            filtersComboboxes[filter.name].type = 'local';
+            filtersComboboxes[filter.name].on('change', self.render);
+          }
 				}
 			}
 			if (!filtersEl.childElementCount) {
@@ -6029,12 +6072,12 @@ var Nuance = {
 			}
 		}
 
-		function setFilters(newFilters) {
+		this.setLocalFilters = function(newFilters) {
 			if (newFilters) {
 
 				showFilters();
 				for (var i in newFilters) {
-					if (filtersComboboxes[i]) {
+					if (filtersComboboxes[i] && filtersComboboxes[i].type == 'local') {
 						filtersComboboxes[i].setValue(newFilters[i]);
 					}
 				}
@@ -6043,7 +6086,20 @@ var Nuance = {
 			}
 		}
 
-		this.setFilters = setFilters;
+    this.setRemoteFilters = function(newFilters) {
+			if (newFilters) {
+
+				showFilters();
+				for (var i in newFilters) {
+					if (filtersComboboxes[i] && filtersComboboxes[i].type == 'remote') {
+						filtersComboboxes[i].setValue(newFilters[i]);
+					}
+				}
+			} else {
+				hideFilters();
+			}
+		}
+
 		new Nuance.input.StretchField({
 			target: toolbarEl
 		});
@@ -6348,7 +6404,7 @@ var Nuance = {
 			formatData();
 			drawHeader();
 			sort();
-			filter();
+			localFilter();
 			search();
 			stretchEl.style.height = (rowHeight * dataOrder.length) + 'px';
 
@@ -6419,6 +6475,14 @@ var Nuance = {
 					renderRows();
 				}
 			}
+      var remoteFilter = self.store.getFilter();
+      for (var i in remoteFilter) {
+        showFilters();
+        if (filtersComboboxes[i] && filtersComboboxes[i].type == 'remote') {
+          filtersComboboxes[i].setValue(remoteFilter[i]);
+        }
+      }
+      self.filtersComboboxes = filtersComboboxes;
 		};
 
 		function forceRender() {

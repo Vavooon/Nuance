@@ -24,9 +24,9 @@
         <?php
         $jsPath = realpath(__DIR__ . "/../../js");
         ?>
+        <script src="js/lib/date.js"></script>
         <script src="js/lib/Gettext.js"></script>
         <script src="js/lib/Nuance.class.js"></script>
-        <script src="js/lib/date.js"></script>
         <?php
         if (isset($_SESSION['user_id']))
         {

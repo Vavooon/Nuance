@@ -25,7 +25,7 @@ scratchcard = function(o) {
 
 		var scStore = new Nuance.Store({
 			name: 'scratchcard',
-			filter: location.hash.indexOf('scratchcard') !== 1 ? 'id=0' : false,
+			//filter: location.hash.indexOf('scratchcard') !== 1 ? {id: '=0'} : {},
 			autoLoad: true
 		});
 		tables.tabs.scratchcard = {

@@ -80,6 +80,9 @@ $router->map('POST', '/logout', function ()
 /*    Database    */
 $router->map('GET', '/db/[a:name]/get', function ($params)
 {
+    if (isset($_GET['filter'])) {
+      $params['filter'] = $_GET['filter'];
+    }
     $db = new DB();
     $db->get($params);
 }
@@ -207,7 +210,7 @@ $router->map('POST', '/routersync/[a:name]', function ($params)
 /*  Get all data */
 $router->map('GET', '/all/get', function ($params)
 {
-    global $response, $mysqlTimeDateFormat;
+    global $response, $mysqlDateFormat, $mysqlTimeDateFormat;
     $db = new Config($params);
     $db->get($params);
 
@@ -218,27 +221,47 @@ $router->map('GET', '/all/get', function ($params)
     $db->get(array('name' => '*'));
 
     $skipTables = array(
-        'moneyflow', 'order', 'log', 'scratchcard'
+        'moneyflow', 'log', 'scratchcard'
     );
     for ($i = 0; $i < count($skipTables); $i++)
     {
+        $request = array(
+          "name" => $skipTables[$i]
+        );
         if ($skipTables[$i] === $_GET['activetab'])
         {
-            $db->get(array('name' => $skipTables[$i]));
+          if ($skipTables[$i] !== 'scratchcard') {
+          /*
+          if (isset($_GET['filter'])) {
+            $request['filter'] = $_GET['filter'];
+          }
+           */
+            $firstDayOfMonth = new DateTime;
+            $firstDayOfMonth ->setDate($firstDayOfMonth->format('Y'), $firstDayOfMonth->format('m'), 1);
+            $firstDayOfMonth ->setTime( 0, 0, 0);
+
+            $lastDayOfMonth = clone $firstDayOfMonth;
+            $lastDayOfMonth->modify('+1 month');
+            //$firstDayOfMonth->modify()
+            $request['filter'] = 'date^>='.$firstDayOfMonth->format($mysqlDateFormat);
+            $request['filter'] .= ',<'.$lastDayOfMonth->format($mysqlDateFormat);
+          }
         }
         else
         {
-            $db->get(array('name' => $skipTables[$i], 'filter' => 'id=0'));
+          $request['filter'] = 'id^=0';
         }
+
+        $db->get($request);
     }
 
-    $db->get(array('name' => 'order', 'filter' => 'enddate>' . date($mysqlTimeDateFormat)));
+    $db->get(array('name' => 'order', 'filter' => 'enddate^>' . date($mysqlTimeDateFormat)));
     //d($response['db']['order']);
     $response['db']['activeorder'] = $response['db']['order'];
     unset($response['db']['order']);
 
-    $db = new ACL();
-    $db->get();
+    $acl = new ACL();
+    $acl->get();
 
     // Load runtime: available locales, themes and timezone list
     global $newTarget, $domain;
@@ -300,6 +323,9 @@ $router->map('GET', '/all/get', function ($params)
 
     $response['runtime']['timezone']['header'] = array(array('id', 'varchar'), array('name', 'varchar'));
     $response['runtime']['timezone']['data'] = $assocTzlist;
+
+
+    // create stores for 
 }
 );
 
