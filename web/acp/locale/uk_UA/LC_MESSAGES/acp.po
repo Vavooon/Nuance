@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Nuance Billing System\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-21 23:33+0200\n"
-"PO-Revision-Date: 2014-06-22 00:27+0200\n"
+"PO-Revision-Date: 2015-05-17 14:09+0200\n"
 "Last-Translator: Vavooon <vavooon@gmail.com>\n"
 "Language-Team: Nuance <vavooon@gmail.com>\n"
 "Language: uk_UA\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.7.6\n"
 "X-Poedit-SearchPath-0: .locale-src\\acp\n"
 "X-Poedit-SearchPath-1: acp\\themes\\default\n"
 
@@ -2635,11 +2635,11 @@ msgstr "Віддалений IP"
 
 #: .locale-src\acp/strings.js:608
 msgid "header_localip"
-msgstr "Лькальний IPИНН"
+msgstr "Локальний IP"
 
 #: .locale-src\acp/strings.js:609
 msgid "localip"
-msgstr "Лькальний IP"
+msgstr "Локальний IP"
 
 #: .locale-src\acp/strings.js:610
 msgid "remoteip"
@@ -2658,9 +2658,9 @@ msgid "PPP data"
 msgstr "Дані PPP"
 
 #: .locale-src\acp/strings.js:614
-#, fuzzy, python-format
+#, python-format
 msgid "Are you sure you want to delete ip %s?"
-msgstr "Вы действительно хотите удалить пользователя %s?"
+msgstr "Ви справді хочете видалити користувача %s?"
 
 #: .locale-src\acp/strings.js:615
 msgid "pppservice"
