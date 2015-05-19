@@ -35,7 +35,7 @@ function state() {
 
 						// Free RAM
 						if (routerData[row[ns.id]]) {
-							displayData[id][displayNs.freeram] = routerData[row[ns.id]]['free-memory'] + 'kb';
+							displayData[id][displayNs.freeram] = routerData[row[ns.id]]['free-memory'] + 'b';
 						} else {
 							displayData[id][displayNs.freeram] = '';
 						}
@@ -103,7 +103,7 @@ function state() {
 						} else {
 							cpuload = loadPercentage + '%';
 						}
-						freeram = data['free-memory'] + 'kb';
+						freeram = data['free-memory'] + 'b';
 						version = data.version;
 
 						if (Nuance.grids.router) {

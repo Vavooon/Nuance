@@ -84,7 +84,6 @@ $default = '{
     "main" :
     {
       "outInterface" : "wan",
-      "inInterface" : "lan",
       "statPort" : 8080
     },
     "ip" :
@@ -100,8 +99,8 @@ $default = '{
   {
     "version" : 
     {
-      "number" : "2.3",
-      "branch" : "stable"
+      "number" : "3.0",
+      "branch" : "development"
     }
   },
   "subscriber":

@@ -828,10 +828,6 @@ window.onConfigLoad = function(response) {
 									customOptions: {
 										router: {
 											main: {
-												inInterface: {
-													type: 'link',
-													store: ifacesStore
-												},
 												outInterface: {
 													type: 'link',
 													store: ifacesStore
@@ -1297,7 +1293,6 @@ window.onConfigLoad = function(response) {
 				owner: form.recordId,
 				type: 'subscriber'
 			});
-			var fields = preferencesPopup.fields;
 			preferencesEl.appendChild(preferencesPopup.body);
 
 			var popupTabs = {
@@ -1360,26 +1355,21 @@ window.onConfigLoad = function(response) {
 				customOptions: {
 					router: {
 						main: {
-							inInterface: {
-								type: 'link',
-								store: ifacesStore
-							},
 							outInterface: {
 								type: 'link',
 								store: ifacesStore
 							},
+						},
+            ip: {
 							filterType: {
 								type: 'link',
 								store: filterTypeStore
 							}
-						}
+            }
 					}
 				}
 			});
-			var fields = preferencesPopup.fields;
-			for (var i = 0; i < fields.length; i++) {
-				preferencesEl.appendChild(fields[i].body);
-			}
+			preferencesEl.appendChild(preferencesPopup.body);
 			var popupTabs = {
 				data: {
 					title: _("Main data"),
