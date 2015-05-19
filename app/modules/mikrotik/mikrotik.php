@@ -61,7 +61,7 @@
     private function apiProxy($path, $data)
     {
         $result = $this->API->comm($path, $data);
-        //if (count($result))
+        if (count($result))
         {
           d($path, $data, $result);
           //d($path);
@@ -129,7 +129,6 @@
 
     private function sync($sectionData)
     {
-      d('SECTION:',$sectionData);
       foreach ($sectionData as $sectionKey => $sectionValue)
       {
         foreach ($sectionValue as $userId => $userData)
@@ -343,7 +342,7 @@
     }
 
     public function updateQueue ( $userId ) {
-
+      global $config;
       $resource=$this->checkConnection();
       $majorVersion=intval($resource['version'][0]);
       $allIpRes = $this->getIpRows( $userId );
@@ -365,7 +364,6 @@
         )
       );
 
-      d("WUEUQ:", $userId);
       $currentTariff= getCurrentTariff( $userId );
       if ($currentTariff)
       {
@@ -475,6 +473,7 @@
 		{
 			if ($this->connected)
 			{
+        global $config;
         $resource=$this->checkConnection();
         $majorVersion=intval($resource['version'][0]);
         $ipRes = $this->getIpRows( $userId );
@@ -567,6 +566,7 @@
 		{
 			if ($this->connected)
 			{
+        global $config;
         $resource=$this->checkConnection();
         $majorVersion=intval($resource['version'][0]);
 
