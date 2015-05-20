@@ -178,8 +178,11 @@ function state() {
 
 			this.load = function(force) {
 				state = 'loading';
+
 				if (Nuance.grids.router && Nuance.grids.router.displayData) {
-					Nuance.grids.router.setDisplayValue(id, 'state', formatRouterState('loading'));
+          for (var id in store.data) {
+            Nuance.grids.router.setDisplayValue(id, 'state', formatRouterState('loading'));
+          }
 				}
 				var requestString = '/state/get';
 				if (force) {
@@ -206,8 +209,6 @@ function state() {
 		var routerStore = Nuance.stores.router;
 
 		function loadRouterState() {
-			var store = Nuance.stores.router;
-			var ns = store.ns;
 			routerStateChecker.load();
 		}
 
