@@ -1240,8 +1240,8 @@ var Nuance = {
 				dayField.load();
 				dayField.setValue(selectedDay);
 			}
-			monthField.addEventListener('change', onMonthYearChange);
-			yearField.addEventListener('change', onMonthYearChange);
+			monthField.on('change', onMonthYearChange);
+			yearField.on('change', onMonthYearChange);
 
 			if (o.name)
 				self.el.name = o.name;
@@ -1615,7 +1615,7 @@ var Nuance = {
 				}, toolsContainer);
 			}
 			var self = this,
-				pList = o.parentList,
+				parentList = o.parentList,
 				disabled = false,
 				store = o.store,
 				multiple = o.multiple,
@@ -1628,11 +1628,11 @@ var Nuance = {
 				hoverEl,
 				openEvent,
 				selectedEls = [],
-				pListSelected;
+				parentListSelected;
 
-			if (typeof pList === 'string' && o.form) {
+			if (typeof parentList === 'string' && o.form) {
 				var fields = o.form.getFields();
-				pList = fields[pList];
+				parentList = fields[parentList];
 			}
 			Nuance.EventMixin.call(this, o);
 			o.doNotSetValue = true;
@@ -1849,10 +1849,10 @@ var Nuance = {
 					if (values.length) {
 						activeVal.title = activeVal.placeholder = o.selectPlaceholder || _("Select " + self.getName());
 
-					} else if (pList) {
-						activeVal.title = activeVal.placeholder = pListSelected ? _("No options") : _("Select " + pList.getName() + " at first");
-						if (pList && typeof pList.getValue() === 'object' && pList.getValue.length !== 1) {
-							activeVal.title = activeVal.placeholder = _("Select only one " + pList.getName());
+					} else if (parentList) {
+						activeVal.title = activeVal.placeholder = parentListSelected ? _("No options") : _("Select " + parentList.getName() + " at first");
+						if (parentList && typeof parentList.getValue() === 'object' && parentList.getValue.length !== 1) {
+							activeVal.title = activeVal.placeholder = _("Select only one " + parentList.getName());
 						}
 					} else {
 						activeVal.title = activeVal.placeholder = _("No options");
@@ -1938,11 +1938,11 @@ var Nuance = {
 				self.setDisabled(!values.length);
 				self.values = values;
 			}
-			if (pList) {
+			if (parentList) {
 				function checkSelection() {
 					values = [];
-					var plName = pList.getName();
-					var plValue = pList.getValue();
+					var plName = parentList.getName();
+					var plValue = parentList.getValue();
 					var newOpts = {};
 					if (typeof plValue === 'object' && plValue.length > 1) {
 						self.setValue(false);
@@ -1950,9 +1950,10 @@ var Nuance = {
 						if (typeof plValue === 'object') {
 							plValue = plValue[0];
 						}
+            c(this.children[0].nValue, nullValue);
 						if (this.children[0].nValue != nullValue) {
 							var row = store.ns[plName];
-							pListSelected = true;
+							parentListSelected = true;
 							for (var option in store.data) {
 								var value = store.data[option][row];
 								if (!Array.isArray(value)) {
@@ -1964,13 +1965,14 @@ var Nuance = {
 								}
 							}
 						} else {
-							pListSelected = false;
+							parentListSelected = false;
 						}
 						loadOptions(newOpts);
 						self.setValue(prevVal || false);
 					}
 				}
-				pList.addEventListener('change', checkSelection);
+        checkSelection.call(this.__el);
+				parentList.on('change', checkSelection.bind(this.__el));
 			} else {
 				loadOptions(store.data);
 				store.on('afterload', function() {
@@ -1988,13 +1990,6 @@ var Nuance = {
 
 			this.load = function() {
 				loadOptions(store.data);
-			};
-
-			this.addEventListener = function(event, callback) {
-				el.addEventListener.call(el, event, callback);
-				if (event == 'change') {
-					callback.call(el);
-				}
 			};
 
 			function hover(e) {
@@ -2108,7 +2103,7 @@ var Nuance = {
 					self.body.classList.remove('change-tariff');
 				}
 			}
-			tariffCombobox.addEventListener('change', onChange);
+			tariffCombobox.on('change', onChange);
 
 		},
 		Documents: function(o) {

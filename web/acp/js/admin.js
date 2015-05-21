@@ -598,6 +598,7 @@ window.onConfigLoad = function(response) {
 					customFields: {
 						referrer: {
 							parentList: false,
+              avoidSort: true,
 							selectOnlyItem: false,
 							showNotSelected: true
 						}
