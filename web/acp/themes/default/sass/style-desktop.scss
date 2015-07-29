@@ -21,14 +21,11 @@
   text-align: center;
 }
 #tabpanel-switch {
-  overflow: hidden;
   height: 31px;
   padding: 0;
   display: flex;
-  display: -webkit-box;
 
   & > li.stretch {
-    -webkit-box-flex: 1;
     flex: 1;
     display: block;
     padding: 0;
@@ -45,7 +42,6 @@
 }
 #tabpanel-switch.overflow>li.spoiler-stretch
 {
-  -webkit-box-flex: 1;
   flex: 1;
   padding: 0;
   height: 0;
