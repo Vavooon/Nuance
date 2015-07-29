@@ -691,8 +691,11 @@ var Nuance = {
 				return name;
 			};
 			this.form = o.form;
-			if (o.value !== null && !o.doNotSetValue)
+      /*
+			if (o.value !== null && !o.doNotSetValue) {
 				this.setValue && this.setValue(o.value);
+      }
+      */
 			if (this.el) {
 				this.el.classList.add('selectable');
 				this.addEventListener = function() {
@@ -868,10 +871,12 @@ var Nuance = {
 			var self = this,
 				disabled = o.disabled;
 			self.el = ce('input', {
-				className: 'text field'
+				className: 'text field',
+        value: o.value
 			}, flexWrap);
-			if (o.name)
+			if (o.name) {
 				self.el.name = o.name;
+      }
 			var valueType = 'string';
 			this.setValue = function(value) {
 				valueType = typeof value;
@@ -903,29 +908,43 @@ var Nuance = {
 			this.body = ce('div', {
 				className: 'discount-field-wrap field-wrap'
 			}, o.target);
-			//var titleWrap = ce('span', {className: 'title-wrap'}, this.body);
-			//this.title = ce('span', {className: 'title', innerHTML: o.title || ""}, titleWrap);
 			this.wrap = ce('div', {
 				className: 'flex-wrap'
 			}, this.body);
 			var self = this,
 				disabled = o.disabled;
+			var postfixes = ['%', 'm'];
+			var digitsOnly = /[-1234567890]/g;
+
+      function parseValue(value) {
+        var parsedValue = {postfix: 'm', number: ''};
+				if (value) {
+					var lastChar = value[value.length - 1];
+					if (postfixes.indexOf(lastChar) !== -1) {
+            parsedValue.postfix = lastChar;
+            parsedValue.value = value.substr(0, value.length - 1);
+					} else {
+            parsedValue.value = value;
+					}
+        }
+        return parsedValue;
+			};
+      var initialValue = parseValue(o.value);
+
 			self.el = ce('input', {
-				className: 'text field discount'
+				className: 'text field discount',
+        value: initialValue.number
 			}, this.wrap);
-			var speedPostfix = new Nuance.input.ComboBox({
+			var discountTypePostfix = new Nuance.input.ComboBox({
 				name: 'discount',
 				store: discountTypeStore,
-				value: '%'
+				value: initialValue.postfix
 			});
-			speedPostfix.__el.classList.add('discount');
-			this.wrap.appendChild(speedPostfix.body);
-			if (o.name)
+			discountTypePostfix.__el.classList.add('discount');
+			this.wrap.appendChild(discountTypePostfix.body);
+			if (o.name) {
 				self.el.name = o.name;
-			var valueType = 'string';
-			var postfixes = ['%', 'm'];
-			var postfixesInLowerCase = ['%', 'm'];
-			var digitsOnly = /[-1234567890]/g;
+      }
 			self.el.onkeypress = function(e) {
 				var code = e.which;
 				var character = String.fromCharCode(code);
@@ -940,41 +959,30 @@ var Nuance = {
 				// strange because code: 39 is the down key AND ' key...
 				// and DEL also equals .
 				if (!e.ctrlKey && code != 96 && code != 9 && code != 8 && code != 36 && code != 37 && code != 38 && (code != 39 || (code == 39 && character == "'")) && code != 40) {
-					var prefixIndex = postfixesInLowerCase.indexOf(character.toLowerCase());
+					var prefixIndex = postfixes.indexOf(character.toLowerCase());
 
 					if (character.match(digitsOnly)) {
 						return true;
 					} else if (prefixIndex !== -1) {
-						speedPostfix.setValue(postfixes[prefixIndex]);
+						discountTypePostfix.setValue(postfixes[prefixIndex]);
 					} else if (character === 'm') {
-						speedPostfix.setValue('m');
+						discountTypePostfix.setValue('m');
 					}
 					return false;
 				}
 			};
 			this.setValue = function(value) {
-				valueType = typeof value;
-				if (value) {
-					var lastChar = value[value.length - 1];
-					if (postfixes.indexOf(lastChar) !== -1) {
-						speedPostfix.setValue(lastChar);
-						self.el.value = value.substr(0, value.length - 1);
-					} else {
-						speedPostfix.setValue('m');
-						self.el.value = value;
-					}
-				} else {
-					speedPostfix.setValue('m');
-					self.el.value = '';
-				}
+        var parsedValue = parseValue(value);
+        self.el.value = parsedValue.number;
+        discountTypePostfix.setValue(parsedValue.postfix);
 			};
 			this.getValue = function() {
-				var prefix = speedPostfix.getValue();
-				if (prefix === 'm') {
-					prefix = '';
+				var postfix = discountTypePostfix.getValue();
+				if (postfix === 'm') {
+					postfix = '';
 				}
 				if (parseInt(self.el.value)) {
-					return self.el.value + prefix;
+					return self.el.value + postfix;
 				} else {
 					return '0';
 				}
@@ -985,7 +993,7 @@ var Nuance = {
 			this.setDisabled = function(d) {
 				disabled = !!d;
 				self.el.disabled = disabled;
-				speedPostfix.setDisabled(disabled);
+				discountTypePostfix.setDisabled(disabled);
 				self.el.blur();
 			};
 			Nuance.input.__Field.call(this, o);
@@ -1001,22 +1009,39 @@ var Nuance = {
 			}, this.body);
 			var self = this,
 				disabled = o.disabled;
+
+			var postfixes = ['k', 'M', 'G'];
+			var postfixesInLowerCase = ['k', 'm', 'g'];
+			var digitsOnly = /[1234567890]/g;
+
+      function parseValue(value) {
+        var parsedValue = {postfix: 'b', number: ''};
+				if (value) {
+					var lastChar = value[value.length - 1];
+					if (postfixes.indexOf(lastChar) !== -1) {
+            parsedValue.postfix = lastChar;
+            parsedValue.number = value.substr(0, value.length - 1);
+					} else {
+            parsedValue.number = value;
+					}
+        }
+        return parsedValue;
+      }
+
+      var initialValue = parseValue(o.value);
 			self.el = ce('input', {
-				className: 'text field speed'
+				className: 'text field speed',
+        value: initialValue.number
 			}, this.wrap);
 			var speedPostfix = new Nuance.input.ComboBox({
 				name: 'speed',
 				store: prefixStore,
-				value: 'b'
+        value: initialValue.postfix
 			});
 			speedPostfix.__el.classList.add('speed');
 			this.wrap.appendChild(speedPostfix.body);
 			if (o.name)
 				self.el.name = o.name;
-			var valueType = 'string';
-			var postfixes = ['k', 'M', 'G'];
-			var postfixesInLowerCase = ['k', 'm', 'g'];
-			var digitsOnly = /[1234567890]/g;
 			self.el.onkeypress = function(e) {
 				var code = e.which;
 				var character = String.fromCharCode(code);
@@ -1043,27 +1068,17 @@ var Nuance = {
 				}
 			};
 			this.setValue = function(value) {
-				valueType = typeof value;
-				if (value) {
-					var lastChar = value[value.length - 1];
-					if (postfixes.indexOf(lastChar) !== -1) {
-						speedPostfix.setValue(lastChar);
-						self.el.value = value.substr(0, value.length - 1);
-					} else {
-						speedPostfix.setValue('b');
-						self.el.value = value;
-					}
-				} else {
-					speedPostfix.setValue('b');
-					self.el.value = '';
-				}
+				
+        var parsedValue = parseValue(value);
+        speedPostfix.setValue(parsedValue.postfix);
+        self.el.value = parsedValue.number;
 			};
 			this.getValue = function() {
-				var prefix = speedPostfix.getValue();
-				if (prefix === 'b') {
-					prefix = '';
+				var postfix = speedPostfix.getValue();
+				if (postfix === 'b') {
+					postfix = '';
 				}
-				return self.el.value + prefix;
+				return self.el.value + postfix;
 			};
 			this.isDisabled = function() {
 				return disabled;
@@ -1169,11 +1184,38 @@ var Nuance = {
 			self.el = ce('div', {
 				className: 'flex-wrap date field'
 			}, this.wrap);
+
+      
+      function parseValue(value) {
+        var parsedValue = {second: 0, minute: 0, hour: 0, day: 0, month: 0, year: 0};
+				var date = Date.parseExact(value, dateFormat);
+				if (date) {
+					parsedValue.month = date.getMonth() + 1;
+					parsedValue.year = date.getFullYear();
+					parsedValue.day = date.getDate();
+					parsedValue.hour = date.getHours();
+					parsedValue.minute = date.getMinutes();
+					parsedValue.second = date.getSeconds();
+        }
+        return parsedValue;
+			};
+
+      var initialValue = parseValue(o.value);
+      c(initialValue);
+
+			if (o.name) {
+				self.el.name = o.name;
+      }
+			var hourValue = initialValue.hour,
+				minuteValue = initialValue.minute,
+				secondValue = initialValue.year;
+
 			var dayField = new Nuance.input.ComboBox({
 				selectPlaceholder: _('Day'),
 				store: dayStore,
 				name: 'day',
 				avoidSort: true,
+        value: initialValue.day,
 				target: self.el
 			});
 			var monthStore = new Nuance.MemoryStore({
@@ -1215,12 +1257,14 @@ var Nuance = {
 				store: monthStore,
 				name: 'month',
 				avoidSort: true,
+        value: initialValue.month,
 				target: self.el
 			});
 			var yearField = new Nuance.input.ComboBox({
 				store: yearStore,
 				selectPlaceholder: _('Year'),
 				name: 'year',
+        value: initialValue.year,
 				target: self.el
 			});
 
@@ -1237,17 +1281,13 @@ var Nuance = {
 				for (var i = 1; i <= daysInSelectedMonth; i++) {
 					dayStore.data[i] = [i, i];
 				}
-				dayField.load();
-				dayField.setValue(selectedDay);
+        dayStore.trigger('afterload');
 			}
+      onMonthYearChange();
 			monthField.on('change', onMonthYearChange);
 			yearField.on('change', onMonthYearChange);
 
-			if (o.name)
-				self.el.name = o.name;
-			var hourValue = 0,
-				minuteValue = 0,
-				secondValue = 0;
+
 			this.setValue = function(value) {
 				var date = Date.parseExact(value, dateFormat);
 				if (date) {
@@ -1281,7 +1321,7 @@ var Nuance = {
 						secondValue
 					);
 				}
-				return date ? date.toString(dbDateTimeFormat) : "0000-00-00 00:00:00";
+				return date ? date.toString(dateFormat) : "";
 			};
 			this.isDisabled = function() {
 				return disabled;
@@ -1304,13 +1344,13 @@ var Nuance = {
 				className: 'flex-wrap'
 			}, this.body);
 			var self = this,
-				realValue,
+				realValue = o.value,
 				disabled = false,
 				countryCode = configProxy.getValue('system', 'grid', 'countryCode');
 			self.el = ce('input', {
 				type: 'tel',
 				className: 'text field',
-				value: countryCode
+				value: o.value || countryCode
 			}, this.wrap);
 			if (o.name)
 				self.el.name = o.name;
@@ -1344,6 +1384,7 @@ var Nuance = {
 			this.el = ce('input', {
 				type: 'password',
 				className: 'text password field',
+        value: o.value,
 				placeholder: o.value ? _("Type to change password") : ''
 			}, this.wrap);
 
@@ -1384,6 +1425,7 @@ var Nuance = {
 			self.el = ce('input', {
 				type: 'password',
 				className: 'text password field',
+        value: o.value,
 				placeholder: o.value ? _("Type to change password") : ''
 			}, this.wrap);
 
@@ -1571,7 +1613,327 @@ var Nuance = {
 				el.classList[disabled ? 'add' : 'remove']('disabled');
 			};
 		},
-		ComboBox: function(o) {
+    ComboBox: function(o) {
+      this.body = ce('div', {
+				className: 'combobox-field-wrap field-wrap'
+			}, o.target);
+			this.wrap = ce('div', {
+				className: 'flex-wrap'
+			}, this.body);
+			var el = ce('div', {
+				className: 'combobox field'
+			}, this.wrap);
+			var input = ce('input', {
+				className: 'top-option option',
+				onselectstart: falsefunc,
+				onsmousedrag: falsefunc,
+        onkeyup: searchItem,
+        onclick: open
+			}, el);
+			var arrowEl = ce('div', {
+				className: 'arrow'
+			}, el);
+			var optionsContainer = ce('div', {
+				className: 'options-list'
+			}, el);
+			var toolsContainer = ce('div', {
+				className: 'combobox-tools'
+			}, el);
+
+			Nuance.EventMixin.call(this, o);
+      var value = []; // Always store value in array because of possible multiple selection mode
+      var multiple = o.multiple,
+        self = this,
+        availableOptions = [],
+        availableOptionNames = [],
+        optionsElements = [],
+        opened = false,
+        disabled,
+        hoverEl,
+        valueType = typeof o.value,
+        openEvent,
+        parentList = o.parentList,
+        name = o.name;
+      this.store = o.store;
+      this.__el  = el;
+      if (!this.store) {
+        throw new Error("Store should be supplied to ComboBox constructor");
+      }
+
+      if (o.hasOwnProperty('value')) {
+        switch (typeof o.value) {
+          case 'object':
+            if (Array.isArray(o.value)) {
+              value = o.value;
+            }
+          break;
+
+          case 'number':
+            value = [o.value];
+          break;
+          case 'string':
+            value = [o.value.toString()];
+
+          break;
+        }
+      }
+
+      this.getValue = function() {
+        if (multiple) {
+          return value;
+        }
+        else {
+          return value[0];
+        }
+      }
+
+      this.setValue = function(newValue) {
+      }
+
+      this.getName = function() {
+        return name;
+      }
+
+			this.setDisabled = function(d) {
+				disabled = !!d;
+				input.disabled = disabled;
+				el.classList[disabled ? 'add' : 'remove']('disabled');
+			};
+
+      this.setDisabled(o.disabled);
+
+      function updateInputField() {
+        var displayedValues = [],
+          newValue = "",
+          newPlaceholder = "",
+          needDisable = false;
+        for (var i = 0; i < value.length; i++) {
+          var optionIndex = availableOptions.indexOf(value[i]);
+          if (optionIndex !== -1) {
+            displayedValues.push(availableOptionNames[optionIndex]);
+            selectOption.call(optionsElements[optionIndex])
+          }
+        }
+
+        if (displayedValues.length) {
+          newValue = displayedValues.join(', ');
+        }
+        else if (availableOptions.length) {
+          newPlaceholder = _("Select " + name);
+        }
+
+        if (parentList) {
+          if (!parentList.getValue()) {
+            newPlaceholder = _("Select " + parentList.getName() + " at first");
+            needDisable = true;
+          }
+          else if (!availableOptions.length) {
+            newPlaceholder = _("No options");
+            needDisable = true;
+          }
+        }
+        else {
+        }
+
+        input.value = newValue;
+        input.placeholder = newPlaceholder;
+        self.setDisabled(needDisable);
+      }
+
+      function unselectOption() {
+        this.classList.remove('selected');
+      }
+
+      function selectOption() {
+        this.classList.add('selected');
+      }
+
+      function toggleOption() {
+        var optionIndex = optionsElements.indexOf(this);
+        if (multiple) {
+        }
+        else {
+          var previousOption = optionsElements[availableOptions.indexOf(value.pop())];
+          if (previousOption) {
+            unselectOption.call(previousOption);
+          }
+          value = [availableOptions[optionIndex]];
+          updateInputField();
+          self.trigger('change');
+          selectOption.call(optionsElements[optionIndex]);
+          close();
+        }
+      }
+
+			function onItemMouseOver() {
+				hoverEl && hoverEl.classList.remove('hover');
+				this.classList.add('hover');
+				hoverEl = this;
+			}
+
+			function onItemMouseOut() {
+				this.classList.remove('hover');
+			}
+
+      function loadOptions(options) {
+        if (!Array.isArray(options)) {
+          var idNs = self.store.ns.id;
+          if (typeof idNs === 'undefined') {
+            throw new Error("Store should contain an id field");
+          }
+          options = [];
+          for (var id in self.store.data) {
+            options.push(self.store.data[id][idNs]);
+          }
+        }
+        optionsContainer.removeChilds();
+        availableOptions = [];
+        availableOptionNames = [];
+        optionsElements = [];
+
+				for (var i = 0; i<options.length; i++) {
+          var id = options[i];
+					var text = self.store.getNameById(id);
+          availableOptions.push(id);
+          availableOptionNames.push(text);
+					var option = ce('div', {
+						className: 'option',
+						innerText: text,
+						textContent: text,
+						value: id,
+            onclick: toggleOption,
+						onmouseover: onItemMouseOver,
+						onmouseout: onItemMouseOut,
+						onselectstart: falsefunc,
+						onsmousedrag: falsefunc
+					}, optionsContainer);
+          optionsElements.push(option);
+				}
+        updateInputField();
+      }
+
+			function scrollToOption(el) {
+				optionsContainer.scrollTop = el.offsetTop - 120;
+			}
+
+      function setOpened(b) {
+				if (!disabled) {
+					opened = b;
+					if (opened) {
+						el.classList.add('open');
+						//value.length && scrollToOption(eelectedEls[selectedEls.length - 1]);
+					} else {
+						el.classList.remove('open');
+						focus();
+					}
+				}
+			}
+
+
+			function onBlur(e) {
+				// Do not close menu at focus or click on input field
+				if (openEvent !== e && e.target !== input) {
+					if (multiple) {
+						if (optionsElements.indexOf(optionsContainer.children, e.target) === -1 && e.target !== selectAllEl && e.target !== unselectAllEl) {
+							close();
+						}
+					} else {
+						close();
+					}
+				}
+			}
+
+      function open(e) {
+				if (opened)
+					return;
+				setOpened(true, e);
+				openEvent = e;
+				input.select();
+				window.addEventListener('click', onBlur);
+				window.addEventListener('dblclick', onBlur);
+				window.addEventListener('contextmenu', onBlur);
+			}
+
+      function close(e) {
+				setOpened(false, e);
+				window.removeEventListener('click', onBlur);
+				window.removeEventListener('dblclick', onBlur);
+				window.removeEventListener('contextmenu', onBlur);
+			}
+
+      function searchItem(e) {
+				if (e.which == 13 && hoverEl) // Handle ENTER press
+				{
+					hoverEl.onclick();
+					!multiple && close();
+					return;
+				}
+				var foundItem;
+				if (e.which == 40 && !opened) // Open list at DOWN press
+				{
+					open();
+					return;
+				}
+				if (e.which == 38 || e.which == 40) // Handle option selection with UP and DOWN keys
+				{
+					if (!hoverEl) {
+						hoverEl = (e.which == 40) ? optionsContainer.children[0] : optionsContainer.lastChild;
+          }
+					var newSelection = hoverEl[(e.which == 40) ? 'nextSibling' : 'previousSibling'];
+					if (newSelection) {
+						foundItem = optionsElements.indexOf(newSelection);
+						onItemMouseOver.call(newSelection);
+						hoverEl = newSelection;
+					}
+					input.select();
+					return;
+				}
+
+				// Open if ComboBox is focused and search was started
+				if (!opened && [9, 16, 17, 18].indexOf(e.which) == -1) {
+					open();
+				}
+				//  Handle key press to search
+				var count = 0;
+				var needle = input.value.toLowerCase();
+				for (var s = 0; s < optionsContainer.children.length; s++) {
+					if (availableOptionNames[s].toLowerCase().indexOf(needle) != -1) {
+						count++;
+						foundItem = s;
+						onItemMouseOver.call(optionsContainer.children[s]);
+						scrollToOption(optionsContainer.children[s]);
+						break;
+					}
+				}
+			}
+
+
+      function filterOptions() {
+        var value = parentList.getValue(),
+          name = parentList.getName(),
+          filteredOptions = [],
+          ns = self.store.ns;
+        for (var id in self.store.data) {
+          if (self.store.data[id][ns[name]] == value) {
+            filteredOptions.push(self.store.data[id][ns['id']]);
+          }
+        }
+        loadOptions(filteredOptions);
+      }
+
+
+      var hookFunction = parentList ? filterOptions : loadOptions;
+      if (this.store.getState() === 'loaded') {
+        hookFunction();
+      }
+      if (parentList) {
+        parentList.on('change', hookFunction);
+      }
+      this.store.on('afterload', hookFunction);
+    
+
+    },
+		OldComboBox: function(o) {
 			this.body = ce('div', {
 				className: 'combobox-field-wrap field-wrap'
 			}, o.target);
@@ -1735,7 +2097,8 @@ var Nuance = {
 						if (Array.prototype.indexOf.call(optionsContainer.children, e.target) === -1 && e.target !== selectAllEl && e.target !== unselectAllEl) {
 							close();
 						}
-					} else {
+					}
+          else {
 						close();
 					}
 				}
@@ -1950,7 +2313,6 @@ var Nuance = {
 						if (typeof plValue === 'object') {
 							plValue = plValue[0];
 						}
-            c(this.children[0].nValue, nullValue);
 						if (this.children[0].nValue != nullValue) {
 							var row = store.ns[plName];
 							parentListSelected = true;
@@ -2281,7 +2643,8 @@ var Nuance = {
 				className: 'flex-wrap'
 			}, this.body);
 			var el = ce('textarea', {
-					className: 'multitext field'
+					className: 'multitext field',
+          value: o.value
 				}, this.wrap),
 				self = this,
 				disabled = false;

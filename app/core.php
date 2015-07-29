@@ -855,6 +855,10 @@ $afterAddRenderers = array(
                         if (count($newFields))
                         {
                             $newFields['editdate'] = date($mysqlTimeDateFormat);
+                            if (isset($newFields['regdate'])) {
+                              $regDate = new DateTime($newFields['regdate']);
+                              $newFields['regdate'] = $regDate->format($mysqlTimeDateFormat);
+                            }
                         }
                         return $newFields;
                     },
